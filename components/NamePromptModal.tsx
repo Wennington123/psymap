@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface Props {
   visible: boolean;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export default function NamePromptModal({ visible, onConfirm, onCancel }: Props) {
+  const { colors } = useTheme();
   const [name, setName] = useState('');
 
   function handleConfirm() {
@@ -31,16 +33,16 @@ export default function NamePromptModal({ visible, onConfirm, onCancel }: Props)
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={handleClose}>
-      <KeyboardAvoidingView style={styles.overlay} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View style={styles.card}>
-          <Text style={styles.title}>Identificação para o PDF</Text>
-          <Text style={styles.body}>
+      <KeyboardAvoidingView style={[styles.overlay, { backgroundColor: colors.overlay }]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={[styles.card, { backgroundColor: colors.background, borderColor: colors.border }]}>
+          <Text style={[styles.title, { color: colors.text }]}>Identificação para o PDF</Text>
+          <Text style={[styles.body, { color: colors.textSecondary }]}>
             Seu nome será usado apenas para identificar o relatório. Não será armazenado ou compartilhado.
           </Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
             placeholder="Seu nome completo"
-            placeholderTextColor="#555"
+            placeholderTextColor={colors.textDim}
             value={name}
             onChangeText={setName}
             autoFocus
@@ -48,11 +50,11 @@ export default function NamePromptModal({ visible, onConfirm, onCancel }: Props)
             onSubmitEditing={handleConfirm}
           />
           <View style={styles.buttons}>
-            <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
-              <Text style={styles.cancelText}>Cancelar</Text>
+            <TouchableOpacity style={[styles.cancelBtn, { borderColor: colors.borderMuted }]} onPress={handleClose}>
+              <Text style={[styles.cancelText, { color: colors.textSecondary }]}>Cancelar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.confirmBtn} onPress={handleConfirm}>
-              <Text style={styles.confirmText}>Gerar PDF</Text>
+            <TouchableOpacity style={[styles.confirmBtn, { backgroundColor: colors.accent }]} onPress={handleConfirm}>
+              <Text style={[styles.confirmText, { color: colors.textOnAccent }]}>Gerar PDF</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -64,7 +66,6 @@ export default function NamePromptModal({ visible, onConfirm, onCancel }: Props)
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: '#000000aa',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
@@ -72,33 +73,26 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     maxWidth: 340,
-    backgroundColor: '#1a1a2e',
     borderRadius: 16,
     padding: 24,
     borderWidth: 1,
-    borderColor: '#0f3460',
   },
   title: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#e0e0e0',
     marginBottom: 8,
   },
   body: {
     fontSize: 13,
-    color: '#888',
     marginBottom: 16,
     lineHeight: 18,
   },
   input: {
-    backgroundColor: '#16213e',
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#e0e0e0',
     borderWidth: 1,
-    borderColor: '#0f3460',
     marginBottom: 16,
   },
   buttons: {
@@ -111,10 +105,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#444',
   },
   cancelText: {
-    color: '#888',
     fontSize: 15,
     fontWeight: '600',
   },
@@ -123,10 +115,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: 'center',
-    backgroundColor: '#e94560',
   },
   confirmText: {
-    color: '#fff',
     fontSize: 15,
     fontWeight: '700',
   },

@@ -8,6 +8,7 @@ import {
   Modal,
 } from 'react-native';
 import { Emotion } from '../types';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface Props {
   visible: boolean;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function CustomEmotionInput({ visible, onClose, onSave }: Props) {
+  const { colors } = useTheme();
   const [label, setLabel] = useState('');
   const [emoji, setEmoji] = useState('');
 
@@ -35,35 +37,35 @@ export default function CustomEmotionInput({ visible, onClose, onSave }: Props) 
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.overlay}>
-        <View style={styles.dialog}>
-          <Text style={styles.title}>Nova emoção personalizada</Text>
+      <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
+        <View style={[styles.dialog, { backgroundColor: colors.background, borderColor: colors.border }]}>
+          <Text style={[styles.title, { color: colors.text }]}>Nova emoção personalizada</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
             placeholder="Nome da emoção"
-            placeholderTextColor="#666"
+            placeholderTextColor={colors.textDim}
             value={label}
             onChangeText={setLabel}
             autoFocus
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
             placeholder="Emoji (ex: 🎉)"
-            placeholderTextColor="#666"
+            placeholderTextColor={colors.textDim}
             value={emoji}
             onChangeText={setEmoji}
             maxLength={2}
           />
           <View style={styles.buttons}>
             <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-              <Text style={styles.cancelText}>Cancelar</Text>
+              <Text style={[styles.cancelText, { color: colors.textSecondary }]}>Cancelar</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.saveBtn, !label.trim() && styles.disabled]}
+              style={[styles.saveBtn, { backgroundColor: colors.accent }, !label.trim() && styles.disabled]}
               onPress={handleSave}
               disabled={!label.trim()}
             >
-              <Text style={styles.saveText}>Adicionar</Text>
+              <Text style={[styles.saveText, { color: colors.textOnAccent }]}>Adicionar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -75,36 +77,29 @@ export default function CustomEmotionInput({ visible, onClose, onSave }: Props) 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
   },
   dialog: {
-    backgroundColor: '#1a1a2e',
     borderRadius: 16,
     padding: 24,
     width: '100%',
     maxWidth: 320,
     borderWidth: 1,
-    borderColor: '#0f3460',
   },
   title: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#e0e0e0',
     marginBottom: 16,
     textAlign: 'center',
   },
   input: {
-    backgroundColor: '#16213e',
     borderRadius: 10,
     padding: 12,
     fontSize: 16,
-    color: '#e0e0e0',
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#0f3460',
   },
   buttons: {
     flexDirection: 'row',
@@ -117,17 +112,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   cancelText: {
-    color: '#888',
     fontSize: 15,
   },
   saveBtn: {
-    backgroundColor: '#e94560',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
   },
   saveText: {
-    color: '#fff',
     fontSize: 15,
     fontWeight: '600',
   },

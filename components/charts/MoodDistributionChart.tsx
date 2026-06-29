@@ -2,23 +2,24 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { PieChart } from 'react-native-gifted-charts';
 import { EmotionStat } from '../../lib/stats';
-
-const PALLETTE = ['#e94560', '#f77f00', '#fcbf49', '#06d6a0', '#118ab2', '#9b5de5', '#f15bb5', '#073b4c'];
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface Props {
   data: EmotionStat[];
 }
 
 export default function MoodDistributionChart({ data }: Props) {
+  const { colors } = useTheme();
+
   if (data.length === 0) return null;
 
   const total = data.reduce((sum, s) => sum + s.count, 0);
 
   const pieData = data.map((stat, i) => ({
     value: stat.count,
-    color: PALLETTE[i % PALLETTE.length],
+    color: colors.chartPalette[i % colors.chartPalette.length],
     text: `${stat.percentage}%`,
-    textColor: '#1a1a2e',
+    textColor: colors.text,
     textSize: 11,
     focused: i === 0,
     label: stat.emoji,
@@ -31,19 +32,19 @@ export default function MoodDistributionChart({ data }: Props) {
         donut
         radius={100}
         innerRadius={60}
-        innerCircleColor="#1a1a2e"
+        innerCircleColor={colors.background}
         centerLabelComponent={() => (
           <View style={styles.center}>
-            <Text style={styles.centerNumber}>{total}</Text>
-            <Text style={styles.centerLabel}>registros</Text>
+            <Text style={[styles.centerNumber, { color: colors.text }]}>{total}</Text>
+            <Text style={[styles.centerLabel, { color: colors.textDim }]}>registros</Text>
           </View>
         )}
       />
       <View style={styles.legend}>
         {data.map((stat, i) => (
           <View key={stat.emotionId} style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: PALLETTE[i % PALLETTE.length] }]} />
-            <Text style={styles.legendText}>
+            <View style={[styles.legendDot, { backgroundColor: colors.chartPalette[i % colors.chartPalette.length] }]} />
+            <Text style={[styles.legendText, { color: colors.textSecondary }]}>
               {stat.emoji} {stat.label} ({stat.count})
             </Text>
           </View>
@@ -64,11 +65,9 @@ const styles = StyleSheet.create({
   centerNumber: {
     fontSize: 30,
     fontWeight: '700',
-    color: '#e0e0e0',
   },
   centerLabel: {
     fontSize: 11,
-    color: '#666',
   },
   legend: {
     flexDirection: 'row',
@@ -89,7 +88,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   legendText: {
-    color: '#a0a0b0',
     fontSize: 11,
   },
 });

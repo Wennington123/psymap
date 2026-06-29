@@ -2,21 +2,24 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
 import { DayOfWeekStat } from '../../lib/stats';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface Props {
   data: DayOfWeekStat[];
 }
 
 export default function DayOfWeekChart({ data }: Props) {
+  const { colors } = useTheme();
+
   if (data.length === 0) return null;
 
   const barData = data.map((stat) => ({
     value: stat.avgIntensity,
     label: stat.dayLabel,
-    frontColor: stat.count > 0 ? '#e94560' : '#2a2a4e',
+    frontColor: stat.count > 0 ? colors.accent : colors.surface,
     topLabelComponent: () =>
       stat.count > 0 ? (
-        <Text style={{ color: '#e0e0e0', fontSize: 10, fontWeight: '600' }}>{stat.avgIntensity}</Text>
+        <Text style={{ color: colors.text, fontSize: 10, fontWeight: '600' }}>{stat.avgIntensity}</Text>
       ) : null,
   }));
 
@@ -29,16 +32,16 @@ export default function DayOfWeekChart({ data }: Props) {
         roundedTop
         roundedBottom
         hideRules
-        yAxisTextStyle={styles.axisLabel}
+        yAxisTextStyle={{ color: colors.textDim, fontSize: 10 }}
         noOfSections={4}
         maxValue={5}
         stepValue={1}
         isAnimated
         showReferenceLine1
         referenceLine1Position={0}
-        referenceLine1Config={{ color: '#2a2a4e', thickness: 1 }}
+        referenceLine1Config={{ color: colors.chartAxis, thickness: 1 }}
       />
-      <Text style={styles.hint}>Intensidade média por dia da semana</Text>
+      <Text style={[styles.hint, { color: colors.textDim }]}>Intensidade média por dia da semana</Text>
     </View>
   );
 }
@@ -48,21 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
   },
-  barTop: {
-    color: '#e0e0e0',
-    fontSize: 10,
-    fontWeight: '600',
-  },
-  barLabel: {
-    color: '#666',
-    fontSize: 10,
-  },
-  axisLabel: {
-    color: '#666',
-    fontSize: 10,
-  },
   hint: {
-    color: '#555',
     fontSize: 11,
     marginTop: 8,
   },

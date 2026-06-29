@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface Props {
   title: string;
@@ -7,9 +8,11 @@ interface Props {
 }
 
 export default function StatsSection({ title, children }: Props) {
+  const { colors } = useTheme();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={[styles.title, { color: colors.accent, borderBottomColor: colors.border }]}>{title}</Text>
       {children}
     </View>
   );
@@ -17,17 +20,14 @@ export default function StatsSection({ title, children }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 8,
-    marginBottom: 4,
+    marginTop: 20,
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#0f3460',
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#e0e0e0',
-    marginBottom: 12,
+    fontSize: 15,
+    fontWeight: '700',
+    marginBottom: 8,
+    paddingBottom: 6,
+    borderBottomWidth: 1,
   },
 });

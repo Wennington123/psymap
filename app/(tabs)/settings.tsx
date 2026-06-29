@@ -12,9 +12,9 @@ import {
 } from 'react-native';
 import Constants from 'expo-constants';
 import * as Clipboard from 'expo-clipboard';
-import { useTheme } from '../contexts/ThemeContext';
-import { Themes, ThemeName } from '../constants/colors';
-import { clearAllData } from '../storage/moodStorage';
+import { useTheme } from '../../contexts/ThemeContext';
+import { Themes, ThemeName } from '../../constants/colors';
+import { clearAllData } from '../../storage/moodStorage';
 
 const THEME_LIST: { key: ThemeName; label: string }[] = [
   { key: 'dracula', label: 'Dracula' },
@@ -48,7 +48,7 @@ export default function SettingsScreen() {
   };
 
   const handleFeedback = () => {
-    Linking.openURL('mailto:feedback@psymap.app?subject=Feedback%20PsyMap');
+    Linking.openURL('mailto:wenningtondiasx25@gmail.com?subject=Feedback%20PsyMap');
   };
 
   const handleShare = () => {
@@ -145,7 +145,7 @@ export default function SettingsScreen() {
         <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border, flexDirection: 'column', alignItems: 'stretch' }]}>
           <Text style={[styles.label, { color: colors.text, marginBottom: 12 }]}>Fazer doação (PIX)</Text>
           <Image
-            source={require('../assets/qrcode-pix.png')}
+            source={require('../../assets/qrcode-pix.png')}
             style={styles.qrImage}
             resizeMode="contain"
           />

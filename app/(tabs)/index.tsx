@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,21 +8,21 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { useRouter, useFocusEffect } from 'expo-router';
-import EmotionWheel from '../components/EmotionWheel';
-import IntensityPicker from '../components/IntensityPicker';
-import CustomEmotionInput from '../components/CustomEmotionInput';
-import NoteInput from '../components/NoteInput';
+import { useFocusEffect } from 'expo-router';
+import EmotionWheel from '../../components/EmotionWheel';
+import IntensityPicker from '../../components/IntensityPicker';
+import CustomEmotionInput from '../../components/CustomEmotionInput';
+import NoteInput from '../../components/NoteInput';
 import {
   addEntry,
   addCustomEmotion,
   getCustomEmotions,
-  getEntries,
-} from '../storage/moodStorage';
-import { Emotion, MoodEntry } from '../types';
+} from '../../storage/moodStorage';
+import { Emotion, MoodEntry } from '../../types';
+import { useTheme } from '../../contexts/ThemeContext';
 
 export default function HomeScreen() {
-  const router = useRouter();
+  const { colors } = useTheme();
 
   const [step, setStep] = useState<'wheel' | 'intensity' | 'note'>('wheel');
   const [selectedEmotion, setSelectedEmotion] = useState<Emotion | null>(null);
@@ -30,7 +30,6 @@ export default function HomeScreen() {
   const [note, setNote] = useState('');
   const [customEmotions, setCustomEmotions] = useState<Emotion[]>([]);
   const [showCustomInput, setShowCustomInput] = useState(false);
-  const [totalEntries, setTotalEntries] = useState(0);
 
   useFocusEffect(
     useCallback(() => {
@@ -39,9 +38,8 @@ export default function HomeScreen() {
   );
 
   async function loadData() {
-    const [custom, entries] = await Promise.all([getCustomEmotions(), getEntries()]);
+    const custom = await getCustomEmotions();
     setCustomEmotions(custom);
-    setTotalEntries(entries.length);
   }
 
   function handleSelectEmotion(emotion: Emotion) {
@@ -66,7 +64,6 @@ export default function HomeScreen() {
       timestamp: new Date().toISOString(),
     };
     await addEntry(entry);
-    setTotalEntries(prev => prev + 1);
     setStep('wheel');
     setSelectedEmotion(null);
     setNote('');
@@ -74,12 +71,16 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+    <ScrollView
+      contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}
+      keyboardShouldPersistTaps="handled"
+    >
       {step === 'wheel' && (
         <>
           <View style={styles.logoContainer}>
-            <Text style={styles.logoText}>PsyMap</Text>
-            <Text style={styles.subtitle}>Mapeie suas emoções</Text>
+            <Image source={require('../../assets/icon.png')} style={styles.logoImage} resizeMode="contain" />
+            <Text style={[styles.logoText, { color: colors.accent }]}>PsyMap</Text>
+            <Text style={[styles.subtitle, { color: colors.textDim }]}>Mapeie suas emoções</Text>
           </View>
 
           <EmotionWheel
@@ -94,44 +95,29 @@ export default function HomeScreen() {
             onSave={handleSaveCustom}
           />
 
-          <View style={styles.bottomActions}>
-            <TouchableOpacity
-              style={styles.navBtn}
-              onPress={() => router.push('/history')}
-            >
-              <Text style={styles.navBtnText}>
-                📋 Histórico ({totalEntries})
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navBtn}
-              onPress={() => router.push('/statistics' as any)}
-            >
-              <Text style={styles.navBtnText}>📊 Estatísticas</Text>
-            </TouchableOpacity>
-          </View>
+
         </>
       )}
 
       {step === 'intensity' && selectedEmotion && (
         <View style={styles.stepContainer}>
           <Text style={styles.selectedEmoji}>{selectedEmotion.emoji}</Text>
-          <Text style={styles.selectedLabel}>{selectedEmotion.label}</Text>
+          <Text style={[styles.selectedLabel, { color: colors.text }]}>{selectedEmotion.label}</Text>
 
           <IntensityPicker value={intensity} onChange={setIntensity} />
 
           <View style={styles.stepButtons}>
             <TouchableOpacity
-              style={styles.backBtn}
+              style={[styles.backBtn, { borderColor: colors.borderMuted }]}
               onPress={() => setStep('wheel')}
             >
-              <Text style={styles.backBtnText}>Voltar</Text>
+              <Text style={[styles.backBtnText, { color: colors.textSecondary }]}>Voltar</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.nextBtn}
+              style={[styles.nextBtn, { backgroundColor: colors.accent }]}
               onPress={() => setStep('note')}
             >
-              <Text style={styles.nextBtnText}>Continuar</Text>
+              <Text style={[styles.nextBtnText, { color: colors.textOnAccent }]}>Continuar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -140,7 +126,7 @@ export default function HomeScreen() {
       {step === 'note' && (
         <View style={styles.stepContainer}>
           <Text style={styles.selectedEmoji}>{selectedEmotion?.emoji}</Text>
-          <Text style={styles.selectedLabel}>
+          <Text style={[styles.selectedLabel, { color: colors.text }]}>
             {selectedEmotion?.label} — {intensity}/5
           </Text>
 
@@ -148,13 +134,13 @@ export default function HomeScreen() {
 
           <View style={styles.stepButtons}>
             <TouchableOpacity
-              style={styles.backBtn}
+              style={[styles.backBtn, { borderColor: colors.borderMuted }]}
               onPress={() => setStep('intensity')}
             >
-              <Text style={styles.backBtnText}>Voltar</Text>
+              <Text style={[styles.backBtnText, { color: colors.textSecondary }]}>Voltar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.registerBtn} onPress={handleRegister}>
-              <Text style={styles.registerBtnText}>Registrar</Text>
+            <TouchableOpacity style={[styles.registerBtn, { backgroundColor: colors.accent }]} onPress={handleRegister}>
+              <Text style={[styles.registerBtnText, { color: colors.textOnAccent }]}>Registrar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -173,15 +159,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
   },
+  logoImage: {
+    width: 80,
+    height: 80,
+    marginBottom: 8,
+  },
   logoText: {
     fontSize: 32,
     fontWeight: '700',
-    color: '#e94560',
     letterSpacing: 1,
   },
   subtitle: {
     fontSize: 14,
-    color: '#666',
     marginTop: 4,
   },
   stepContainer: {
@@ -195,7 +184,6 @@ const styles = StyleSheet.create({
   selectedLabel: {
     fontSize: 22,
     fontWeight: '600',
-    color: '#e0e0e0',
     marginBottom: 24,
   },
   stepButtons: {
@@ -208,20 +196,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#444',
   },
   backBtnText: {
-    color: '#888',
     fontSize: 16,
   },
   nextBtn: {
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 10,
-    backgroundColor: '#e94560',
   },
   nextBtnText: {
-    color: '#fff',
     fontSize: 16,
     fontWeight: '600',
   },
@@ -229,28 +213,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 10,
-    backgroundColor: '#e94560',
   },
   registerBtnText: {
-    color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-  },
-  bottomActions: {
-    alignItems: 'center',
-    marginTop: 32,
-  },
-  navBtn: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 10,
-    backgroundColor: '#16213e',
-    borderWidth: 1,
-    borderColor: '#0f3460',
-    marginBottom: 10,
-  },
-  navBtnText: {
-    color: '#e0e0e0',
-    fontSize: 16,
   },
 });

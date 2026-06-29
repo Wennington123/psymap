@@ -1,6 +1,5 @@
 import { SummaryStats, EmotionStat, TimeSeriesPoint, DayOfWeekStat, HourOfDayStat } from './stats';
-
-const PALLETTE = ['#e94560', '#f77f00', '#fcbf49', '#06d6a0', '#118ab2', '#9b5de5', '#f15bb5', '#073b4c'];
+import { ThemeColors } from '../constants/colors';
 
 const ESC = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -14,6 +13,7 @@ interface ReportParams {
   hourOfDay: HourOfDayStat[];
   custom: EmotionStat[];
   logoSrc?: string;
+  colors: ThemeColors;
 }
 
 export function generateReportHtml({
@@ -26,9 +26,11 @@ export function generateReportHtml({
   hourOfDay,
   custom,
   logoSrc,
+  colors,
 }: ReportParams): string {
   const exportedAt = new Date().toLocaleString('pt-BR');
   const displayName = userName.trim() || 'Anônimo';
+  const p = colors.chartPalette;
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -40,56 +42,56 @@ export function generateReportHtml({
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    color: #1a1a2e;
-    background: #fff;
+    color: ${ESC(colors.text)};
+    background: ${ESC(colors.background)};
     padding: 32px 24px 48px;
     max-width: 680px;
     margin: 0 auto;
     font-size: 13px;
     line-height: 1.5;
   }
-  h1 { font-size: 22px; font-weight: 700; color: #e94560; margin-bottom: 2px; }
-  h2 { font-size: 15px; font-weight: 600; color: #1a1a2e; margin: 24px 0 10px; padding-bottom: 4px; border-bottom: 2px solid #e94560; }
-  .sub { color: #666; font-size: 12px; margin-bottom: 4px; }
-  .meta { color: #888; font-size: 11px; margin-bottom: 18px; }
+  h1 { font-size: 22px; font-weight: 700; color: ${ESC(colors.accent)}; margin-bottom: 2px; }
+  h2 { font-size: 15px; font-weight: 600; color: ${ESC(colors.text)}; margin: 24px 0 10px; padding-bottom: 4px; border-bottom: 2px solid ${ESC(colors.accent)}; }
+  .sub { color: ${ESC(colors.textSecondary)}; font-size: 12px; margin-bottom: 4px; }
+  .meta { color: ${ESC(colors.textDim)}; font-size: 11px; margin-bottom: 18px; }
 
   .cards { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
   .card {
-    background: #f5f5f9;
+    background: ${ESC(colors.surface)};
     border-radius: 8px;
     padding: 10px 14px;
     min-width: 110px;
     flex: 1 1 auto;
     text-align: center;
-    border: 1px solid #e0e0e8;
+    border: 1px solid ${ESC(colors.borderAlt)};
   }
-  .card .num { font-size: 24px; font-weight: 700; color: #e94560; }
-  .card .lbl { font-size: 10px; color: #888; margin-top: 2px; }
+  .card .num { font-size: 24px; font-weight: 700; color: ${ESC(colors.accent)}; }
+  .card .lbl { font-size: 10px; color: ${ESC(colors.textSecondary)}; margin-top: 2px; }
   .card .emoji { font-size: 28px; }
-  .card .sub-text { font-size: 12px; color: #444; font-weight: 600; margin-top: 2px; }
+  .card .sub-text { font-size: 12px; color: ${ESC(colors.text)}; font-weight: 600; margin-top: 2px; }
 
   .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
   .bar-row .emoji-span { font-size: 16px; width: 28px; text-align: center; flex-shrink: 0; }
-  .bar-row .label-span { font-size: 11px; color: #444; width: 90px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .bar-row .bar-bg { flex: 1; height: 18px; background: #ececf0; border-radius: 4px; overflow: hidden; }
+  .bar-row .label-span { font-size: 11px; color: ${ESC(colors.text)}; width: 90px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-row .bar-bg { flex: 1; height: 18px; background: ${ESC(colors.borderAlt)}; border-radius: 4px; overflow: hidden; }
   .bar-row .bar-fill { height: 100%; border-radius: 4px; text-align: right; padding-right: 6px; font-size: 10px; font-weight: 600; color: #fff; line-height: 18px; white-space: nowrap; }
-  .bar-row .count { font-size: 12px; color: #666; width: 36px; text-align: right; flex-shrink: 0; }
+  .bar-row .count { font-size: 12px; color: ${ESC(colors.textDim)}; width: 36px; text-align: right; flex-shrink: 0; }
 
   table { width: 100%; border-collapse: collapse; font-size: 11px; }
-  th, td { padding: 5px 8px; border-bottom: 1px solid #e0e0e8; text-align: left; }
-  th { color: #888; font-weight: 600; font-size: 10px; text-transform: uppercase; }
-  td { color: #333; }
+  th, td { padding: 5px 8px; border-bottom: 1px solid ${ESC(colors.borderAlt)}; text-align: left; }
+  th { color: ${ESC(colors.textSecondary)}; font-weight: 600; font-size: 10px; text-transform: uppercase; }
+  td { color: ${ESC(colors.text)}; }
   .td-num { text-align: right; font-variant-numeric: tabular-nums; }
   .td-emoji { font-size: 15px; text-align: center; }
 
   .dow-bars { display: flex; align-items: flex-end; gap: 6px; height: 100px; margin-top: 8px; }
   .dow-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .dow-fill { width: 100%; border-radius: 4px 4px 0 0; min-height: 4px; }
-  .dow-label { font-size: 9px; color: #888; }
-  .dow-val { font-size: 10px; color: #444; font-weight: 600; }
+  .dow-label { font-size: 9px; color: ${ESC(colors.textSecondary)}; }
+  .dow-val { font-size: 10px; color: ${ESC(colors.text)}; font-weight: 600; }
 
-  .footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #e0e0e8; font-size: 10px; color: #aaa; text-align: center; }
-  .footer a { color: #aaa; }
+  .footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid ${ESC(colors.borderAlt)}; font-size: 10px; color: ${ESC(colors.textDim)}; text-align: center; }
+  .footer a { color: ${ESC(colors.textDim)}; }
 
   @media print {
     body { padding: 0; }
@@ -106,12 +108,12 @@ ${logoSrc ? `<div style="text-align:center;margin-bottom:12px;"><img src="${ESC(
 <div class="meta">Exportado em ${ESC(exportedAt)} · Período: ${ESC(rangeLabel)}</div>
 
 ${summaryHtml(summary)}
-${frequencyHtml(frequency)}
+${frequencyHtml(frequency, p)}
 ${distributionTable(frequency)}
 ${intensityTable(trend)}
-${dayOfWeekHtml(dayOfWeek)}
+${dayOfWeekHtml(dayOfWeek, p)}
 ${hourOfDayHtml(hourOfDay)}
-${custom.length > 0 ? customHtml(custom) : ''}
+${custom.length > 0 ? customHtml(custom, p) : ''}
 
 <div class="footer">
   Gerado por PsyMap — app gratuito e open-source (GPL-3.0)<br>
@@ -134,7 +136,7 @@ function summaryHtml(s: SummaryStats): string {
 </div>`;
 }
 
-function frequencyHtml(stats: EmotionStat[]): string {
+function frequencyHtml(stats: EmotionStat[], p: readonly string[]): string {
   if (stats.length === 0) return '';
   const max = stats[0].count;
   return `<h2>Frequência de Emoções</h2>
@@ -143,7 +145,7 @@ ${stats.map((s, i) => {
   return `<div class="bar-row">
   <span class="emoji-span">${s.emoji}</span>
   <span class="label-span">${ESC(s.label)}</span>
-  <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${PALLETTE[i % PALLETTE.length]}">${s.percentage > 5 ? s.percentage + '%' : ''}</div></div>
+  <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${p[i % p.length]}">${s.percentage > 5 ? s.percentage + '%' : ''}</div></div>
   <span class="count">${s.count}</span>
 </div>`;
 }).join('')}`;
@@ -180,7 +182,7 @@ ${points.map((p) => {
 </table>`;
 }
 
-function dayOfWeekHtml(stats: DayOfWeekStat[]): string {
+function dayOfWeekHtml(stats: DayOfWeekStat[], p: readonly string[]): string {
   if (stats.length === 0) return '';
   const max = Math.max(...stats.map((s) => s.avgIntensity), 1);
   return `<h2>Humor por Dia da Semana</h2>
@@ -190,7 +192,7 @@ ${stats.map((s, i) => {
   const hasData = s.count > 0;
   return `<div class="dow-col">
     <div class="dow-val">${hasData ? s.avgIntensity : ''}</div>
-    <div class="dow-fill" style="height:${h}px;background:${hasData ? PALLETTE[i % PALLETTE.length] : '#ccc'}"></div>
+    <div class="dow-fill" style="height:${h}px;background:${hasData ? p[i % p.length] : '#ccc'}"></div>
     <div class="dow-label">${s.dayLabel}</div>
   </div>`;
 }).join('')}
@@ -211,6 +213,6 @@ ${active.map((s) => `<tr>
 </table>`;
 }
 
-function customHtml(stats: EmotionStat[]): string {
-  return `<h2>Emoções Personalizadas</h2>${frequencyHtml(stats)}`;
+function customHtml(stats: EmotionStat[], p: readonly string[]): string {
+  return `<h2>Emoções Personalizadas</h2>${frequencyHtml(stats, p)}`;
 }

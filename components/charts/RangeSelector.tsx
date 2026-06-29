@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { DateRangePreset, RANGE_LABELS } from '../../lib/dateRange';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface Props {
   selected: DateRangePreset;
@@ -10,16 +11,24 @@ interface Props {
 const OPTIONS: DateRangePreset[] = ['all', '7d', '30d', '90d'];
 
 export default function RangeSelector({ selected, onSelect }: Props) {
+  const { colors } = useTheme();
+
   return (
     <View style={styles.container}>
       {OPTIONS.map((opt) => (
         <TouchableOpacity
           key={opt}
-          style={[styles.segment, selected === opt && styles.segmentActive]}
+          style={[
+            styles.segment,
+            {
+              backgroundColor: selected === opt ? colors.accent : colors.surface,
+              borderColor: selected === opt ? colors.accent : colors.border,
+            },
+          ]}
           onPress={() => onSelect(opt)}
           activeOpacity={0.7}
         >
-          <Text style={[styles.segmentText, selected === opt && styles.segmentTextActive]}>
+          <Text style={[styles.segmentText, { color: selected === opt ? colors.textOnAccent : colors.textSecondary }]}>
             {RANGE_LABELS[opt]}
           </Text>
         </TouchableOpacity>
@@ -40,20 +49,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 8,
-    backgroundColor: '#16213e',
     borderWidth: 1,
-    borderColor: '#0f3460',
-  },
-  segmentActive: {
-    backgroundColor: '#e94560',
-    borderColor: '#e94560',
   },
   segmentText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#888',
-  },
-  segmentTextActive: {
-    color: '#fff',
   },
 });

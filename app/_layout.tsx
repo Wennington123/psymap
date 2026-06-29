@@ -1,22 +1,23 @@
-import { Stack } from 'expo-router';
+import { Slot } from 'expo-router';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
+
+function AppContent() {
+  const { colors } = useTheme();
+
+  return (
+    <>
+      <StatusBar style={colors.statusBar as 'light' | 'dark'} />
+      <Slot />
+    </>
+  );
+}
 
 export default function RootLayout() {
   return (
-    <>
-      <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: '#1a1a2e' },
-          headerTintColor: '#e0e0e0',
-          headerTitleStyle: { fontWeight: '600' },
-          contentStyle: { backgroundColor: '#1a1a2e' },
-        }}
-      >
-        <Stack.Screen name="index" options={{ title: 'PsyMap' }} />
-        <Stack.Screen name="history" options={{ title: 'Histórico' }} />
-        <Stack.Screen name="statistics" options={{ title: 'Estatísticas' }} />
-      </Stack>
-    </>
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }

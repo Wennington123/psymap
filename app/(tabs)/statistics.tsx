@@ -13,9 +13,9 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
-import { getEntries } from '../storage/moodStorage';
-import { MoodEntry } from '../types';
-import { DateRangePreset, filterByRange, getRangeLabel } from '../lib/dateRange';
+import { getEntries } from '../../storage/moodStorage';
+import { MoodEntry } from '../../types';
+import { DateRangePreset, filterByRange, getRangeLabel } from '../../lib/dateRange';
 import {
   computeSummary,
   computeEmotionFrequency,
@@ -23,20 +23,22 @@ import {
   computeDayOfWeek,
   computeHourOfDay,
   computeCustomStats,
-} from '../lib/stats';
-import { generateReportHtml } from '../lib/pdfReport';
-import RangeSelector from '../components/charts/RangeSelector';
-import StatsSummaryCards from '../components/charts/StatsSummaryCards';
-import StatsSection from '../components/charts/StatsSection';
-import EmotionFrequencyChart from '../components/charts/EmotionFrequencyChart';
-import MoodDistributionChart from '../components/charts/MoodDistributionChart';
-import IntensityTrendChart from '../components/charts/IntensityTrendChart';
-import DayOfWeekChart from '../components/charts/DayOfWeekChart';
-import HourOfDayChart from '../components/charts/HourOfDayChart';
-import CustomEmotionBreakdown from '../components/charts/CustomEmotionBreakdown';
-import NamePromptModal from '../components/NamePromptModal';
+} from '../../lib/stats';
+import { generateReportHtml } from '../../lib/pdfReport';
+import { useTheme } from '../../contexts/ThemeContext';
+import RangeSelector from '../../components/charts/RangeSelector';
+import StatsSummaryCards from '../../components/charts/StatsSummaryCards';
+import StatsSection from '../../components/charts/StatsSection';
+import EmotionFrequencyChart from '../../components/charts/EmotionFrequencyChart';
+import MoodDistributionChart from '../../components/charts/MoodDistributionChart';
+import IntensityTrendChart from '../../components/charts/IntensityTrendChart';
+import DayOfWeekChart from '../../components/charts/DayOfWeekChart';
+import HourOfDayChart from '../../components/charts/HourOfDayChart';
+import CustomEmotionBreakdown from '../../components/charts/CustomEmotionBreakdown';
+import NamePromptModal from '../../components/NamePromptModal';
 
 export default function StatisticsScreen() {
+  const { colors } = useTheme();
   const [entries, setEntries] = useState<MoodEntry[]>([]);
   const [range, setRange] = useState<DateRangePreset>('all');
   const [showNamePrompt, setShowNamePrompt] = useState(false);
@@ -113,6 +115,8 @@ export default function StatisticsScreen() {
         dayOfWeek: dataRef.current.dayOfWeek,
         hourOfDay: dataRef.current.hourOfDay,
         custom: dataRef.current.custom,
+        logoSrc,
+        colors,
       });
 
       const { uri } = await Print.printToFileAsync({ html });
@@ -135,19 +139,22 @@ export default function StatisticsScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      contentContainerStyle={styles.content}
+    >
       <RangeSelector selected={range} onSelect={setRange} />
 
       <TouchableOpacity
-        style={[styles.exportBtn, (!hasData || exporting) && styles.exportBtnDisabled]}
+        style={[styles.exportBtn, { backgroundColor: colors.accent }, (!hasData || exporting) && styles.exportBtnDisabled]}
         onPress={handleOpenNamePrompt}
         disabled={!hasData || exporting}
         activeOpacity={0.7}
       >
         {exporting ? (
-          <ActivityIndicator color="#fff" size="small" />
+          <ActivityIndicator color={colors.textOnAccent} size="small" />
         ) : (
-          <Text style={styles.exportBtnText}>📄 Exportar PDF</Text>
+          <Text style={[styles.exportBtnText, { color: colors.textOnAccent }]}>📄 Exportar PDF</Text>
         )}
       </TouchableOpacity>
 
@@ -195,7 +202,6 @@ export default function StatisticsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
   },
   content: {
     paddingBottom: 40,
@@ -205,14 +211,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingVertical: 13,
     borderRadius: 10,
-    backgroundColor: '#e94560',
     alignItems: 'center',
   },
   exportBtnDisabled: {
     opacity: 0.4,
   },
   exportBtnText: {
-    color: '#fff',
     fontSize: 16,
     fontWeight: '700',
   },

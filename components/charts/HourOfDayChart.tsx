@@ -2,12 +2,15 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { HourOfDayStat } from '../../lib/stats';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface Props {
   data: HourOfDayStat[];
 }
 
 export default function HourOfDayChart({ data }: Props) {
+  const { colors } = useTheme();
+
   if (data.length === 0) return null;
 
   const lineData = data.map((stat) => ({
@@ -23,31 +26,31 @@ export default function HourOfDayChart({ data }: Props) {
         data={lineData}
         width={300}
         height={160}
-        color="#e94560"
+        color={colors.accent}
         thickness={2}
-        startFillColor="#e9456020"
-        endFillColor="#e9456000"
+        startFillColor={colors.accent + '20'}
+        endFillColor={colors.accent + '00'}
         startOpacity={0.3}
         endOpacity={0}
         spacing={10}
         initialSpacing={10}
-        yAxisColor="#2a2a4e"
-        xAxisColor="#2a2a4e"
-        yAxisTextStyle={{ color: '#666', fontSize: 9 }}
-        xAxisLabelTextStyle={{ color: '#666', fontSize: 9 }}
+        yAxisColor={colors.chartAxis}
+        xAxisColor={colors.chartAxis}
+        yAxisTextStyle={{ color: colors.textDim, fontSize: 9 }}
+        xAxisLabelTextStyle={{ color: colors.textDim, fontSize: 9 }}
         noOfSections={4}
         maxValue={maxVal > 5 ? maxVal : 5}
         stepValue={1}
         curved
         isAnimated
         hideDataPoints
-        rulesColor="#2a2a4e"
+        rulesColor={colors.chartAxis}
         rulesType="solid"
         showReferenceLine1
         referenceLine1Position={0}
-        referenceLine1Config={{ color: '#2a2a4e', thickness: 1 }}
+        referenceLine1Config={{ color: colors.chartAxis, thickness: 1 }}
       />
-      <Text style={styles.hint}>Intensidade média por hora do dia</Text>
+      <Text style={[styles.hint, { color: colors.textDim }]}>Intensidade média por hora do dia</Text>
     </View>
   );
 }
@@ -57,16 +60,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
   },
-  axisLabel: {
-    color: '#666',
-    fontSize: 9,
-  },
-  labelText: {
-    color: '#666',
-    fontSize: 9,
-  },
   hint: {
-    color: '#555',
     fontSize: 11,
     marginTop: 8,
   },

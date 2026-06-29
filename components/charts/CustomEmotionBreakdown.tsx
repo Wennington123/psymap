@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import EmotionFrequencyChart from './EmotionFrequencyChart';
+import { View, Text, StyleSheet } from 'react-native';
 import { EmotionStat } from '../../lib/stats';
-import StatsSection from './StatsSection';
+import EmotionFrequencyChart from './EmotionFrequencyChart';
 
 interface Props {
   data: EmotionStat[];
@@ -10,7 +9,6 @@ interface Props {
 
 export default function CustomEmotionBreakdown({ data }: Props) {
   if (data.length === 0) return null;
-
   return (
     <View style={styles.container}>
       <EmotionFrequencyChart data={data} />
@@ -19,5 +17,7 @@ export default function CustomEmotionBreakdown({ data }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    alignItems: 'center',
+  },
 });

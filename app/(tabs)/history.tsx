@@ -8,9 +8,10 @@ import {
   SectionList,
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
-import MoodLogItem from '../components/MoodLogItem';
-import { getEntries, deleteEntry } from '../storage/moodStorage';
-import { MoodEntry } from '../types';
+import MoodLogItem from '../../components/MoodLogItem';
+import { getEntries, deleteEntry } from '../../storage/moodStorage';
+import { MoodEntry } from '../../types';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface Section {
   title: string;
@@ -19,6 +20,7 @@ interface Section {
 
 export default function HistoryScreen() {
   const router = useRouter();
+  const { colors } = useTheme();
   const [sections, setSections] = useState<Section[]>([]);
 
   useFocusEffect(
@@ -67,12 +69,12 @@ export default function HistoryScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {sections.length === 0 ? (
         <View style={styles.empty}>
           <Text style={styles.emptyEmoji}>📝</Text>
-          <Text style={styles.emptyText}>Nenhum registro ainda</Text>
-          <Text style={styles.emptyHint}>Volte à tela inicial e registre sua primeira emoção</Text>
+          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>Nenhum registro ainda</Text>
+          <Text style={[styles.emptyHint, { color: colors.textDim }]}>Volte à tela inicial e registre sua primeira emoção</Text>
         </View>
       ) : (
         <SectionList
@@ -87,18 +89,21 @@ export default function HistoryScreen() {
             </TouchableOpacity>
           )}
           renderSectionHeader={({ section: { title } }) => (
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionHeaderText}>{title}</Text>
+            <View style={[styles.sectionHeader, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
+              <Text style={[styles.sectionHeaderText, { color: colors.accent }]}>{title}</Text>
             </View>
           )}
           contentContainerStyle={{ paddingBottom: 24 }}
           stickySectionHeadersEnabled
           ListHeaderComponent={
             <View style={styles.topBar}>
-              <Text style={styles.totalText}>
+              <Text style={[styles.totalText, { color: colors.textDim }]}>
                 {sections.reduce((sum, s) => sum + s.data.length, 0)} registros
               </Text>
-              <TouchableOpacity onPress={() => router.push('/statistics' as any)} style={styles.statsBtn}>
+              <TouchableOpacity
+                onPress={() => router.push('/statistics' as any)}
+                style={[styles.statsBtn, { backgroundColor: colors.surface, borderColor: colors.border }]}
+              >
                 <Text style={styles.statsBtnText}>📊</Text>
               </TouchableOpacity>
             </View>
@@ -112,7 +117,6 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
   },
   topBar: {
     flexDirection: 'row',
@@ -123,30 +127,24 @@ const styles = StyleSheet.create({
   },
   totalText: {
     fontSize: 14,
-    color: '#666',
   },
   statsBtn: {
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 8,
-    backgroundColor: '#16213e',
     borderWidth: 1,
-    borderColor: '#0f3460',
   },
   statsBtnText: {
     fontSize: 18,
   },
   sectionHeader: {
-    backgroundColor: '#1a1a2e',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#0f3460',
   },
   sectionHeaderText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#e94560',
     textTransform: 'capitalize',
   },
   empty: {
@@ -161,12 +159,10 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 18,
-    color: '#888',
     fontWeight: '600',
   },
   emptyHint: {
     fontSize: 14,
-    color: '#555',
     marginTop: 8,
     textAlign: 'center',
   },

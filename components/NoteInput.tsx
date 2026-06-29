@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface Props {
   value: string;
@@ -8,15 +9,17 @@ interface Props {
 }
 
 export default function NoteInput({ value, onChange, visible }: Props) {
+  const { colors } = useTheme();
+
   if (!visible) return null;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Adicionar uma nota (opcional)</Text>
+      <Text style={[styles.title, { color: colors.textSecondary }]}>Adicionar uma nota (opcional)</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
         placeholder="O que está acontecendo?"
-        placeholderTextColor="#555"
+        placeholderTextColor={colors.textDim}
         value={value}
         onChangeText={onChange}
         multiline
@@ -34,17 +37,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#a0a0b0',
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#16213e',
     borderRadius: 10,
     padding: 12,
     fontSize: 15,
-    color: '#e0e0e0',
     borderWidth: 1,
-    borderColor: '#0f3460',
     minHeight: 70,
   },
 });

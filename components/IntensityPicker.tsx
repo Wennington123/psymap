@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface Props {
   value: number;
@@ -9,9 +10,11 @@ interface Props {
 const LABELS = ['Muito fraco', 'Fraco', 'Moderado', 'Forte', 'Muito intenso'];
 
 export default function IntensityPicker({ value, onChange }: Props) {
+  const { colors } = useTheme();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Qual a intensidade?</Text>
+      <Text style={[styles.title, { color: colors.text }]}>Qual a intensidade?</Text>
       <View style={styles.dots}>
         {[1, 2, 3, 4, 5].map((level) => (
           <TouchableOpacity
@@ -19,12 +22,14 @@ export default function IntensityPicker({ value, onChange }: Props) {
             onPress={() => onChange(level)}
             style={[
               styles.dot,
-              level <= value ? styles.dotActive : styles.dotInactive,
+              level <= value
+                ? { backgroundColor: colors.accent, borderColor: colors.accent }
+                : { backgroundColor: 'transparent', borderColor: colors.borderMuted },
             ]}
           />
         ))}
       </View>
-      <Text style={styles.label}>{LABELS[value - 1]}</Text>
+      <Text style={[styles.label, { color: colors.textSecondary }]}>{LABELS[value - 1]}</Text>
     </View>
   );
 }
@@ -37,7 +42,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#e0e0e0',
     marginBottom: 16,
   },
   dots: {
@@ -50,17 +54,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 2,
   },
-  dotActive: {
-    backgroundColor: '#e94560',
-    borderColor: '#e94560',
-  },
-  dotInactive: {
-    backgroundColor: 'transparent',
-    borderColor: '#444',
-  },
   label: {
     fontSize: 13,
-    color: '#888',
     marginTop: 12,
   },
 });
