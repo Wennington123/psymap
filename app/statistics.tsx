@@ -92,12 +92,12 @@ export default function StatisticsScreen() {
     try {
       let logoSrc: string | undefined;
       try {
-        const logoUri = FileSystem.documentDirectory + '../custom/icon.png';
-        const logoB64 = await FileSystem.readAsStringAsync(
-          (await Asset.fromModule(require('../assets/icon.png'))).localUri || '',
-          { encoding: FileSystem.EncodingType.Base64 }
-        );
-        if (logoB64) {
+        const asset = Asset.fromModule(require('../assets/icon.png'));
+        await asset.downloadAsync();
+        if (asset.localUri) {
+          const logoB64 = await FileSystem.readAsStringAsync(asset.localUri, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
           logoSrc = 'data:image/png;base64,' + logoB64;
         }
       } catch (_) {
