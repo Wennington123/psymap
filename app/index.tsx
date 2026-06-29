@@ -95,12 +95,18 @@ export default function HomeScreen() {
 
           <View style={styles.bottomActions}>
             <TouchableOpacity
-              style={styles.historyBtn}
+              style={styles.navBtn}
               onPress={() => router.push('/history')}
             >
-              <Text style={styles.historyBtnText}>
+              <Text style={styles.navBtnText}>
                 📋 Histórico ({totalEntries})
               </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navBtn}
+              onPress={() => router.push('/statistics' as any)}
+            >
+              <Text style={styles.navBtnText}>📊 Estatísticas</Text>
             </TouchableOpacity>
           </View>
         </>
@@ -233,15 +239,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 32,
   },
-  historyBtn: {
+  navBtn: {
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 10,
     backgroundColor: '#16213e',
     borderWidth: 1,
     borderColor: '#0f3460',
+    marginBottom: 10,
   },
-  historyBtnText: {
+  navBtnText: {
     color: '#e0e0e0',
     fontSize: 16,
   },

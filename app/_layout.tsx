@@ -15,6 +15,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" options={{ title: 'PsyMap' }} />
         <Stack.Screen name="history" options={{ title: 'Histórico' }} />
+        <Stack.Screen name="statistics" options={{ title: 'Estatísticas' }} />
       </Stack>
     </>
   );

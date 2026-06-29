@@ -9,7 +9,7 @@ import {
   SectionList,
   Platform,
 } from 'react-native';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import MoodLogItem from '../components/MoodLogItem';
@@ -22,6 +22,7 @@ interface Section {
 }
 
 export default function HistoryScreen() {
+  const router = useRouter();
   const [sections, setSections] = useState<Section[]>([]);
 
   useFocusEffect(
@@ -129,12 +130,16 @@ export default function HistoryScreen() {
               <Text style={styles.totalText}>
                 {sections.reduce((sum, s) => sum + s.data.length, 0)} registros
               </Text>
-              {exportBtn}
+              <View style={styles.topButtons}>
+                {exportBtn}
+                <TouchableOpacity onPress={() => router.push('/statistics' as any)} style={styles.statsBtn}>
+                  <Text style={styles.statsBtnText}>📊</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           }
         />
       )}
-      {sections.length > 0 && sections[0]?.data.length === 0 ? null : null}
     </View>
   );
 }
@@ -201,5 +206,21 @@ const styles = StyleSheet.create({
     color: '#555',
     marginTop: 8,
     textAlign: 'center',
+  },
+  topButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  statsBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: '#16213e',
+    borderWidth: 1,
+    borderColor: '#0f3460',
+  },
+  statsBtnText: {
+    fontSize: 18,
   },
 });
