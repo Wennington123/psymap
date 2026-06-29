@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#1a1a2e"
       },
-      "package": "org.psymap.app"
+      "package": "org.psymap.app",
+      "versionCode": 1
     },
     "plugins": [
       "expo-router",

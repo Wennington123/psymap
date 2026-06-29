@@ -1,0 +1,15 @@
+O PsyMap é um diário emocional minimalista e 100% offline que te ajuda a entender como você se sente.
+
+<b>Principais funcionalidades:</b>
+
+▪ <b>Roda de emoções</b> — selecione emoções base ou crie as suas
+▪ <b>Intensidade</b> — registre a força de cada sentimento (1 a 5)
+▪ <b>Notas</b> — adicione anotações a cada registro
+▪ <b>Histórico</b> — visualize, filtre e exclua entradas passadas
+▪ <b>Estatísticas</b> — gráficos de frequência, distribuição, tendência, dias da semana e horários
+▪ <b>Exportar PDF</b> — gere relatórios para compartilhar com seu terapeuta
+▪ <b>3 temas</b> — Dracula, Escuro e Claro
+
+<b>Privacidade:</b> O PsyMap não coleta, armazena ou transmite nenhum dado pessoal. Tudo fica salvo apenas no seu dispositivo. Sem login, sem nuvem, sem telemetria.
+
+<b>100% gratuito e open source (GPLv3).</b> Distribuído sem rastreadores, anúncios ou dependências proprietárias.

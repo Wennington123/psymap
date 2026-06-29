@@ -1,0 +1,3 @@
+Substitua este arquivo por screenshots reais do app (use os prints do celular).
+Recomendado: 1080x1920, PNG sem transparência.
+Nomeie sequencialmente: 1.png, 2.png, 3.png, etc.

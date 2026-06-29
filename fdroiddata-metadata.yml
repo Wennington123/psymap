@@ -1,0 +1,37 @@
+AntiFeatures: []
+Categories:
+  - Science & Education
+License: GPL-3.0-only
+AuthorName: Wennington Dias
+AuthorEmail: wenningtondiasx25@gmail.com
+WebSite: https://gitlab.com/wenningtondiasx25/psymap
+SourceCode: https://gitlab.com/wenningtondiasx25/psymap
+IssueTracker: https://gitlab.com/wenningtondiasx25/psymap/issues
+Changelog: https://gitlab.com/wenningtondiasx25/psymap/-/releases
+Donate: null
+
+RepoType: git
+Repo: https://gitlab.com/wenningtondiasx25/psymap.git
+
+Builds:
+  - versionName: '1.0.0'
+    versionCode: 1
+    commit: v1.0.0
+    sudo:
+      - apt-get update
+      - apt-get install -y nodejs npm
+    prebuild:
+      - npm ci
+      - npx expo prebuild --platform android --no-install
+    build:
+      - cd android && ./gradlew assembleRelease
+
+AllowedAPKSigningKeys: []
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+UpdateCheckData: app.json|android\.versionCode\s*:\s*(\d+)
+VercodeOperation:
+  - '%c'
+CurrentVersion: '1.0.0'
+CurrentVersionCode: 1
