@@ -1,9 +1,21 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import { useFocusEffect } from 'expo-router';
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
+import { Asset } from 'expo-asset';
 import { getEntries } from '../storage/moodStorage';
 import { MoodEntry } from '../types';
-import { DateRangePreset, filterByRange } from '../lib/dateRange';
+import { DateRangePreset, filterByRange, getRangeLabel } from '../lib/dateRange';
 import {
   computeSummary,
   computeEmotionFrequency,
@@ -12,6 +24,7 @@ import {
   computeHourOfDay,
   computeCustomStats,
 } from '../lib/stats';
+import { generateReportHtml } from '../lib/pdfReport';
 import RangeSelector from '../components/charts/RangeSelector';
 import StatsSummaryCards from '../components/charts/StatsSummaryCards';
 import StatsSection from '../components/charts/StatsSection';
@@ -21,10 +34,22 @@ import IntensityTrendChart from '../components/charts/IntensityTrendChart';
 import DayOfWeekChart from '../components/charts/DayOfWeekChart';
 import HourOfDayChart from '../components/charts/HourOfDayChart';
 import CustomEmotionBreakdown from '../components/charts/CustomEmotionBreakdown';
+import NamePromptModal from '../components/NamePromptModal';
 
 export default function StatisticsScreen() {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
   const [range, setRange] = useState<DateRangePreset>('all');
+  const [showNamePrompt, setShowNamePrompt] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const dataRef = useRef<{
+    summary: ReturnType<typeof computeSummary>;
+    frequency: ReturnType<typeof computeEmotionFrequency>;
+    trend: ReturnType<typeof computeIntensityTrend>;
+    dayOfWeek: ReturnType<typeof computeDayOfWeek>;
+    hourOfDay: ReturnType<typeof computeHourOfDay>;
+    custom: ReturnType<typeof computeCustomStats>;
+    rangeLabel: string;
+  } | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -45,9 +70,87 @@ export default function StatisticsScreen() {
 
   const hasData = filtered.length > 0;
 
+  function handleOpenNamePrompt() {
+    if (!hasData) return;
+    dataRef.current = {
+      summary,
+      frequency,
+      trend,
+      dayOfWeek,
+      hourOfDay,
+      custom,
+      rangeLabel: getRangeLabel(range),
+    };
+    setShowNamePrompt(true);
+  }
+
+  async function handleExportPdf(userName: string) {
+    setShowNamePrompt(false);
+    if (!dataRef.current) return;
+
+    setExporting(true);
+    try {
+      let logoSrc: string | undefined;
+      try {
+        const logoUri = FileSystem.documentDirectory + '../custom/icon.png';
+        const logoB64 = await FileSystem.readAsStringAsync(
+          (await Asset.fromModule(require('../assets/icon.png'))).localUri || '',
+          { encoding: FileSystem.EncodingType.Base64 }
+        );
+        if (logoB64) {
+          logoSrc = 'data:image/png;base64,' + logoB64;
+        }
+      } catch (_) {
+        // logo optional
+      }
+
+      const html = generateReportHtml({
+        userName,
+        rangeLabel: dataRef.current.rangeLabel,
+        summary: dataRef.current.summary,
+        frequency: dataRef.current.frequency,
+        trend: dataRef.current.trend,
+        dayOfWeek: dataRef.current.dayOfWeek,
+        hourOfDay: dataRef.current.hourOfDay,
+        custom: dataRef.current.custom,
+      });
+
+      const { uri } = await Print.printToFileAsync({ html });
+
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(uri, {
+          mimeType: 'application/pdf',
+          dialogTitle: 'Relatório PsyMap',
+          UTI: 'com.adobe.pdf',
+        });
+      } else {
+        Alert.alert('PDF gerado!', `Salvo em:\n${uri}`);
+      }
+    } catch (err) {
+      Alert.alert('Erro', 'Não foi possível gerar o PDF.');
+    } finally {
+      setExporting(false);
+      dataRef.current = null;
+    }
+  }
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <RangeSelector selected={range} onSelect={setRange} />
+
+      <TouchableOpacity
+        style={[styles.exportBtn, (!hasData || exporting) && styles.exportBtnDisabled]}
+        onPress={handleOpenNamePrompt}
+        disabled={!hasData || exporting}
+        activeOpacity={0.7}
+      >
+        {exporting ? (
+          <ActivityIndicator color="#fff" size="small" />
+        ) : (
+          <Text style={styles.exportBtnText}>📄 Exportar PDF</Text>
+        )}
+      </TouchableOpacity>
+
       <StatsSummaryCards data={summary} />
 
       {hasData && (
@@ -79,6 +182,12 @@ export default function StatisticsScreen() {
           )}
         </>
       )}
+
+      <NamePromptModal
+        visible={showNamePrompt}
+        onConfirm={handleExportPdf}
+        onCancel={() => setShowNamePrompt(false)}
+      />
     </ScrollView>
   );
 }
@@ -90,5 +199,21 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingBottom: 40,
+  },
+  exportBtn: {
+    marginHorizontal: 16,
+    marginBottom: 12,
+    paddingVertical: 13,
+    borderRadius: 10,
+    backgroundColor: '#e94560',
+    alignItems: 'center',
+  },
+  exportBtnDisabled: {
+    opacity: 0.4,
+  },
+  exportBtnText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
   },
 });

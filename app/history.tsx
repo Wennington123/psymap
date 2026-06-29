@@ -2,18 +2,14 @@ import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
-  FlatList,
   TouchableOpacity,
   StyleSheet,
   Alert,
   SectionList,
-  Platform,
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
-import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
 import MoodLogItem from '../components/MoodLogItem';
-import { getEntries, deleteEntry, exportAllData } from '../storage/moodStorage';
+import { getEntries, deleteEntry } from '../storage/moodStorage';
 import { MoodEntry } from '../types';
 
 interface Section {
@@ -70,34 +66,6 @@ export default function HistoryScreen() {
     ]);
   }
 
-  async function handleExport() {
-    try {
-      const json = await exportAllData();
-      const fileName = `psymap-backup-${new Date().toISOString().split('T')[0]}.json`;
-      const fileUri = FileSystem.documentDirectory + fileName;
-      await FileSystem.writeAsStringAsync(fileUri, json, {
-        encoding: FileSystem.EncodingType.UTF8,
-      });
-
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(fileUri, {
-          mimeType: 'application/json',
-          dialogTitle: 'Exportar dados do PsyMap',
-        });
-      } else {
-        Alert.alert('Exportado!', `Arquivo salvo em:\n${fileUri}`);
-      }
-    } catch (err) {
-      Alert.alert('Erro', 'Não foi possível exportar os dados.');
-    }
-  }
-
-  const exportBtn = (
-    <TouchableOpacity onPress={handleExport} style={styles.exportBtn}>
-      <Text style={styles.exportBtnText}>Exportar</Text>
-    </TouchableOpacity>
-  );
-
   return (
     <View style={styles.container}>
       {sections.length === 0 ? (
@@ -130,12 +98,9 @@ export default function HistoryScreen() {
               <Text style={styles.totalText}>
                 {sections.reduce((sum, s) => sum + s.data.length, 0)} registros
               </Text>
-              <View style={styles.topButtons}>
-                {exportBtn}
-                <TouchableOpacity onPress={() => router.push('/statistics' as any)} style={styles.statsBtn}>
-                  <Text style={styles.statsBtnText}>📊</Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity onPress={() => router.push('/statistics' as any)} style={styles.statsBtn}>
+                <Text style={styles.statsBtnText}>📊</Text>
+              </TouchableOpacity>
             </View>
           }
         />
@@ -160,18 +125,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
   },
-  exportBtn: {
+  statsBtn: {
     paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     borderRadius: 8,
     backgroundColor: '#16213e',
     borderWidth: 1,
     borderColor: '#0f3460',
   },
-  exportBtnText: {
-    color: '#e94560',
-    fontSize: 14,
-    fontWeight: '600',
+  statsBtnText: {
+    fontSize: 18,
   },
   sectionHeader: {
     backgroundColor: '#1a1a2e',
@@ -206,21 +169,5 @@ const styles = StyleSheet.create({
     color: '#555',
     marginTop: 8,
     textAlign: 'center',
-  },
-  topButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  statsBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    backgroundColor: '#16213e',
-    borderWidth: 1,
-    borderColor: '#0f3460',
-  },
-  statsBtnText: {
-    fontSize: 18,
   },
 });

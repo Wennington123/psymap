@@ -23,3 +23,7 @@ export function filterByRange(entries: MoodEntry[], preset: DateRangePreset): Mo
   if (!start) return entries;
   return entries.filter((e) => new Date(e.timestamp) >= start);
 }
+
+export function getRangeLabel(preset: DateRangePreset): string {
+  return RANGE_LABELS[preset];
+}
