@@ -16,9 +16,8 @@ export default function DayOfWeekChart({ data }: Props) {
     frontColor: stat.count > 0 ? '#e94560' : '#2a2a4e',
     topLabelComponent: () =>
       stat.count > 0 ? (
-        <Text style={styles.barTop}>{stat.avgIntensity}</Text>
+        <Text style={{ color: '#e0e0e0', fontSize: 10, fontWeight: '600' }}>{stat.avgIntensity}</Text>
       ) : null,
-    labelTextStyle: styles.barLabel,
   }));
 
   return (

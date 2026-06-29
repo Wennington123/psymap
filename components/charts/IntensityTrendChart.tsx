@@ -18,7 +18,6 @@ export default function IntensityTrendChart({ data }: Props) {
       value: point.avgIntensity,
       label: `${day}/${month}`,
       dataPointText: point.avgIntensity.toString(),
-      labelTextStyle: styles.labelText,
     };
   });
 

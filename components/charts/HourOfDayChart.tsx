@@ -13,7 +13,6 @@ export default function HourOfDayChart({ data }: Props) {
   const lineData = data.map((stat) => ({
     value: stat.avgIntensity,
     label: stat.hour % 3 === 0 ? `${stat.hour}h` : '',
-    labelTextStyle: styles.labelText,
   }));
 
   const maxVal = Math.max(...data.map((d) => d.avgIntensity), 1);
@@ -34,7 +33,8 @@ export default function HourOfDayChart({ data }: Props) {
         initialSpacing={10}
         yAxisColor="#2a2a4e"
         xAxisColor="#2a2a4e"
-        yAxisTextStyle={styles.axisLabel}
+        yAxisTextStyle={{ color: '#666', fontSize: 9 }}
+        xAxisLabelTextStyle={{ color: '#666', fontSize: 9 }}
         noOfSections={4}
         maxValue={maxVal > 5 ? maxVal : 5}
         stepValue={1}

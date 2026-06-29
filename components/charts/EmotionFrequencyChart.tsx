@@ -33,8 +33,8 @@ export default function EmotionFrequencyChart({ data }: Props) {
         roundedTop
         roundedBottom
         hideRules
-        xAxisLabelTextStyle={styles.axisLabel}
-        yAxisTextStyle={styles.axisLabel}
+        xAxisLabelTextStyle={{ color: '#666', fontSize: 10 }}
+        yAxisTextStyle={{ color: '#666', fontSize: 10 }}
         yAxisLabelSuffix=""
         noOfSections={4}
         maxValue={maxCount}
@@ -66,10 +66,6 @@ const styles = StyleSheet.create({
     color: '#e0e0e0',
     fontSize: 10,
     fontWeight: '600',
-  },
-  axisLabel: {
-    color: '#666',
-    fontSize: 10,
   },
   legend: {
     flexDirection: 'row',
