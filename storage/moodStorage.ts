@@ -3,6 +3,11 @@ import { Emotion, MoodEntry } from '../types';
 
 const ENTRIES_KEY = '@psymap:moodEntries';
 const CUSTOM_EMOTIONS_KEY = '@psymap:customEmotions';
+const THEME_KEY = 'psymap-theme';
+
+export async function clearAllData(): Promise<void> {
+  await AsyncStorage.multiRemove([ENTRIES_KEY, CUSTOM_EMOTIONS_KEY, THEME_KEY]);
+}
 
 export async function getEntries(): Promise<MoodEntry[]> {
   const raw = await AsyncStorage.getItem(ENTRIES_KEY);
