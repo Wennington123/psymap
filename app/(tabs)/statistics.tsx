@@ -98,7 +98,7 @@ export default function StatisticsScreen() {
         await asset.downloadAsync();
         if (asset.localUri) {
           const logoB64 = await FileSystem.readAsStringAsync(asset.localUri, {
-            encoding: FileSystem.EncodingType.Base64,
+            encoding: 'base64',
           });
           logoSrc = 'data:image/png;base64,' + logoB64;
         }
