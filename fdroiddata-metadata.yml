@@ -27,7 +27,7 @@ Builds:
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-UpdateCheckData: app.json|android\.versionCode\s*:\s*(\d+)|app.json|"version"\s*:\s*"([^"]+)"
+UpdateCheckData: app.json|"versionCode"\s*:\s*(\d+)|app.json|"version"\s*:\s*"([^"]+)"
 VercodeOperation:
   - '%c'
 CurrentVersion: 1.0.0
