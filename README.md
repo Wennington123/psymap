@@ -83,4 +83,4 @@ Gostou do app? Considere apoiar o projeto com uma doação via PIX — a chave e
 
 ## 📄 Licença
 
-MIT © Wennington Dias
+GNU GPLv3 © Wennington Dias
