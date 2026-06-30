@@ -16,7 +16,7 @@ Repo: https://gitlab.com/wenningtondiasx25/psymap.git
 Builds:
   - versionName: '1.0.0'
     versionCode: 1
-    commit: v1.0.0
+    commit: 509e201b30cb14fbde36e974ce87afd0fa0d8f56
     sudo:
       - apt-get update
       - apt-get install -y nodejs npm
