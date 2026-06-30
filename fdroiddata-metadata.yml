@@ -1,4 +1,3 @@
-AntiFeatures: []
 Categories:
   - Science & Education
 License: GPL-3.0-only
@@ -14,7 +13,7 @@ RepoType: git
 Repo: https://gitlab.com/wenningtondiasx25/psymap.git
 
 Builds:
-  - versionName: '1.0.0'
+  - versionName: 1.0.0
     versionCode: 1
     commit: 509e201b30cb14fbde36e974ce87afd0fa0d8f56
     sudo:
@@ -26,12 +25,10 @@ Builds:
     build:
       - cd android && ./gradlew assembleRelease
 
-AllowedAPKSigningKeys: []
-
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-UpdateCheckData: app.json|android\.versionCode\s*:\s*(\d+)
+UpdateCheckData: app.json|android\.versionCode\s*:\s*(\d+)|app.json|"version"\s*:\s*"([^"]+)"
 VercodeOperation:
   - '%c'
-CurrentVersion: '1.0.0'
+CurrentVersion: 1.0.0
 CurrentVersionCode: 1
