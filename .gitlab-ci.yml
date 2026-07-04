@@ -1,0 +1,9 @@
+pages:
+  stage: deploy
+  script:
+    - echo "Deploying privacy policy"
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
