@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#1a1a2e"
       },
-      "package": "org.psymap.app",
+      "package": "com.app.psymap",
       "versionCode": 1
     },
     "plugins": [
