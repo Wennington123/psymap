@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,9 +12,17 @@ import {
 } from 'react-native';
 import Constants from 'expo-constants';
 import * as Clipboard from 'expo-clipboard';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Themes, ThemeName } from '../../constants/colors';
 import { clearAllData } from '../../storage/moodStorage';
+import {
+  requestPermission,
+  scheduleDailyReminders,
+  cancelAllReminders,
+  setNotificationsEnabled,
+  getNotificationsEnabled,
+} from '../../lib/notifications';
 
 const THEME_LIST: { key: ThemeName; label: string }[] = [
   { key: 'dracula', label: 'Dracula' },
@@ -27,6 +35,35 @@ const PIX_KEY = '74988217793';
 export default function SettingsScreen() {
   const { colors, themeName, setTheme } = useTheme();
   const version = Constants.expoConfig?.version ?? '1.0.0';
+  const [notifEnabled, setNotifEnabled] = useState(false);
+
+  useEffect(() => {
+    getNotificationsEnabled().then(setNotifEnabled);
+  }, []);
+
+  const handleToggleNotifications = async () => {
+    if (notifEnabled) {
+      await cancelAllReminders();
+      await setNotificationsEnabled(false);
+      setNotifEnabled(false);
+    } else {
+      const granted = await requestPermission();
+      if (!granted) {
+        Alert.alert(
+          'Permissão negada',
+          'Para receber lembretes, ative as notificações para o PsyMap nas configurações do seu dispositivo.',
+        );
+        return;
+      }
+      await scheduleDailyReminders();
+      await setNotificationsEnabled(true);
+      setNotifEnabled(true);
+      Alert.alert(
+        'Notificações ativadas',
+        'Você receberá 3 lembretes gentis por dia (9h, 14h e 20h) para registrar seu humor.',
+      );
+    }
+  };
 
   const handleDeleteAll = () => {
     Alert.alert(
@@ -108,6 +145,31 @@ export default function SettingsScreen() {
             )}
           </TouchableOpacity>
         ))}
+      </View>
+
+      {/* Notification Section */}
+      <Text style={[styles.sectionTitle, { color: colors.accent }]}>Notificações</Text>
+      <View style={styles.section}>
+        <TouchableOpacity
+          style={[styles.card, { backgroundColor: colors.surface, borderColor: notifEnabled ? colors.accent : colors.border }]}
+          activeOpacity={0.7}
+          onPress={handleToggleNotifications}
+        >
+          <Ionicons
+            name={notifEnabled ? 'notifications' : 'notifications-outline'}
+            size={22}
+            color={notifEnabled ? colors.accent : colors.textDim}
+          />
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.label, { color: colors.text }]}>Lembretes diários</Text>
+            <Text style={[styles.description, { color: colors.textSecondary }]}>
+              {notifEnabled ? '3 lembretes por dia (9h, 14h e 20h)' : 'Receba lembretes gentis para registrar seu humor'}
+            </Text>
+          </View>
+          <View style={[styles.toggle, { backgroundColor: notifEnabled ? colors.accent : colors.borderMuted }]}>
+            <View style={[styles.toggleDot, notifEnabled && styles.toggleDotOn]} />
+          </View>
+        </TouchableOpacity>
       </View>
 
       {/* Data Section */}
@@ -205,6 +267,27 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: '600',
+  },
+  description: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  toggle: {
+    width: 44,
+    height: 26,
+    borderRadius: 13,
+    justifyContent: 'center',
+    paddingHorizontal: 3,
+  },
+  toggleDot: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#999',
+  },
+  toggleDotOn: {
+    alignSelf: 'flex-end',
+    backgroundColor: '#fff',
   },
   check: {
     width: 28,

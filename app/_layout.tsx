@@ -1,11 +1,16 @@
 import { Slot } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
+import { initNotifications } from '../lib/notifications';
 
 function AppContent() {
   const { colors } = useTheme();
+
+  useEffect(() => {
+    initNotifications();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['left', 'right']}>
