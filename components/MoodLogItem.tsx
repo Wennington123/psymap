@@ -2,20 +2,27 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { MoodEntry } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
+import { EmojiSource } from '../constants/colors';
+import EmojiRenderer from './EmojiRenderer';
 
 interface Props {
   entry: MoodEntry;
 }
 
 export default function MoodLogItem({ entry }: Props) {
-  const { colors } = useTheme();
+  const { colors, emojiPack } = useTheme();
   const time = new Date(entry.timestamp);
   const timeStr = time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+  const emojiSource: EmojiSource =
+    !entry.emotion.isCustom
+      ? (emojiPack[entry.emotion.id as keyof typeof emojiPack] ?? entry.emotion.emoji)
+      : entry.emotion.emoji;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>
       <View style={styles.left}>
-        <Text style={styles.emoji}>{entry.emotion.emoji}</Text>
+        <EmojiRenderer source={emojiSource} size={30} />
       </View>
       <View style={styles.center}>
         <Text style={[styles.emotionName, { color: colors.text }]}>{entry.emotion.label}</Text>

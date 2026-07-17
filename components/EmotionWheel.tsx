@@ -8,6 +8,8 @@ import {
 import { Emotion } from '../types';
 import { BASE_EMOTIONS } from '../constants/emotions';
 import { useTheme } from '../contexts/ThemeContext';
+import { EmojiSource } from '../constants/colors';
+import EmojiRenderer from './EmojiRenderer';
 
 interface Props {
   onSelect: (emotion: Emotion) => void;
@@ -16,21 +18,34 @@ interface Props {
 }
 
 export default function EmotionWheel({ onSelect, onAddCustom, customEmotions }: Props) {
-  const { colors } = useTheme();
-  const allEmotions = [...BASE_EMOTIONS, ...customEmotions];
+  const { colors, emojiPack } = useTheme();
 
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { color: colors.text }]}>Como você está se sentindo?</Text>
       <View style={styles.grid}>
-        {allEmotions.map((emotion) => (
+        {BASE_EMOTIONS.map((emotion) => {
+          const emojiSource: EmojiSource = emojiPack[emotion.id as keyof typeof emojiPack] ?? emotion.emoji;
+          return (
+            <TouchableOpacity
+              key={emotion.id}
+              style={[styles.emotionItem, { backgroundColor: colors.surface, borderColor: colors.border }]}
+              onPress={() => onSelect(emotion)}
+              activeOpacity={0.6}
+            >
+              <EmojiRenderer source={emojiSource} size={28} />
+              <Text style={[styles.emotionLabel, { color: colors.textSecondary }]}>{emotion.label}</Text>
+            </TouchableOpacity>
+          );
+        })}
+        {customEmotions.map((emotion) => (
           <TouchableOpacity
             key={emotion.id}
             style={[styles.emotionItem, { backgroundColor: colors.surface, borderColor: colors.border }]}
             onPress={() => onSelect(emotion)}
             activeOpacity={0.6}
           >
-            <Text style={styles.emoji}>{emotion.emoji}</Text>
+            <EmojiRenderer source={emotion.emoji} size={28} />
             <Text style={[styles.emotionLabel, { color: colors.textSecondary }]}>{emotion.label}</Text>
           </TouchableOpacity>
         ))}

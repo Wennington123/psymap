@@ -24,16 +24,21 @@ import {
   getNotificationsEnabled,
 } from '../../lib/notifications';
 
-const THEME_LIST: { key: ThemeName; label: string }[] = [
-  { key: 'dracula', label: 'Dracula' },
-  { key: 'dark', label: 'Escuro' },
-  { key: 'light', label: 'Claro' },
-];
+const THEME_LABELS: Record<ThemeName, string> = {
+  dracula: 'Dracula',
+  dark: 'Escuro',
+  light: 'Claro',
+  sunset: 'Sunset',
+  ocean: 'Oceano',
+  forest: 'Floresta',
+  kittens: 'Gatinhos',
+};
+const THEME_LIST: ThemeName[] = ['dracula', 'dark', 'light', 'sunset', 'ocean', 'forest', 'kittens'];
 
 const PIX_KEY = '74988217793';
 
 export default function SettingsScreen() {
-  const { colors, themeName, setTheme } = useTheme();
+  const { colors, themeName, setTheme, isUnlocked, channel } = useTheme();
   const version = Constants.expoConfig?.version ?? '1.0.0';
   const [notifEnabled, setNotifEnabled] = useState(false);
 
@@ -97,6 +102,24 @@ export default function SettingsScreen() {
     Alert.alert('Copiado!', 'Chave PIX copiada para a área de transferência.');
   };
 
+  const handleBuy = (name: ThemeName) => {
+    const price = Themes[name].priceBRL?.toFixed(2).replace('.', ',');
+    Alert.alert(
+      `Comprar tema ${THEME_LABELS[name]}`,
+      `Na Play Store este tema custa R$ ${price}. A compra será processada pelo Google Play Billing.`,
+    );
+  };
+
+  const handleThemePress = (name: ThemeName) => {
+    if (isUnlocked(name)) {
+      setTheme(name);
+      return;
+    }
+    if (channel === 'play') {
+      handleBuy(name);
+    }
+  };
+
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.background }]}
@@ -105,46 +128,58 @@ export default function SettingsScreen() {
       {/* Theme Section */}
       <Text style={[styles.sectionTitle, { color: colors.accent }]}>Tema</Text>
       <View style={styles.section}>
-        {THEME_LIST.map(({ key, label }) => (
-          <TouchableOpacity
-            key={key}
-            style={[
-              styles.card,
-              {
-                backgroundColor: colors.surface,
-                borderColor: themeName === key ? colors.accent : colors.border,
-              },
-            ]}
-            activeOpacity={0.7}
-            onPress={() => setTheme(key)}
-          >
-            <View style={styles.preview}>
-              {[0, 1, 2].map((i) => (
-                <View
-                  key={i}
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 8,
-                    margin: 2,
-                    backgroundColor:
-                      i === 0
-                        ? Themes[key].accent
-                        : i === 1
-                          ? Themes[key].border
-                          : Themes[key].textDim,
-                  }}
-                />
-              ))}
-            </View>
-            <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
-            {themeName === key && (
-              <View style={[styles.check, { backgroundColor: colors.accent }]}>
-                <Text style={{ color: '#fff', fontSize: 13, fontWeight: '700' }}>✓</Text>
+        {THEME_LIST.map((key) => {
+          const theme = Themes[key];
+          const unlocked = isUnlocked(key);
+          const isSelected = themeName === key;
+          return (
+            <TouchableOpacity
+              key={key}
+              style={[
+                styles.card,
+                {
+                  backgroundColor: colors.surface,
+                  borderColor: isSelected ? colors.accent : colors.border,
+                },
+              ]}
+              activeOpacity={0.7}
+              onPress={() => handleThemePress(key)}
+            >
+              <View style={styles.preview}>
+                {[0, 1, 2].map((i) => (
+                  <View
+                    key={i}
+                    style={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 8,
+                      margin: 2,
+                      backgroundColor:
+                        i === 0
+                          ? theme.accent
+                          : i === 1
+                            ? theme.border
+                            : theme.textDim,
+                    }}
+                  />
+                ))}
               </View>
-            )}
-          </TouchableOpacity>
-        ))}
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.label, { color: colors.text }]}>{THEME_LABELS[key]}</Text>
+                {channel === 'play' && theme.premium ? (
+                  <Text style={[styles.description, { color: colors.textSecondary }]}>
+                    {unlocked ? 'Premium · adquirido' : `Premium · R$ ${theme.priceBRL?.toFixed(2).replace('.', ',')}`}
+                  </Text>
+                ) : null}
+              </View>
+              {isSelected && (
+                <View style={[styles.check, { backgroundColor: colors.accent }]}>
+                  <Text style={{ color: '#fff', fontSize: 13, fontWeight: '700' }}>✓</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          );
+        })}
       </View>
 
       {/* Notification Section */}
@@ -317,6 +352,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '700',
+  },
+  input: {
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    fontSize: 14,
   },
   version: {
     textAlign: 'center',

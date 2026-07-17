@@ -12,7 +12,7 @@ Mapeamento emocional direto do seu bolso. Registre como você se sente, acompanh
 - **Histórico** — visualize, filtre e exclua entradas passadas
 - **Estatísticas** — gráficos de frequência, distribuição, tendência de intensidade, dias da semana e horários
 - **Exportar PDF** — gere relatórios com seus dados para compartilhar com seu terapeuta
-- **3 temas** — Dracula, Escuro e Claro
+- **4 temas** — Dracula, Escuro, Claro e Gatinhos
 - **Doação via PIX** — contribua com o projeto se quiser
 
 ---
@@ -84,3 +84,9 @@ Gostou do app? Considere apoiar o projeto com uma doação via PIX — a chave e
 ## 📄 Licença
 
 GNU GPLv3 © Wennington Dias
+
+---
+
+## 🙏 Atribuições
+
+- Emojis dos temas **Floresta**, **Sunset** e **Ocean** projetados por [OpenMoji](https://openmoji.org) – the open-source emoji and icon project. Licença: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
