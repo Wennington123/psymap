@@ -58,15 +58,17 @@ Escaneie o QR code com o **Expo Go** (Android/iOS) ou pressione `a` para emulado
 ### Build APK
 
 ```bash
-npx eas build -p android --profile preview
+npx eas-cli build -p android --profile preview
 ```
+
+> **Nota:** O `eas-cli` deve ser usado via `npx` ou instalado globalmente (`npm i -g eas-cli`), não como dependência do projeto. O arquivo `.easignore` já exclui `releases/`, `.git/` e `node_modules/` do pacote enviado ao servidor de build.
 
 ---
 
 ## 🛠 Tecnologias
 
 - [Expo](https://expo.dev) + [Expo Router](https://docs.expo.dev/router/introduction/) (navegação por arquivos)
-- [React Native](https://reactnative.dev) 0.79
+- [React Native](https://reactnative.dev) 0.81
 - [AsyncStorage](https://react-native-async-storage.github.io/async-storage/) (persistência local)
 - [react-native-gifted-charts](https://gifted-charts.web.app) (gráficos)
 - [Ionicons](https://ionic.io/ionicons) (ícones da tab bar)
