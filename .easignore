@@ -1,0 +1,8 @@
+releases/
+.git/
+node_modules/
+.expo/
+dist/
+credentials.json
+android-keystore.jks
+NEXT_STEPS.md
