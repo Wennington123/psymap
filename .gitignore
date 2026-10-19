@@ -19,3 +19,5 @@ expo-env.d.ts
 # @end expo-cli
 # Planejamento local
 NEXT_STEPS.md
+
+/android/

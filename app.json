@@ -23,7 +23,8 @@
         "backgroundColor": "#1a1a2e"
       },
       "package": "com.app.psymap",
-      "versionCode": 1
+      "versionCode": 1,
+      "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       "expo-router",
