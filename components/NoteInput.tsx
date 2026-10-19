@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
+import { radii } from '../constants/ui';
 
 interface Props {
   value: string;
@@ -17,7 +18,7 @@ export default function NoteInput({ value, onChange, visible }: Props) {
     <View style={styles.container}>
       <Text style={[styles.title, { color: colors.textSecondary }]}>Adicionar uma nota (opcional)</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
+        style={[styles.input, { backgroundColor: colors.surface, color: colors.text, borderRadius: radii.input }]}
         placeholder="O que está acontecendo?"
         placeholderTextColor={colors.textDim}
         value={value}
@@ -40,10 +41,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   input: {
-    borderRadius: 10,
-    padding: 12,
+    padding: 14,
     fontSize: 15,
-    borderWidth: 1,
-    minHeight: 70,
+    minHeight: 76,
   },
 });

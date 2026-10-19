@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SummaryStats } from '../../lib/stats';
 import { useTheme } from '../../contexts/ThemeContext';
+import { radii, shadow } from '../../constants/ui';
 
 interface Props {
   data: SummaryStats;
@@ -22,15 +23,15 @@ export default function StatsSummaryCards({ data }: Props) {
 
   return (
     <View style={styles.grid}>
-      <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+      <View style={[styles.card, { backgroundColor: colors.surface }, shadow()]}>
         <Text style={[styles.cardNumber, { color: colors.accent }]}>{data.totalEntries}</Text>
         <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>Registros</Text>
       </View>
-      <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+      <View style={[styles.card, { backgroundColor: colors.surface }, shadow()]}>
         <Text style={[styles.cardNumber, { color: colors.accent }]}>{data.avgIntensity}</Text>
         <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>Média intensidade</Text>
       </View>
-      <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+      <View style={[styles.card, { backgroundColor: colors.surface }, shadow()]}>
         {data.mostFrequent ? (
           <>
             <Text style={styles.cardEmoji}>{data.mostFrequent.emoji}</Text>
@@ -41,12 +42,12 @@ export default function StatsSummaryCards({ data }: Props) {
           <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>-</Text>
         )}
       </View>
-      <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+      <View style={[styles.card, { backgroundColor: colors.surface }, shadow()]}>
         <Text style={[styles.cardNumber, { color: colors.accent }]}>{data.daysWithEntries}</Text>
         <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>Dias ativos</Text>
       </View>
-      <View style={[styles.card, styles.cardWide, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        <Text style={[styles.cardNumber, { color: colors.accent }]}>{data.currentStreak}</Text>
+      <View style={[styles.card, styles.cardWide, { backgroundColor: colors.surface }, shadow()]}>
+        <Text style={[styles.cardNumber, { color: colors.accent }]}>🔥 {data.currentStreak}</Text>
         <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>Sequência de dias</Text>
       </View>
     </View>
@@ -62,11 +63,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   card: {
-    borderRadius: 12,
+    borderRadius: radii.card,
     padding: 14,
     width: '46%',
     alignItems: 'center',
-    borderWidth: 1,
   },
   cardWide: {
     width: '100%',

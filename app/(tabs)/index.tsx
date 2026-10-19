@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
-  Image,
   ScrollView,
   TouchableOpacity,
   StyleSheet,
@@ -17,12 +16,21 @@ import {
   addEntry,
   addCustomEmotion,
   getCustomEmotions,
+  getEntries,
 } from '../../storage/moodStorage';
 import { Emotion, MoodEntry } from '../../types';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { useGamification } from '../../hooks/useGamification';
+import { computeStreak } from '../../lib/gamification';
+import { awardEntry } from '../../storage/gamification';
+import { syncXpDelta } from '../../lib/firebaseRanking';
+import { card, radii, spacing, shadow } from '../../constants/ui';
 
 export default function HomeScreen() {
   const { colors } = useTheme();
+  const { user } = useAuth();
+  const gamification = useGamification();
 
   const [step, setStep] = useState<'wheel' | 'intensity' | 'note'>('wheel');
   const [selectedEmotion, setSelectedEmotion] = useState<Emotion | null>(null);
@@ -34,7 +42,7 @@ export default function HomeScreen() {
   useFocusEffect(
     useCallback(() => {
       loadData();
-    }, [])
+    }, []),
   );
 
   async function loadData() {
@@ -63,11 +71,31 @@ export default function HomeScreen() {
       note: note.trim() || undefined,
       timestamp: new Date().toISOString(),
     };
+
+    const prevEntries = await getEntries();
     await addEntry(entry);
+
+    const award = await awardEntry(prevEntries, entry);
+
+    let gamiMessage = '';
+    if (award.delta > 0) {
+      gamiMessage = `\n+${award.delta} XP`;
+    }
+    if (award.newBadges.length > 0) {
+      gamiMessage += `\nNova conquista desbloqueada! 🎉`;
+    }
+
+    if (user && award.delta > 0) {
+      const streakAfter = computeStreak([...prevEntries, entry]);
+      syncXpDelta(user, award.delta, streakAfter).catch(() => {});
+    }
+
+    await gamification.refresh();
+
     setStep('wheel');
     setSelectedEmotion(null);
     setNote('');
-    Alert.alert('Registrado!', `${selectedEmotion.emoji} ${selectedEmotion.label} — intensidade ${intensity}/5`);
+    Alert.alert('Registrado!', `${selectedEmotion.emoji} ${selectedEmotion.label} — intensidade ${intensity}/5${gamiMessage}`);
   }
 
   return (
@@ -77,10 +105,33 @@ export default function HomeScreen() {
     >
       {step === 'wheel' && (
         <>
-          <View style={styles.logoContainer}>
-            <Image source={require('../../assets/icon.png')} style={styles.logoImage} resizeMode="contain" />
-            <Text style={[styles.logoText, { color: colors.accent }]}>PsyMap</Text>
-            <Text style={[styles.subtitle, { color: colors.textDim }]}>Mapeie suas emoções</Text>
+          <View style={styles.greeting}>
+            <Text style={[styles.greetingTitle, { color: colors.text }]}>Olá 👋</Text>
+            <Text style={[styles.greetingSubtitle, { color: colors.textDim }]}>
+              Como você está se sentindo?
+            </Text>
+          </View>
+
+          <View style={[styles.gamiCard, card(colors)]}>
+            <View style={styles.gamiRow}>
+              <Text style={[styles.gamiStreak, { color: colors.accent }]}>
+                🔥 {gamification.streak}
+              </Text>
+              <Text style={[styles.gamiLevel, { color: colors.textSecondary }]}>
+                Nível {gamification.level} · {gamification.xpTotal} XP
+              </Text>
+            </View>
+            <View style={[styles.gamiBarTrack, { backgroundColor: colors.background }]}>
+              <View
+                style={[
+                  styles.gamiBarFill,
+                  { backgroundColor: colors.accent, width: `${Math.round(gamification.levelProgress * 100)}%` },
+                ]}
+              />
+            </View>
+            <Text style={[styles.gamiNext, { color: colors.textDim }]}>
+              {gamification.toNext} XP para o nível {gamification.level + 1}
+            </Text>
           </View>
 
           <EmotionWheel
@@ -94,8 +145,6 @@ export default function HomeScreen() {
             onClose={() => setShowCustomInput(false)}
             onSave={handleSaveCustom}
           />
-
-
         </>
       )}
 
@@ -108,7 +157,7 @@ export default function HomeScreen() {
 
           <View style={styles.stepButtons}>
             <TouchableOpacity
-              style={[styles.backBtn, { borderColor: colors.borderMuted }]}
+              style={styles.backBtn}
               onPress={() => setStep('wheel')}
             >
               <Text style={[styles.backBtnText, { color: colors.textSecondary }]}>Voltar</Text>
@@ -117,7 +166,7 @@ export default function HomeScreen() {
               style={[styles.nextBtn, { backgroundColor: colors.accent }]}
               onPress={() => setStep('note')}
             >
-              <Text style={[styles.nextBtnText, { color: colors.textOnAccent }]}>Continuar</Text>
+              <Text style={[styles.primaryBtnText, { color: colors.textOnAccent }]}>Continuar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -134,13 +183,16 @@ export default function HomeScreen() {
 
           <View style={styles.stepButtons}>
             <TouchableOpacity
-              style={[styles.backBtn, { borderColor: colors.borderMuted }]}
+              style={styles.backBtn}
               onPress={() => setStep('intensity')}
             >
               <Text style={[styles.backBtnText, { color: colors.textSecondary }]}>Voltar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.registerBtn, { backgroundColor: colors.accent }]} onPress={handleRegister}>
-              <Text style={[styles.registerBtnText, { color: colors.textOnAccent }]}>Registrar</Text>
+            <TouchableOpacity
+              style={[styles.nextBtn, { backgroundColor: colors.accent }]}
+              onPress={handleRegister}
+            >
+              <Text style={[styles.primaryBtnText, { color: colors.textOnAccent }]}>Registrar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -152,70 +204,90 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    paddingVertical: 24,
-    paddingHorizontal: 16,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.md,
   },
-  logoContainer: {
-    alignItems: 'center',
-    marginBottom: 24,
+  greeting: {
+    marginBottom: spacing.md,
   },
-  logoImage: {
-    width: 80,
-    height: 80,
-    marginBottom: 8,
+  greetingTitle: {
+    fontSize: 34,
+    fontWeight: '800',
   },
-  logoText: {
-    fontSize: 32,
-    fontWeight: '700',
-    letterSpacing: 1,
-  },
-  subtitle: {
-    fontSize: 14,
+  greetingSubtitle: {
+    fontSize: 15,
     marginTop: 4,
+  },
+  gamiCard: {
+    padding: spacing.md,
+    marginBottom: spacing.md,
+  },
+  gamiRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  gamiStreak: {
+    fontSize: 22,
+    fontWeight: '800',
+  },
+  gamiLevel: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  gamiBarTrack: {
+    height: 6,
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  gamiBarFill: {
+    height: '100%',
+    borderRadius: 3,
+  },
+  gamiNext: {
+    fontSize: 11,
+    marginTop: 6,
   },
   stepContainer: {
     alignItems: 'center',
-    paddingTop: 24,
+    paddingTop: spacing.lg,
   },
   selectedEmoji: {
-    fontSize: 60,
+    fontSize: 64,
     marginBottom: 8,
   },
   selectedLabel: {
     fontSize: 22,
     fontWeight: '600',
-    marginBottom: 24,
+    marginBottom: spacing.lg,
   },
   stepButtons: {
     flexDirection: 'row',
     gap: 12,
-    marginTop: 24,
+    marginTop: spacing.lg,
+    width: '100%',
+    maxWidth: 320,
   },
   backBtn: {
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 24,
-    borderRadius: 10,
-    borderWidth: 1,
+    borderRadius: radii.btn,
+    justifyContent: 'center',
   },
   backBtnText: {
-    fontSize: 16,
+    fontSize: 15,
+    fontWeight: '600',
   },
   nextBtn: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 10,
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: radii.btn,
+    alignItems: 'center',
+    ...shadow(),
   },
-  nextBtnText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  registerBtn: {
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 10,
-  },
-  registerBtnText: {
-    fontSize: 16,
-    fontWeight: '600',
+  primaryBtnText: {
+    fontSize: 15,
+    fontWeight: '700',
   },
 });

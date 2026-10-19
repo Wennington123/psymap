@@ -20,12 +20,8 @@ export default function IntensityPicker({ value, onChange }: Props) {
           <TouchableOpacity
             key={level}
             onPress={() => onChange(level)}
-            style={[
-              styles.dot,
-              level <= value
-                ? { backgroundColor: colors.accent, borderColor: colors.accent }
-                : { backgroundColor: 'transparent', borderColor: colors.borderMuted },
-            ]}
+            style={[styles.dot, { backgroundColor: level <= value ? colors.accent : colors.borderMuted }]}
+            activeOpacity={0.7}
           />
         ))}
       </View>
@@ -49,10 +45,9 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   dot: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 2,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
   },
   label: {
     fontSize: 13,

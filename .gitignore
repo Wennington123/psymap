@@ -6,6 +6,8 @@ dist/
 *.key
 *.mobileprovision
 credentials.json
+*.jks
+!android-keystore.jks
 *.orig.*
 web-build/
 .env

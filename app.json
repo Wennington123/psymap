@@ -34,13 +34,16 @@
           "icon": "./assets/icon.png",
           "color": "#1a1a2e"
         }
-      ]
+      ],
+      "@react-native-firebase/app",
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
       "router": {},
+      "googleWebClientId": "896785690367-kmvdjdabsrcjl4kmu1cgt4jkm9q8m7j7.apps.googleusercontent.com",
       "eas": {
         "projectId": "b54c850c-9e85-43e4-8e45-fe9c0f41713b"
       }

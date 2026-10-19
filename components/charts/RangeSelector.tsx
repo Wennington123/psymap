@@ -22,7 +22,6 @@ export default function RangeSelector({ selected, onSelect }: Props) {
             styles.segment,
             {
               backgroundColor: selected === opt ? colors.accent : colors.surface,
-              borderColor: selected === opt ? colors.accent : colors.border,
             },
           ]}
           onPress={() => onSelect(opt)}
@@ -47,9 +46,8 @@ const styles = StyleSheet.create({
   },
   segment: {
     paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: 8,
-    borderWidth: 1,
+    paddingHorizontal: 16,
+    borderRadius: 999,
   },
   segmentText: {
     fontSize: 13,

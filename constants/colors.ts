@@ -93,10 +93,8 @@ export interface ThemeDefinition {
   chartPalette: readonly string[];
   statusBar: 'light-content' | 'dark-content';
   emojiPack: EmojiPack;
-  premium: boolean;
-  priceBRL?: number;
-  sku?: string;
-  donationCode?: string;
+  /** Badge do sistema de gamificação que desbloqueia o tema (undefined = sempre disponível) */
+  requiredBadge?: string;
 }
 
 export const Themes: Record<string, ThemeDefinition> = {
@@ -119,7 +117,6 @@ export const Themes: Record<string, ThemeDefinition> = {
     chartPalette: ChartPalette.dark,
     statusBar: 'light-content',
     emojiPack: EmojiPacks.default,
-    premium: false,
   },
   light: {
     name: 'light',
@@ -140,7 +137,6 @@ export const Themes: Record<string, ThemeDefinition> = {
     chartPalette: ChartPalette.light,
     statusBar: 'dark-content',
     emojiPack: EmojiPacks.default,
-    premium: false,
   },
   dracula: {
     name: 'dracula',
@@ -161,7 +157,6 @@ export const Themes: Record<string, ThemeDefinition> = {
     chartPalette: ChartPalette.dracula,
     statusBar: 'light-content',
     emojiPack: EmojiPacks.default,
-    premium: false,
   },
   sunset: {
     name: 'sunset',
@@ -182,10 +177,7 @@ export const Themes: Record<string, ThemeDefinition> = {
     chartPalette: ChartPalette.sunset,
     statusBar: 'light-content',
     emojiPack: EmojiPacks.sunset,
-    premium: true,
-    priceBRL: 4.9,
-    sku: 'theme_sunset',
-    donationCode: 'SUNSET-PSYMAP',
+    requiredBadge: 'streak-7',
   },
   ocean: {
     name: 'ocean',
@@ -206,10 +198,7 @@ export const Themes: Record<string, ThemeDefinition> = {
     chartPalette: ChartPalette.ocean,
     statusBar: 'light-content',
     emojiPack: EmojiPacks.ocean,
-    premium: true,
-    priceBRL: 3.9,
-    sku: 'theme_ocean',
-    donationCode: 'OCEAN-PSYMAP',
+    requiredBadge: 'streak-3',
   },
   forest: {
     name: 'forest',
@@ -230,10 +219,7 @@ export const Themes: Record<string, ThemeDefinition> = {
     chartPalette: ChartPalette.forest,
     statusBar: 'light-content',
     emojiPack: EmojiPacks.forest,
-    premium: true,
-    priceBRL: 4.9,
-    sku: 'theme_forest',
-    donationCode: 'FOREST-PSYMAP',
+    requiredBadge: 'entries-50',
   },
   kittens: {
     name: 'kittens',
@@ -254,10 +240,7 @@ export const Themes: Record<string, ThemeDefinition> = {
     chartPalette: ['#ff6b6b', '#ff9e64', '#ffd56b', '#f7a072', '#c85671', '#ff8fab', '#ffb347', '#e07a5f'],
     statusBar: 'light-content',
     emojiPack: EmojiPacks.kittens,
-    premium: true,
-    priceBRL: 4.9,
-    sku: 'theme_kittens',
-    donationCode: 'KITTENS-PSYMAP',
+    requiredBadge: 'level-5',
   },
 };
 

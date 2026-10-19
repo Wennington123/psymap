@@ -10,6 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
+import { card, radii } from '../constants/ui';
 
 interface Props {
   visible: boolean;
@@ -34,13 +35,13 @@ export default function NamePromptModal({ visible, onConfirm, onCancel }: Props)
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={handleClose}>
       <KeyboardAvoidingView style={[styles.overlay, { backgroundColor: colors.overlay }]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View style={[styles.card, { backgroundColor: colors.background, borderColor: colors.border }]}>
+        <View style={[styles.card, { backgroundColor: colors.background }, card(colors)]}>
           <Text style={[styles.title, { color: colors.text }]}>Identificação para o PDF</Text>
           <Text style={[styles.body, { color: colors.textSecondary }]}>
             Seu nome será usado apenas para identificar o relatório. Não será armazenado ou compartilhado.
           </Text>
           <TextInput
-            style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
+            style={[styles.input, { backgroundColor: colors.surface, color: colors.text }]}
             placeholder="Seu nome completo"
             placeholderTextColor={colors.textDim}
             value={name}
@@ -50,7 +51,7 @@ export default function NamePromptModal({ visible, onConfirm, onCancel }: Props)
             onSubmitEditing={handleConfirm}
           />
           <View style={styles.buttons}>
-            <TouchableOpacity style={[styles.cancelBtn, { borderColor: colors.borderMuted }]} onPress={handleClose}>
+            <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
               <Text style={[styles.cancelText, { color: colors.textSecondary }]}>Cancelar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.confirmBtn, { backgroundColor: colors.accent }]} onPress={handleConfirm}>
@@ -73,9 +74,8 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     maxWidth: 340,
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 24,
-    borderWidth: 1,
   },
   title: {
     fontSize: 18,
@@ -88,11 +88,10 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   input: {
-    borderRadius: 10,
+    borderRadius: radii.input,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    borderWidth: 1,
     marginBottom: 16,
   },
   buttons: {
@@ -102,9 +101,8 @@ const styles = StyleSheet.create({
   cancelBtn: {
     flex: 1,
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: radii.btn,
     alignItems: 'center',
-    borderWidth: 1,
   },
   cancelText: {
     fontSize: 15,
@@ -113,7 +111,7 @@ const styles = StyleSheet.create({
   confirmBtn: {
     flex: 1,
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: radii.btn,
     alignItems: 'center',
   },
   confirmText: {

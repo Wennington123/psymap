@@ -26,6 +26,7 @@ import {
 } from '../../lib/stats';
 import { generateReportHtml } from '../../lib/pdfReport';
 import { useTheme } from '../../contexts/ThemeContext';
+import { radii, shadow } from '../../constants/ui';
 import RangeSelector from '../../components/charts/RangeSelector';
 import StatsSummaryCards from '../../components/charts/StatsSummaryCards';
 import StatsSection from '../../components/charts/StatsSection';
@@ -94,7 +95,7 @@ export default function StatisticsScreen() {
     try {
       let logoSrc: string | undefined;
       try {
-        const asset = Asset.fromModule(require('../assets/icon.png'));
+        const asset = Asset.fromModule(require('../../assets/icon.png'));
         await asset.downloadAsync();
         if (asset.localUri) {
           const logoB64 = await FileSystem.readAsStringAsync(asset.localUri, {
@@ -154,7 +155,7 @@ export default function StatisticsScreen() {
         {exporting ? (
           <ActivityIndicator color={colors.textOnAccent} size="small" />
         ) : (
-          <Text style={[styles.exportBtnText, { color: colors.textOnAccent }]}>📄 Exportar PDF</Text>
+          <Text style={[styles.exportBtnText, { color: colors.textOnAccent }]}>Exportar PDF</Text>
         )}
       </TouchableOpacity>
 
@@ -209,9 +210,10 @@ const styles = StyleSheet.create({
   exportBtn: {
     marginHorizontal: 16,
     marginBottom: 12,
-    paddingVertical: 13,
-    borderRadius: 10,
+    paddingVertical: 14,
+    borderRadius: radii.btn,
     alignItems: 'center',
+    ...shadow(),
   },
   exportBtnDisabled: {
     opacity: 0.4,

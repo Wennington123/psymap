@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Emotion } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
+import { card, radii } from '../constants/ui';
 
 interface Props {
   visible: boolean;
@@ -38,10 +39,10 @@ export default function CustomEmotionInput({ visible, onClose, onSave }: Props) 
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
-        <View style={[styles.dialog, { backgroundColor: colors.background, borderColor: colors.border }]}>
+        <View style={[styles.dialog, { backgroundColor: colors.background }, card(colors)]}>
           <Text style={[styles.title, { color: colors.text }]}>Nova emoção personalizada</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
+            style={[styles.input, { backgroundColor: colors.surface, color: colors.text }]}
             placeholder="Nome da emoção"
             placeholderTextColor={colors.textDim}
             value={label}
@@ -49,7 +50,7 @@ export default function CustomEmotionInput({ visible, onClose, onSave }: Props) 
             autoFocus
           />
           <TextInput
-            style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
+            style={[styles.input, { backgroundColor: colors.surface, color: colors.text }]}
             placeholder="Emoji (ex: 🎉)"
             placeholderTextColor={colors.textDim}
             value={emoji}
@@ -82,24 +83,22 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   dialog: {
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 24,
     width: '100%',
     maxWidth: 320,
-    borderWidth: 1,
   },
   title: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '700',
     marginBottom: 16,
     textAlign: 'center',
   },
   input: {
-    borderRadius: 10,
+    borderRadius: radii.input,
     padding: 12,
     fontSize: 16,
     marginBottom: 12,
-    borderWidth: 1,
   },
   buttons: {
     flexDirection: 'row',
@@ -117,7 +116,7 @@ const styles = StyleSheet.create({
   saveBtn: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 10,
+    borderRadius: 24,
   },
   saveText: {
     fontSize: 15,

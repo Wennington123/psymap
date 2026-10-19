@@ -9,13 +9,19 @@ import {
   Image,
   Share,
   Linking,
+  ActivityIndicator,
 } from 'react-native';
 import Constants from 'expo-constants';
 import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { BADGES } from '../../lib/gamification';
 import { Themes, ThemeName } from '../../constants/colors';
-import { clearAllData } from '../../storage/moodStorage';
+import { clearAllData, getEntries } from '../../storage/moodStorage';
+import { clearGamificationData, getEarnedBadges, getXpTotal } from '../../storage/gamification';
+import { computeStreak } from '../../lib/gamification';
+import { ensureRankDoc } from '../../lib/firebaseRanking';
 import {
   requestPermission,
   scheduleDailyReminders,
@@ -23,6 +29,9 @@ import {
   setNotificationsEnabled,
   getNotificationsEnabled,
 } from '../../lib/notifications';
+import { card, radii, shadow } from '../../constants/ui';
+import { useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 
 const THEME_LABELS: Record<ThemeName, string> = {
   dracula: 'Dracula',
@@ -38,9 +47,18 @@ const THEME_LIST: ThemeName[] = ['dracula', 'dark', 'light', 'sunset', 'ocean', 
 const PIX_KEY = '74988217793';
 
 export default function SettingsScreen() {
-  const { colors, themeName, setTheme, isUnlocked, channel } = useTheme();
+  const { colors, themeName, setTheme } = useTheme();
+  const { user, loading, signInWithGoogle, signOut } = useAuth();
   const version = Constants.expoConfig?.version ?? '1.0.0';
   const [notifEnabled, setNotifEnabled] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
+  const [myBadges, setMyBadges] = useState<string[]>([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getEarnedBadges().then(setMyBadges);
+    }, []),
+  );
 
   useEffect(() => {
     getNotificationsEnabled().then(setNotifEnabled);
@@ -70,10 +88,27 @@ export default function SettingsScreen() {
     }
   };
 
+  const handleSignIn = async () => {
+    setSigningIn(true);
+    const signedIn = await signInWithGoogle();
+    setSigningIn(false);
+    if (!signedIn) return;
+    // garante que o doc do ranking nasce com o XP já acumulado
+    const [xp, entries] = await Promise.all([getXpTotal(), getEntries()]);
+    ensureRankDoc(signedIn, xp, computeStreak(entries));
+  };
+
+  const handleSignOut = () => {
+    Alert.alert('Sair da conta', 'Sair da sua conta Google? Seus dados locais são mantidos.', [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Sair', style: 'destructive', onPress: () => signOut() },
+    ]);
+  };
+
   const handleDeleteAll = () => {
     Alert.alert(
       'Excluir todos os dados',
-      'Isso apagará todo o seu histórico, emoções customizadas e redefinirá o tema. Esta ação não pode ser desfeita.',
+      'Isso apagará todo o seu histórico, emoções customizadas, gamificação e redefinirá o tema. Esta ação não pode ser desfeita.',
       [
         { text: 'Cancelar', style: 'cancel' },
         {
@@ -81,6 +116,7 @@ export default function SettingsScreen() {
           style: 'destructive',
           onPress: async () => {
             await clearAllData();
+            await clearGamificationData();
             setTheme('dracula');
             Alert.alert('Sucesso', 'Todos os dados foram excluídos.');
           },
@@ -102,22 +138,21 @@ export default function SettingsScreen() {
     Alert.alert('Copiado!', 'Chave PIX copiada para a área de transferência.');
   };
 
-  const handleBuy = (name: ThemeName) => {
-    const price = Themes[name].priceBRL?.toFixed(2).replace('.', ',');
-    Alert.alert(
-      `Comprar tema ${THEME_LABELS[name]}`,
-      `Na Play Store este tema custa R$ ${price}. A compra será processada pelo Google Play Billing.`,
-    );
-  };
-
   const handleThemePress = (name: ThemeName) => {
-    if (isUnlocked(name)) {
+    const theme = Themes[name];
+    const requirement = theme.requiredBadge ? BADGES.find((b) => b.id === theme.requiredBadge) : null;
+    if (!requirement) {
       setTheme(name);
       return;
     }
-    if (channel === 'play') {
-      handleBuy(name);
+    if (myBadges.includes(theme.requiredBadge!)) {
+      setTheme(name);
+      return;
     }
+    Alert.alert(
+      THEME_LABELS[name],
+      `Desbloqueie com a conquista ${requirement.emoji} ${requirement.title}: ${requirement.description.toLowerCase()}.`,
+    );
   };
 
   return (
@@ -125,22 +160,66 @@ export default function SettingsScreen() {
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
-      {/* Theme Section */}
-      <Text style={[styles.sectionTitle, { color: colors.accent }]}>Tema</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textDim }]}>Conta</Text>
+      <View style={styles.section}>
+        {loading ? (
+          <View style={[styles.accountCard, card(colors)]}>
+            <ActivityIndicator color={colors.accent} size="small" />
+          </View>
+        ) : user ? (
+          <View style={[styles.accountCard, card(colors)]}>
+            {user.photoURL ? (
+              <Image source={{ uri: user.photoURL }} style={styles.avatar} />
+            ) : (
+              <View style={[styles.avatar, { backgroundColor: colors.accent }]}>
+                <Text style={[styles.avatarInitial, { color: colors.textOnAccent }]}>
+                  {(user.displayName ?? '?').charAt(0).toUpperCase()}
+                </Text>
+              </View>
+            )}
+            <View style={styles.accountInfo}>
+              <Text style={[styles.accountName, { color: colors.text }]}>{user.displayName}</Text>
+              <Text style={[styles.accountEmail, { color: colors.textDim }]}>{user.email}</Text>
+            </View>
+            <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut}>
+              <Text style={[styles.signOutText, { color: colors.textSecondary }]}>Sair</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={[styles.loginCard, card(colors)]}
+            activeOpacity={0.7}
+            onPress={handleSignIn}
+          >
+            <View style={styles.googleBadge}>
+              <Text style={styles.googleBadgeIcon}>G</Text>
+            </View>
+            <View style={styles.accountInfo}>
+              <Text style={[styles.accountName, { color: colors.text }]}>Entrar com Google</Text>
+              <Text style={[styles.accountEmail, { color: colors.textDim }]}>
+                Para competir no ranking semanal e geral
+              </Text>
+            </View>
+            {signingIn ? <ActivityIndicator color={colors.accent} size="small" /> : <Ionicons name="chevron-forward" size={20} color={colors.textDim} />}
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <Text style={[styles.sectionTitle, { color: colors.textDim }]}>Tema</Text>
       <View style={styles.section}>
         {THEME_LIST.map((key) => {
           const theme = Themes[key];
-          const unlocked = isUnlocked(key);
+          const requirement = theme.requiredBadge ? BADGES.find((b) => b.id === theme.requiredBadge) : null;
+          const unlocked = !requirement || myBadges.includes(requirement.id);
           const isSelected = themeName === key;
           return (
             <TouchableOpacity
               key={key}
               style={[
                 styles.card,
-                {
-                  backgroundColor: colors.surface,
-                  borderColor: isSelected ? colors.accent : colors.border,
-                },
+                card(colors),
+                !unlocked && { opacity: 0.55 },
+                isSelected && unlocked && { borderWidth: 2, borderColor: colors.accent },
               ]}
               activeOpacity={0.7}
               onPress={() => handleThemePress(key)}
@@ -152,7 +231,7 @@ export default function SettingsScreen() {
                     style={{
                       width: 44,
                       height: 44,
-                      borderRadius: 8,
+                      borderRadius: 10,
                       margin: 2,
                       backgroundColor:
                         i === 0
@@ -166,15 +245,15 @@ export default function SettingsScreen() {
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={[styles.label, { color: colors.text }]}>{THEME_LABELS[key]}</Text>
-                {channel === 'play' && theme.premium ? (
+                {requirement && !unlocked ? (
                   <Text style={[styles.description, { color: colors.textSecondary }]}>
-                    {unlocked ? 'Premium · adquirido' : `Premium · R$ ${theme.priceBRL?.toFixed(2).replace('.', ',')}`}
+                    🔒 Desbloqueia com: {requirement.emoji} {requirement.title}
                   </Text>
                 ) : null}
               </View>
-              {isSelected && (
+              {isSelected && unlocked && (
                 <View style={[styles.check, { backgroundColor: colors.accent }]}>
-                  <Text style={{ color: '#fff', fontSize: 13, fontWeight: '700' }}>✓</Text>
+                  <Text style={{ color: colors.textOnAccent, fontSize: 13, fontWeight: '700' }}>✓</Text>
                 </View>
               )}
             </TouchableOpacity>
@@ -182,11 +261,10 @@ export default function SettingsScreen() {
         })}
       </View>
 
-      {/* Notification Section */}
-      <Text style={[styles.sectionTitle, { color: colors.accent }]}>Notificações</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textDim }]}>Notificações</Text>
       <View style={styles.section}>
         <TouchableOpacity
-          style={[styles.card, { backgroundColor: colors.surface, borderColor: notifEnabled ? colors.accent : colors.border }]}
+          style={[styles.card, card(colors)]}
           activeOpacity={0.7}
           onPress={handleToggleNotifications}
         >
@@ -207,11 +285,10 @@ export default function SettingsScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Data Section */}
-      <Text style={[styles.sectionTitle, { color: colors.accent }]}>Dados</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textDim }]}>Dados</Text>
       <View style={styles.section}>
         <TouchableOpacity
-          style={[styles.card, styles.dangerCard, { backgroundColor: colors.surface, borderColor: '#e94560' }]}
+          style={[styles.card, card(colors)]}
           activeOpacity={0.7}
           onPress={handleDeleteAll}
         >
@@ -219,11 +296,10 @@ export default function SettingsScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Contribute Section */}
-      <Text style={[styles.sectionTitle, { color: colors.accent }]}>Contribua</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textDim }]}>Contribua</Text>
       <View style={styles.section}>
         <TouchableOpacity
-          style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          style={[styles.card, card(colors)]}
           activeOpacity={0.7}
           onPress={handleFeedback}
         >
@@ -231,15 +307,14 @@ export default function SettingsScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          style={[styles.card, card(colors)]}
           activeOpacity={0.7}
           onPress={handleShare}
         >
           <Text style={[styles.label, { color: colors.text }]}>Compartilhar app</Text>
         </TouchableOpacity>
 
-        {/* Donation Card */}
-        <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border, flexDirection: 'column', alignItems: 'stretch' }]}>
+        <View style={[styles.card, card(colors), styles.donationCard]}>
           <Text style={[styles.label, { color: colors.text, marginBottom: 12 }]}>Fazer doação (PIX)</Text>
           <Image
             source={require('../../assets/qrcode-pix.png')}
@@ -257,7 +332,6 @@ export default function SettingsScreen() {
         </View>
       </View>
 
-      {/* Version */}
       <Text style={[styles.version, { color: colors.textDim }]}>PsyMap v{version}</Text>
     </ScrollView>
   );
@@ -268,17 +342,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingTop: 24,
+    paddingTop: 16,
     paddingBottom: 40,
   },
   sectionTitle: {
     fontSize: 13,
     fontWeight: '700',
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 1.2,
     paddingHorizontal: 16,
-    marginBottom: 8,
-    marginTop: 20,
+    marginBottom: 10,
+    marginTop: 24,
   },
   section: {
     paddingHorizontal: 16,
@@ -288,12 +362,65 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 14,
-    borderRadius: 12,
-    borderWidth: 2,
     gap: 14,
   },
-  dangerCard: {
-    borderColor: '#e94560',
+  accountCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    gap: 14,
+  },
+  loginCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    gap: 14,
+    ...shadow(),
+  },
+  avatar: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarInitial: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  accountInfo: {
+    flex: 1,
+  },
+  accountName: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  accountEmail: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  signOutBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+  },
+  signOutText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  googleBadge: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.06)',
+  },
+  googleBadgeIcon: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#4285F4',
   },
   preview: {
     flexDirection: 'row',
@@ -318,11 +445,11 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: '#999',
+    backgroundColor: 'rgba(128,128,128,0.6)',
   },
   toggleDotOn: {
     alignSelf: 'flex-end',
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255,255,255,0.95)',
   },
   check: {
     width: 28,
@@ -330,6 +457,10 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  donationCard: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
   },
   qrImage: {
     width: 200,
@@ -343,22 +474,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   copyButton: {
-    paddingVertical: 10,
+    paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 8,
+    borderRadius: radii.btn,
     alignSelf: 'center',
   },
   copyButtonText: {
     color: '#fff',
     fontSize: 14,
     fontWeight: '700',
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    fontSize: 14,
   },
   version: {
     textAlign: 'center',

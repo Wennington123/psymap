@@ -12,7 +12,7 @@ export default function StatsSection({ title, children }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: colors.accent, borderBottomColor: colors.border }]}>{title}</Text>
+      <Text style={[styles.title, { color: colors.textDim }]}>{title}</Text>
       {children}
     </View>
   );
@@ -24,10 +24,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   title: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '700',
-    marginBottom: 8,
-    paddingBottom: 6,
-    borderBottomWidth: 1,
+    textTransform: 'uppercase',
+    letterSpacing: 1.2,
+    marginBottom: 10,
   },
 });

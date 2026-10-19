@@ -8,10 +8,12 @@ import {
   SectionList,
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
-import MoodLogItem from '../../components/MoodLogItem';
-import { getEntries, deleteEntry } from '../../storage/moodStorage';
 import { MoodEntry } from '../../types';
 import { useTheme } from '../../contexts/ThemeContext';
+import { shadow } from '../../constants/ui';
+
+import MoodLogItem from '../../components/MoodLogItem';
+import { getEntries, deleteEntry } from '../../storage/moodStorage';
 
 interface Section {
   title: string;
@@ -89,8 +91,8 @@ export default function HistoryScreen() {
             </TouchableOpacity>
           )}
           renderSectionHeader={({ section: { title } }) => (
-            <View style={[styles.sectionHeader, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
-              <Text style={[styles.sectionHeaderText, { color: colors.accent }]}>{title}</Text>
+            <View style={[styles.sectionHeader, { backgroundColor: colors.background }]}>
+              <Text style={[styles.sectionHeaderText, { color: colors.textDim }]}>{title}</Text>
             </View>
           )}
           contentContainerStyle={{ paddingBottom: 24 }}
@@ -102,7 +104,8 @@ export default function HistoryScreen() {
               </Text>
               <TouchableOpacity
                 onPress={() => router.push('/statistics' as any)}
-                style={[styles.statsBtn, { backgroundColor: colors.surface, borderColor: colors.border }]}
+                style={[styles.statsBtn, { backgroundColor: colors.surface }, shadow()]}
+                activeOpacity={0.7}
               >
                 <Text style={styles.statsBtnText}>📊</Text>
               </TouchableOpacity>
@@ -131,16 +134,15 @@ const styles = StyleSheet.create({
   statsBtn: {
     paddingVertical: 8,
     paddingHorizontal: 12,
-    borderRadius: 8,
-    borderWidth: 1,
+    borderRadius: 12,
   },
   statsBtnText: {
     fontSize: 18,
   },
   sectionHeader: {
     paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
+    paddingTop: 16,
+    paddingBottom: 6,
   },
   sectionHeaderText: {
     fontSize: 13,

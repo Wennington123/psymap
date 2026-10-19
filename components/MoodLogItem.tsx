@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { MoodEntry } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
 import { EmojiSource } from '../constants/colors';
+import { shadow, radii } from '../constants/ui';
 import EmojiRenderer from './EmojiRenderer';
 
 interface Props {
@@ -20,7 +21,7 @@ export default function MoodLogItem({ entry }: Props) {
       : entry.emotion.emoji;
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <View style={[styles.container, { backgroundColor: colors.surface }]}>
       <View style={styles.left}>
         <EmojiRenderer source={emojiSource} size={30} />
       </View>
@@ -34,12 +35,7 @@ export default function MoodLogItem({ entry }: Props) {
           {[1, 2, 3, 4, 5].map((level) => (
             <View
               key={level}
-              style={[
-                styles.miniDot,
-                level <= entry.intensity
-                  ? { backgroundColor: colors.accent, borderColor: colors.accent }
-                  : { backgroundColor: 'transparent', borderColor: colors.borderMuted },
-              ]}
+              style={[styles.miniDot, level <= entry.intensity ? { backgroundColor: colors.accent } : { backgroundColor: colors.borderMuted }]}
             />
           ))}
         </View>
@@ -51,12 +47,12 @@ export default function MoodLogItem({ entry }: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    borderRadius: 12,
+    borderRadius: radii.card,
     padding: 14,
     marginHorizontal: 16,
-    marginVertical: 4,
+    marginVertical: 5,
     alignItems: 'center',
-    borderWidth: 1,
+    ...shadow(),
   },
   left: {
     marginRight: 12,
@@ -90,6 +86,5 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    borderWidth: 1,
   },
 });
