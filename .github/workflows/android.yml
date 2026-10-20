@@ -5,10 +5,13 @@ on:
   push:
     branches: [main]
 
+env:
+  REACT_NATIVE_ARCHS: arm64-v8a
+
 jobs:
-  build:
+  debug-apk:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -21,6 +24,53 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Install Android platform
+        run: |
+          SDK_ROOT="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+          SDKMANAGER="$(ls -d "$SDK_ROOT"/cmdline-tools/*/bin/sdkmanager | tail -1)"
+          yes | "$SDKMANAGER" --licenses > /dev/null
+          "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0" > /dev/null
+
+      - name: Install JS dependencies
+        run: npm ci --include=dev
+
+      - name: Generate native project
+        run: npx expo prebuild --platform android --clean --no-install
+
+      - name: Build debug APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug -PreactNativeArchitectures=$REACT_NATIVE_ARCHS --stacktrace
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: psymap-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
 
       - name: Install Android platform
         run: |
@@ -40,17 +90,11 @@ jobs:
       - name: Configure release signing
         run: node .github/scripts/patch-signing.js
 
-      - name: Build APKs and AAB
+      - name: Build release APK and AAB
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug assembleRelease bundleRelease --no-daemon --stacktrace
-
-      - name: Upload debug APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: psymap-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          ./gradlew assembleRelease bundleRelease -PreactNativeArchitectures=$REACT_NATIVE_ARCHS --stacktrace
 
       - name: Upload release APK
         uses: actions/upload-artifact@v4
