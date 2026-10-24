@@ -9,7 +9,7 @@ import { Emotion } from '../types';
 import { BASE_EMOTIONS } from '../constants/emotions';
 import { useTheme } from '../contexts/ThemeContext';
 import { EmojiSource } from '../constants/colors';
-import { card, radii, spacing, shadow } from '../constants/ui';
+import { spacing, shadow, fonts, displayFont } from '../constants/ui';
 import EmojiRenderer from './EmojiRenderer';
 
 interface Props {
@@ -23,13 +23,15 @@ export default function EmotionWheel({ onSelect, onAddCustom, customEmotions }: 
 
   const itemStyle = {
     backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    ...shadow(),
+    borderRadius: colors.style === 'pixel' ? 6 : 999,
+    borderWidth: colors.style === 'pixel' ? 2 : 1,
+    borderColor: colors.style === 'pixel' ? colors.border : colors.border + '55',
+    ...(colors.style === 'pixel' ? {} : shadow()),
   } as const;
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: colors.text }]}>Selecione uma Emoção</Text>
+      <Text style={[styles.title, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Selecione uma emoção</Text>
       <View style={styles.grid}>
         {BASE_EMOTIONS.map((emotion) => {
           const emojiSource: EmojiSource = emojiPack[emotion.id as keyof typeof emojiPack] ?? emotion.emoji;
@@ -38,10 +40,17 @@ export default function EmotionWheel({ onSelect, onAddCustom, customEmotions }: 
               key={emotion.id}
               style={[styles.emotionItem, itemStyle]}
               onPress={() => onSelect(emotion)}
-              activeOpacity={0.7}
+              activeOpacity={0.65}
             >
-              <EmojiRenderer source={emojiSource} size={28} />
-              <Text style={[styles.emotionLabel, { color: colors.textSecondary }]}>{emotion.label}</Text>
+              <EmojiRenderer source={emojiSource} size={30} />
+              <Text
+                style={[styles.emotionLabel, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+              >
+                {emotion.label}
+              </Text>
             </TouchableOpacity>
           );
         })}
@@ -50,19 +59,28 @@ export default function EmotionWheel({ onSelect, onAddCustom, customEmotions }: 
             key={emotion.id}
             style={[styles.emotionItem, itemStyle]}
             onPress={() => onSelect(emotion)}
-            activeOpacity={0.7}
+            activeOpacity={0.65}
           >
-            <EmojiRenderer source={emotion.emoji} size={28} />
-            <Text style={[styles.emotionLabel, { color: colors.textSecondary }]}>{emotion.label}</Text>
+            <EmojiRenderer source={emotion.emoji} size={30} />
+            <Text style={[styles.emotionLabel, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>{emotion.label}</Text>
           </TouchableOpacity>
         ))}
         <TouchableOpacity
-          style={[styles.emotionItem, itemStyle, { borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.accent }]}
+          style={[
+            styles.emotionItem,
+            {
+              backgroundColor: 'transparent',
+              borderRadius: colors.style === 'pixel' ? 6 : 999,
+              borderWidth: colors.style === 'pixel' ? 2 : 1.5,
+              borderStyle: 'dashed',
+              borderColor: colors.accent + 'aa',
+            },
+          ]}
           onPress={onAddCustom}
-          activeOpacity={0.7}
+          activeOpacity={0.65}
         >
           <Text style={[styles.emoji, { color: colors.accent }]}>+</Text>
-          <Text style={[styles.emotionLabel, { color: colors.textSecondary }]}>Personalizar</Text>
+          <Text style={[styles.emotionLabel, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>Nova</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -71,23 +89,23 @@ export default function EmotionWheel({ onSelect, onAddCustom, customEmotions }: 
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
     paddingVertical: spacing.sm,
   },
   title: {
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: 12,
+    fontFamily: fonts.bold,
+    textTransform: 'uppercase',
+    letterSpacing: 1.4,
     marginBottom: spacing.md,
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: 12,
+    gap: 16,
   },
   emotionItem: {
-    width: 82,
-    height: 84,
+    width: 76,
+    height: 76,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -96,7 +114,8 @@ const styles = StyleSheet.create({
   },
   emotionLabel: {
     fontSize: 10,
-    marginTop: 4,
+    fontFamily: fonts.semibold,
+    marginTop: 3,
     textAlign: 'center',
   },
 });

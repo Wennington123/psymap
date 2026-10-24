@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import EmotionWheel from '../../components/EmotionWheel';
+import EmojiRenderer from '../../components/EmojiRenderer';
 import IntensityPicker from '../../components/IntensityPicker';
 import CustomEmotionInput from '../../components/CustomEmotionInput';
 import NoteInput from '../../components/NoteInput';
@@ -25,10 +26,15 @@ import { useGamification } from '../../hooks/useGamification';
 import { computeStreak } from '../../lib/gamification';
 import { awardEntry } from '../../storage/gamification';
 import { syncXpDelta } from '../../lib/firebaseRanking';
-import { card, radii, spacing, shadow } from '../../constants/ui';
+import { card, radii, spacing, shadow, fonts, displayFont } from '../../constants/ui';
+
+/* Cantos: temas pixel usam raio pequeno; os modernos usam pill. */
+function displayRadius(colors: ReturnType<typeof useTheme>['colors']): number {
+  return colors.style === 'pixel' ? 6 : 999;
+}
 
 export default function HomeScreen() {
-  const { colors } = useTheme();
+  const { colors, emojiPack } = useTheme();
   const { user } = useAuth();
   const gamification = useGamification();
 
@@ -106,20 +112,26 @@ export default function HomeScreen() {
       {step === 'wheel' && (
         <>
           <View style={styles.greeting}>
-            <Text style={[styles.greetingTitle, { color: colors.text }]}>Olá 👋</Text>
-            <Text style={[styles.greetingSubtitle, { color: colors.textDim }]}>
+            <Text style={[styles.greetingTitle, { color: colors.text, fontFamily: displayFont(colors, 'extrabold') }]}>Olá 👋</Text>
+            <Text style={[styles.greetingSubtitle, { color: colors.textDim, fontFamily: displayFont(colors, 'regular') }]}>
               Como você está se sentindo?
             </Text>
           </View>
 
           <View style={[styles.gamiCard, card(colors)]}>
             <View style={styles.gamiRow}>
-              <Text style={[styles.gamiStreak, { color: colors.accent }]}>
-                🔥 {gamification.streak}
-              </Text>
-              <Text style={[styles.gamiLevel, { color: colors.textSecondary }]}>
-                Nível {gamification.level} · {gamification.xpTotal} XP
-              </Text>
+              <View>
+                <Text style={[styles.gamiLabel, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Sequência</Text>
+                <Text style={[styles.gamiStreak, { color: colors.text, fontFamily: displayFont(colors, 'extrabold') }]}>
+                  🔥 {gamification.streak}
+                  <Text style={[styles.gamiStreakUnit, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>
+                    {gamification.streak === 1 ? ' dia' : ' dias'}
+                  </Text>
+                </Text>
+              </View>
+              <View style={[styles.levelPill, { backgroundColor: colors.accent + '1f', borderColor: colors.accent + '60', borderRadius: displayRadius(colors) }]}>
+                <Text style={[styles.levelPillText, { color: colors.accent, fontFamily: displayFont(colors, 'bold') }]}>Nível {gamification.level}</Text>
+              </View>
             </View>
             <View style={[styles.gamiBarTrack, { backgroundColor: colors.background }]}>
               <View
@@ -129,9 +141,12 @@ export default function HomeScreen() {
                 ]}
               />
             </View>
-            <Text style={[styles.gamiNext, { color: colors.textDim }]}>
-              {gamification.toNext} XP para o nível {gamification.level + 1}
-            </Text>
+            <View style={styles.gamiFooter}>
+              <Text style={[styles.gamiNext, { color: colors.textDim }]}>
+                {gamification.toNext} XP para o nível {gamification.level + 1}
+              </Text>
+              <Text style={[styles.gamiNext, { color: colors.textDim }]}>{gamification.xpTotal} XP</Text>
+            </View>
           </View>
 
           <EmotionWheel
@@ -150,8 +165,11 @@ export default function HomeScreen() {
 
       {step === 'intensity' && selectedEmotion && (
         <View style={styles.stepContainer}>
-          <Text style={styles.selectedEmoji}>{selectedEmotion.emoji}</Text>
-          <Text style={[styles.selectedLabel, { color: colors.text }]}>{selectedEmotion.label}</Text>
+          <EmojiRenderer
+            source={emojiPack[selectedEmotion.id as keyof typeof emojiPack] ?? selectedEmotion.emoji}
+            size={64}
+          />
+          <Text style={[styles.selectedLabel, { color: colors.text, fontFamily: displayFont(colors, 'bold') }]}>{selectedEmotion.label}</Text>
 
           <IntensityPicker value={intensity} onChange={setIntensity} />
 
@@ -160,13 +178,13 @@ export default function HomeScreen() {
               style={styles.backBtn}
               onPress={() => setStep('wheel')}
             >
-              <Text style={[styles.backBtnText, { color: colors.textSecondary }]}>Voltar</Text>
+              <Text style={[styles.backBtnText, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>Voltar</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.nextBtn, { backgroundColor: colors.accent }]}
+              style={[styles.nextBtn, { backgroundColor: colors.accent, borderRadius: radii.btn }]}
               onPress={() => setStep('note')}
             >
-              <Text style={[styles.primaryBtnText, { color: colors.textOnAccent }]}>Continuar</Text>
+              <Text style={[styles.primaryBtnText, { color: colors.textOnAccent, fontFamily: displayFont(colors, 'bold') }]}>Continuar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -174,8 +192,15 @@ export default function HomeScreen() {
 
       {step === 'note' && (
         <View style={styles.stepContainer}>
-          <Text style={styles.selectedEmoji}>{selectedEmotion?.emoji}</Text>
-          <Text style={[styles.selectedLabel, { color: colors.text }]}>
+          <EmojiRenderer
+            source={
+              selectedEmotion
+                ? emojiPack[selectedEmotion.id as keyof typeof emojiPack] ?? selectedEmotion.emoji
+                : '❓'
+            }
+            size={64}
+          />
+          <Text style={[styles.selectedLabel, { color: colors.text, fontFamily: displayFont(colors, 'bold') }]}>
             {selectedEmotion?.label} — {intensity}/5
           </Text>
 
@@ -186,13 +211,13 @@ export default function HomeScreen() {
               style={styles.backBtn}
               onPress={() => setStep('intensity')}
             >
-              <Text style={[styles.backBtnText, { color: colors.textSecondary }]}>Voltar</Text>
+              <Text style={[styles.backBtnText, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>Voltar</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.nextBtn, { backgroundColor: colors.accent }]}
+              style={[styles.nextBtn, { backgroundColor: colors.accent, borderRadius: radii.btn }]}
               onPress={handleRegister}
             >
-              <Text style={[styles.primaryBtnText, { color: colors.textOnAccent }]}>Registrar</Text>
+              <Text style={[styles.primaryBtnText, { color: colors.textOnAccent, fontFamily: displayFont(colors, 'bold') }]}>Registrar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -208,46 +233,73 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
   },
   greeting: {
-    marginBottom: spacing.md,
+    marginBottom: spacing.lg,
   },
   greetingTitle: {
-    fontSize: 34,
-    fontWeight: '800',
+    fontSize: 32,
+    fontFamily: fonts.extrabold,
+    letterSpacing: -0.5,
   },
   greetingSubtitle: {
     fontSize: 15,
+    fontFamily: fonts.regular,
     marginTop: 4,
   },
   gamiCard: {
     padding: spacing.md,
-    marginBottom: spacing.md,
+    marginBottom: spacing.lg,
   },
   gamiRow: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 14,
+  },
+  gamiLabel: {
+    fontSize: 11,
+    fontFamily: fonts.bold,
+    textTransform: 'uppercase',
+    letterSpacing: 1.2,
+    marginBottom: 2,
   },
   gamiStreak: {
-    fontSize: 22,
-    fontWeight: '800',
+    fontSize: 28,
+    fontFamily: fonts.extrabold,
+    letterSpacing: -0.5,
   },
-  gamiLevel: {
-    fontSize: 13,
-    fontWeight: '600',
+  gamiStreakUnit: {
+    fontSize: 15,
+    fontFamily: fonts.semibold,
+    letterSpacing: 0,
+  },
+  levelPill: {
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+    borderRadius: 999,
+    borderWidth: 1,
+  },
+  levelPillText: {
+    fontSize: 12,
+    fontFamily: fonts.bold,
+    letterSpacing: 0.3,
   },
   gamiBarTrack: {
-    height: 6,
-    borderRadius: 3,
+    height: 8,
+    borderRadius: 4,
     overflow: 'hidden',
   },
   gamiBarFill: {
     height: '100%',
-    borderRadius: 3,
+    borderRadius: 4,
+  },
+  gamiFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
   },
   gamiNext: {
     fontSize: 11,
-    marginTop: 6,
+    fontFamily: fonts.regular,
   },
   stepContainer: {
     alignItems: 'center',
@@ -259,7 +311,7 @@ const styles = StyleSheet.create({
   },
   selectedLabel: {
     fontSize: 22,
-    fontWeight: '600',
+    fontFamily: fonts.bold,
     marginBottom: spacing.lg,
   },
   stepButtons: {

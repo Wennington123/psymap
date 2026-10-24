@@ -12,14 +12,14 @@ interface ThemeContextValue {
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  colors: Themes.dracula,
-  themeName: 'dracula',
-  emojiPack: Themes.dracula.emojiPack,
+  colors: Themes.light,
+  themeName: 'light',
+  emojiPack: Themes.light.emojiPack,
   setTheme: () => {},
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [themeName, setThemeName] = useState<ThemeName>('dracula');
+  const [themeName, setThemeName] = useState<ThemeName>('light');
 
   useEffect(() => {
     (async () => {

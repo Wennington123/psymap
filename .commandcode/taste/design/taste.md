@@ -1,0 +1,6 @@
+# Design
+
+- Prefers minimalist, visually clean UIs — explicitly dislikes "over-CSS" looks with hard borders; favors subtle shadows, more whitespace, clear typographic hierarchy. Judges a screen by whether it still reads as raw "HTML + CSS" / "chapado" (flat, div-on-div, no depth): treats that as a defect to fix with real tonal depth (darker bg vs lighter surfaces), hairline borders/shadows, micro-labels + stronger type scale, and organic shapes over plain squares. Confidence: 0.85
+- Likes gamification elements in products (XP, streaks, leaderboards, badges). Confidence: 0.7
+- Wants an explicitly "friendly" (amigável) visual identity: rounded corners everywhere (larger radii on cards/inputs/pills), rounded/soft typefaces (welcomed Nunito over the system font), a consistent set of cute 3D emojis instead of mixed system emojis, and modern line icons. Treat hard edges, square tiles and mixed emoji styles as things to soften. Confidence: 0.7
+- Prefers achievement-gated unlocks over paywalls: asked to remove paid themes (premium/priceBRL/sku/sku purchase flow) in Psymap and unlock themes via gamification goals/badges instead — favors frictionless, free user experience for features like customization. Confidence: 0.7

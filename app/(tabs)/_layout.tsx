@@ -1,17 +1,24 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { House, Clock, ChartColumn, Trophy, Settings } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
-import { shadow } from '../../constants/ui';
+import { displayFont, shadow } from '../../constants/ui';
 
 const TAB_ICONS = {
-  index: 'home',
-  history: 'time',
-  statistics: 'bar-chart',
-  ranking: 'trophy',
-  settings: 'settings',
+  index: House,
+  history: Clock,
+  statistics: ChartColumn,
+  ranking: Trophy,
+  settings: Settings,
 } as const;
+
+type TabName = keyof typeof TAB_ICONS;
+
+function TabIcon({ tab, focused, color }: { tab: TabName; focused: boolean; color: string }) {
+  const Icon = TAB_ICONS[tab];
+  return <Icon size={22} color={color} strokeWidth={focused ? 2.6 : 2} />;
+}
 
 export default function TabLayout() {
   const { colors } = useTheme();
@@ -33,8 +40,9 @@ export default function TabLayout() {
           tabBarActiveTintColor: colors.accent,
           tabBarInactiveTintColor: colors.textDim,
           tabBarLabelStyle: {
-            fontSize: 10,
-            fontWeight: '600',
+            fontSize: 10.5,
+            fontFamily: displayFont(colors, 'bold'),
+            letterSpacing: 0.1,
           },
         }}
       >
@@ -42,45 +50,35 @@ export default function TabLayout() {
           name="index"
           options={{
             title: 'Início',
-            tabBarIcon: ({ focused }) => (
-              <Ionicons name={focused ? TAB_ICONS.index : `${TAB_ICONS.index}-outline`} size={24} color={focused ? colors.accent : colors.textDim} />
-            ),
+            tabBarIcon: ({ focused, color }) => <TabIcon tab="index" focused={focused} color={color} />,
           }}
         />
         <Tabs.Screen
           name="history"
           options={{
             title: 'Histórico',
-            tabBarIcon: ({ focused }) => (
-              <Ionicons name={focused ? TAB_ICONS.history : `${TAB_ICONS.history}-outline`} size={24} color={focused ? colors.accent : colors.textDim} />
-            ),
+            tabBarIcon: ({ focused, color }) => <TabIcon tab="history" focused={focused} color={color} />,
           }}
         />
         <Tabs.Screen
           name="statistics"
           options={{
             title: 'Gráficos',
-            tabBarIcon: ({ focused }) => (
-              <Ionicons name={focused ? TAB_ICONS.statistics : `${TAB_ICONS.statistics}-outline`} size={24} color={focused ? colors.accent : colors.textDim} />
-            ),
+            tabBarIcon: ({ focused, color }) => <TabIcon tab="statistics" focused={focused} color={color} />,
           }}
         />
         <Tabs.Screen
           name="ranking"
           options={{
             title: 'Ranking',
-            tabBarIcon: ({ focused }) => (
-              <Ionicons name={focused ? TAB_ICONS.ranking : `${TAB_ICONS.ranking}-outline`} size={24} color={focused ? colors.accent : colors.textDim} />
-            ),
+            tabBarIcon: ({ focused, color }) => <TabIcon tab="ranking" focused={focused} color={color} />,
           }}
         />
         <Tabs.Screen
           name="settings"
           options={{
             title: 'Ajustes',
-            tabBarIcon: ({ focused }) => (
-              <Ionicons name={focused ? TAB_ICONS.settings : `${TAB_ICONS.settings}-outline`} size={24} color={focused ? colors.accent : colors.textDim} />
-            ),
+            tabBarIcon: ({ focused, color }) => <TabIcon tab="settings" focused={focused} color={color} />,
           }}
         />
       </Tabs>

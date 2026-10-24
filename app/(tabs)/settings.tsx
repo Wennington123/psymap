@@ -29,20 +29,20 @@ import {
   setNotificationsEnabled,
   getNotificationsEnabled,
 } from '../../lib/notifications';
-import { card, radii, shadow } from '../../constants/ui';
+import { card, radii, shadow, displayFont } from '../../constants/ui';
 import { useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
 
 const THEME_LABELS: Record<ThemeName, string> = {
-  dracula: 'Dracula',
-  dark: 'Escuro',
   light: 'Claro',
-  sunset: 'Sunset',
-  ocean: 'Oceano',
-  forest: 'Floresta',
-  kittens: 'Gatinhos',
+  dark: 'Escuro',
+  dracula: 'Dracula',
+  nord: 'Nord',
+  gruvbox: 'Gruvbox',
+  catppuccin: 'Catppuccin',
+  pixel: 'Pixel',
 };
-const THEME_LIST: ThemeName[] = ['dracula', 'dark', 'light', 'sunset', 'ocean', 'forest', 'kittens'];
+const THEME_LIST: ThemeName[] = ['light', 'dark', 'dracula', 'nord', 'gruvbox', 'catppuccin', 'pixel'];
 
 const PIX_KEY = '74988217793';
 
@@ -160,7 +160,7 @@ export default function SettingsScreen() {
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
-      <Text style={[styles.sectionTitle, { color: colors.textDim }]}>Conta</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Conta</Text>
       <View style={styles.section}>
         {loading ? (
           <View style={[styles.accountCard, card(colors)]}>
@@ -178,8 +178,8 @@ export default function SettingsScreen() {
               </View>
             )}
             <View style={styles.accountInfo}>
-              <Text style={[styles.accountName, { color: colors.text }]}>{user.displayName}</Text>
-              <Text style={[styles.accountEmail, { color: colors.textDim }]}>{user.email}</Text>
+              <Text style={[styles.accountName, { color: colors.text, fontFamily: displayFont(colors, 'bold') }]}>{user.displayName}</Text>
+              <Text style={[styles.accountEmail, { color: colors.textDim, fontFamily: displayFont(colors, 'regular') }]}>{user.email}</Text>
             </View>
             <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut}>
               <Text style={[styles.signOutText, { color: colors.textSecondary }]}>Sair</Text>
@@ -195,8 +195,8 @@ export default function SettingsScreen() {
               <Text style={styles.googleBadgeIcon}>G</Text>
             </View>
             <View style={styles.accountInfo}>
-              <Text style={[styles.accountName, { color: colors.text }]}>Entrar com Google</Text>
-              <Text style={[styles.accountEmail, { color: colors.textDim }]}>
+              <Text style={[styles.accountName, { color: colors.text, fontFamily: displayFont(colors, 'bold') }]}>Entrar com Google</Text>
+              <Text style={[styles.accountEmail, { color: colors.textDim, fontFamily: displayFont(colors, 'regular') }]}>
                 Para competir no ranking semanal e geral
               </Text>
             </View>
@@ -205,7 +205,7 @@ export default function SettingsScreen() {
         )}
       </View>
 
-      <Text style={[styles.sectionTitle, { color: colors.textDim }]}>Tema</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Tema</Text>
       <View style={styles.section}>
         {THEME_LIST.map((key) => {
           const theme = Themes[key];
@@ -244,9 +244,9 @@ export default function SettingsScreen() {
                 ))}
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={[styles.label, { color: colors.text }]}>{THEME_LABELS[key]}</Text>
+                <Text style={[styles.label, { color: colors.text, fontFamily: displayFont(colors, 'semibold') }]}>{THEME_LABELS[key]}</Text>
                 {requirement && !unlocked ? (
-                  <Text style={[styles.description, { color: colors.textSecondary }]}>
+                  <Text style={[styles.description, { color: colors.textSecondary, fontFamily: displayFont(colors, 'regular') }]}>
                     🔒 Desbloqueia com: {requirement.emoji} {requirement.title}
                   </Text>
                 ) : null}
@@ -261,7 +261,7 @@ export default function SettingsScreen() {
         })}
       </View>
 
-      <Text style={[styles.sectionTitle, { color: colors.textDim }]}>Notificações</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Notificações</Text>
       <View style={styles.section}>
         <TouchableOpacity
           style={[styles.card, card(colors)]}
@@ -274,8 +274,8 @@ export default function SettingsScreen() {
             color={notifEnabled ? colors.accent : colors.textDim}
           />
           <View style={{ flex: 1 }}>
-            <Text style={[styles.label, { color: colors.text }]}>Lembretes diários</Text>
-            <Text style={[styles.description, { color: colors.textSecondary }]}>
+            <Text style={[styles.label, { color: colors.text, fontFamily: displayFont(colors, 'semibold') }]}>Lembretes diários</Text>
+            <Text style={[styles.description, { color: colors.textSecondary, fontFamily: displayFont(colors, 'regular') }]}>
               {notifEnabled ? '3 lembretes por dia (9h, 14h e 20h)' : 'Receba lembretes gentis para registrar seu humor'}
             </Text>
           </View>
@@ -285,7 +285,7 @@ export default function SettingsScreen() {
         </TouchableOpacity>
       </View>
 
-      <Text style={[styles.sectionTitle, { color: colors.textDim }]}>Dados</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Dados</Text>
       <View style={styles.section}>
         <TouchableOpacity
           style={[styles.card, card(colors)]}
@@ -296,14 +296,14 @@ export default function SettingsScreen() {
         </TouchableOpacity>
       </View>
 
-      <Text style={[styles.sectionTitle, { color: colors.textDim }]}>Contribua</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Contribua</Text>
       <View style={styles.section}>
         <TouchableOpacity
           style={[styles.card, card(colors)]}
           activeOpacity={0.7}
           onPress={handleFeedback}
         >
-          <Text style={[styles.label, { color: colors.text }]}>Enviar feedback</Text>
+          <Text style={[styles.label, { color: colors.text, fontFamily: displayFont(colors, 'semibold') }]}>Enviar feedback</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -311,7 +311,7 @@ export default function SettingsScreen() {
           activeOpacity={0.7}
           onPress={handleShare}
         >
-          <Text style={[styles.label, { color: colors.text }]}>Compartilhar app</Text>
+          <Text style={[styles.label, { color: colors.text, fontFamily: displayFont(colors, 'semibold') }]}>Compartilhar app</Text>
         </TouchableOpacity>
 
         <View style={[styles.card, card(colors), styles.donationCard]}>
@@ -332,7 +332,7 @@ export default function SettingsScreen() {
         </View>
       </View>
 
-      <Text style={[styles.version, { color: colors.textDim }]}>PsyMap v{version}</Text>
+      <Text style={[styles.version, { color: colors.textDim, fontFamily: displayFont(colors, 'regular') }]}>PsyMap v{version}</Text>
     </ScrollView>
   );
 }
