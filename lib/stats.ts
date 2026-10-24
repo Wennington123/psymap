@@ -4,7 +4,6 @@ export interface EmotionStat {
   emotionId: string;
   label: string;
   emoji: string;
-  isCustom: boolean;
   count: number;
   avgIntensity: number;
   percentage: number;
@@ -72,7 +71,7 @@ export function computeSummary(entries: MoodEntry[]): SummaryStats {
 }
 
 export function computeEmotionFrequency(entries: MoodEntry[]): EmotionStat[] {
-  const map = new Map<string, { label: string; emoji: string; isCustom: boolean; count: number; totalIntensity: number }>();
+  const map = new Map<string, { label: string; emoji: string; count: number; totalIntensity: number }>();
 
   entries.forEach((e) => {
     const existing = map.get(e.emotion.id);
@@ -83,7 +82,6 @@ export function computeEmotionFrequency(entries: MoodEntry[]): EmotionStat[] {
       map.set(e.emotion.id, {
         label: e.emotion.label,
         emoji: e.emotion.emoji,
-        isCustom: e.emotion.isCustom,
         count: 1,
         totalIntensity: e.intensity,
       });
@@ -97,7 +95,6 @@ export function computeEmotionFrequency(entries: MoodEntry[]): EmotionStat[] {
       emotionId: id,
       label: v.label,
       emoji: v.emoji,
-      isCustom: v.isCustom,
       count: v.count,
       avgIntensity: Math.round((v.totalIntensity / v.count) * 10) / 10,
       percentage: Math.round((v.count / total) * 1000) / 10,
@@ -187,9 +184,4 @@ export function computeHourOfDay(entries: MoodEntry[]): HourOfDayStat[] {
     avgIntensity: b.count > 0 ? Math.round((b.totalIntensity / b.count) * 10) / 10 : 0,
     count: b.count,
   }));
-}
-
-export function computeCustomStats(entries: MoodEntry[]): EmotionStat[] {
-  const custom = entries.filter((e) => e.emotion.isCustom);
-  return computeEmotionFrequency(custom);
 }

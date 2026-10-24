@@ -22,7 +22,6 @@ import {
   computeIntensityTrend,
   computeDayOfWeek,
   computeHourOfDay,
-  computeCustomStats,
 } from '../../lib/stats';
 import { generateReportHtml } from '../../lib/pdfReport';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -35,7 +34,6 @@ import MoodDistributionChart from '../../components/charts/MoodDistributionChart
 import IntensityTrendChart from '../../components/charts/IntensityTrendChart';
 import DayOfWeekChart from '../../components/charts/DayOfWeekChart';
 import HourOfDayChart from '../../components/charts/HourOfDayChart';
-import CustomEmotionBreakdown from '../../components/charts/CustomEmotionBreakdown';
 import NamePromptModal from '../../components/NamePromptModal';
 
 export default function StatisticsScreen() {
@@ -50,7 +48,6 @@ export default function StatisticsScreen() {
     trend: ReturnType<typeof computeIntensityTrend>;
     dayOfWeek: ReturnType<typeof computeDayOfWeek>;
     hourOfDay: ReturnType<typeof computeHourOfDay>;
-    custom: ReturnType<typeof computeCustomStats>;
     rangeLabel: string;
   } | null>(null);
 
@@ -69,7 +66,6 @@ export default function StatisticsScreen() {
   const trend = useMemo(() => computeIntensityTrend(filtered), [filtered]);
   const dayOfWeek = useMemo(() => computeDayOfWeek(filtered), [filtered]);
   const hourOfDay = useMemo(() => computeHourOfDay(filtered), [filtered]);
-  const custom = useMemo(() => computeCustomStats(filtered), [filtered]);
 
   const hasData = filtered.length > 0;
 
@@ -81,7 +77,6 @@ export default function StatisticsScreen() {
       trend,
       dayOfWeek,
       hourOfDay,
-      custom,
       rangeLabel: getRangeLabel(range),
     };
     setShowNamePrompt(true);
@@ -115,7 +110,6 @@ export default function StatisticsScreen() {
         trend: dataRef.current.trend,
         dayOfWeek: dataRef.current.dayOfWeek,
         hourOfDay: dataRef.current.hourOfDay,
-        custom: dataRef.current.custom,
         logoSrc,
         colors,
       });
@@ -182,12 +176,6 @@ export default function StatisticsScreen() {
           <StatsSection title="Humor por Hora do Dia">
             <HourOfDayChart data={hourOfDay} />
           </StatsSection>
-
-          {custom.length > 0 && (
-            <StatsSection title="Emoções Personalizadas">
-              <CustomEmotionBreakdown data={custom} />
-            </StatsSection>
-          )}
         </>
       )}
 

@@ -16,15 +16,15 @@ export default function NoteInput({ value, onChange, visible }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: colors.textSecondary }]}>Adicionar uma nota (opcional)</Text>
+      <Text style={[styles.title, { color: colors.textSecondary }]}>Descrição (opcional)</Text>
       <TextInput
         style={[styles.input, { backgroundColor: colors.surface, color: colors.text, borderRadius: radii.input }]}
-        placeholder="O que está acontecendo?"
+        placeholder="O que aconteceu? O que você percebeu no corpo e nos pensamentos?"
         placeholderTextColor={colors.textDim}
         value={value}
         onChangeText={onChange}
         multiline
-        numberOfLines={3}
+        numberOfLines={4}
         textAlignVertical="top"
       />
     </View>
@@ -43,6 +43,6 @@ const styles = StyleSheet.create({
   input: {
     padding: 14,
     fontSize: 15,
-    minHeight: 76,
+    minHeight: 96,
   },
 });

@@ -14,11 +14,9 @@ import EmojiRenderer from './EmojiRenderer';
 
 interface Props {
   onSelect: (emotion: Emotion) => void;
-  onAddCustom: () => void;
-  customEmotions: Emotion[];
 }
 
-export default function EmotionWheel({ onSelect, onAddCustom, customEmotions }: Props) {
+export default function EmotionWheel({ onSelect }: Props) {
   const { colors, emojiPack } = useTheme();
 
   const itemStyle = {
@@ -54,34 +52,6 @@ export default function EmotionWheel({ onSelect, onAddCustom, customEmotions }: 
             </TouchableOpacity>
           );
         })}
-        {customEmotions.map((emotion) => (
-          <TouchableOpacity
-            key={emotion.id}
-            style={[styles.emotionItem, itemStyle]}
-            onPress={() => onSelect(emotion)}
-            activeOpacity={0.65}
-          >
-            <EmojiRenderer source={emotion.emoji} size={30} />
-            <Text style={[styles.emotionLabel, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>{emotion.label}</Text>
-          </TouchableOpacity>
-        ))}
-        <TouchableOpacity
-          style={[
-            styles.emotionItem,
-            {
-              backgroundColor: 'transparent',
-              borderRadius: colors.style === 'pixel' ? 6 : 999,
-              borderWidth: colors.style === 'pixel' ? 2 : 1.5,
-              borderStyle: 'dashed',
-              borderColor: colors.accent + 'aa',
-            },
-          ]}
-          onPress={onAddCustom}
-          activeOpacity={0.65}
-        >
-          <Text style={[styles.emoji, { color: colors.accent }]}>+</Text>
-          <Text style={[styles.emotionLabel, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>Nova</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );

@@ -11,7 +11,6 @@ interface ReportParams {
   trend: TimeSeriesPoint[];
   dayOfWeek: DayOfWeekStat[];
   hourOfDay: HourOfDayStat[];
-  custom: EmotionStat[];
   logoSrc?: string;
   colors: ThemeColors;
 }
@@ -24,7 +23,6 @@ export function generateReportHtml({
   trend,
   dayOfWeek,
   hourOfDay,
-  custom,
   logoSrc,
   colors,
 }: ReportParams): string {
@@ -113,7 +111,6 @@ ${distributionTable(frequency)}
 ${intensityTable(trend)}
 ${dayOfWeekHtml(dayOfWeek, p)}
 ${hourOfDayHtml(hourOfDay)}
-${custom.length > 0 ? customHtml(custom, p) : ''}
 
 <div class="footer">
   Gerado por PsyMap — app gratuito e open-source (GPL-3.0)<br>
@@ -210,9 +207,5 @@ ${active.map((s) => `<tr>
   <td class="td-num">${s.avgIntensity}</td>
   <td class="td-num">${s.count}</td>
 </tr>`).join('')}
-</table>`;
-}
-
-function customHtml(stats: EmotionStat[], p: readonly string[]): string {
-  return `<h2>Emoções Personalizadas</h2>${frequencyHtml(stats, p)}`;
+  </table>`;
 }

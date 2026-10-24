@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,18 +7,11 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { useFocusEffect } from 'expo-router';
 import EmotionWheel from '../../components/EmotionWheel';
 import EmojiRenderer from '../../components/EmojiRenderer';
 import IntensityPicker from '../../components/IntensityPicker';
-import CustomEmotionInput from '../../components/CustomEmotionInput';
 import NoteInput from '../../components/NoteInput';
-import {
-  addEntry,
-  addCustomEmotion,
-  getCustomEmotions,
-  getEntries,
-} from '../../storage/moodStorage';
+import { addEntry, getEntries } from '../../storage/moodStorage';
 import { Emotion, MoodEntry } from '../../types';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -42,30 +35,12 @@ export default function HomeScreen() {
   const [selectedEmotion, setSelectedEmotion] = useState<Emotion | null>(null);
   const [intensity, setIntensity] = useState(3);
   const [note, setNote] = useState('');
-  const [customEmotions, setCustomEmotions] = useState<Emotion[]>([]);
-  const [showCustomInput, setShowCustomInput] = useState(false);
-
-  useFocusEffect(
-    useCallback(() => {
-      loadData();
-    }, []),
-  );
-
-  async function loadData() {
-    const custom = await getCustomEmotions();
-    setCustomEmotions(custom);
-  }
 
   function handleSelectEmotion(emotion: Emotion) {
     setSelectedEmotion(emotion);
     setIntensity(3);
     setNote('');
     setStep('intensity');
-  }
-
-  async function handleSaveCustom(emotion: Emotion) {
-    await addCustomEmotion(emotion);
-    setCustomEmotions(prev => [...prev, emotion]);
   }
 
   async function handleRegister() {
@@ -149,17 +124,7 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          <EmotionWheel
-            onSelect={handleSelectEmotion}
-            onAddCustom={() => setShowCustomInput(true)}
-            customEmotions={customEmotions}
-          />
-
-          <CustomEmotionInput
-            visible={showCustomInput}
-            onClose={() => setShowCustomInput(false)}
-            onSave={handleSaveCustom}
-          />
+          <EmotionWheel onSelect={handleSelectEmotion} />
         </>
       )}
 

@@ -108,7 +108,7 @@ export default function SettingsScreen() {
   const handleDeleteAll = () => {
     Alert.alert(
       'Excluir todos os dados',
-      'Isso apagará todo o seu histórico, emoções customizadas, gamificação e redefinirá o tema. Esta ação não pode ser desfeita.',
+      'Isso apagará todo o seu histórico, sua gamificação e redefinirá o tema. Esta ação não pode ser desfeita.',
       [
         { text: 'Cancelar', style: 'cancel' },
         {
