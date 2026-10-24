@@ -33,7 +33,7 @@ export default function TabLayout() {
           tabBarActiveTintColor: colors.accent,
           tabBarInactiveTintColor: colors.textDim,
           tabBarLabelStyle: {
-            fontSize: 11,
+            fontSize: 10,
             fontWeight: '600',
           },
         }}
@@ -59,7 +59,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="statistics"
           options={{
-            title: 'Estatísticas',
+            title: 'Gráficos',
             tabBarIcon: ({ focused }) => (
               <Ionicons name={focused ? TAB_ICONS.statistics : `${TAB_ICONS.statistics}-outline`} size={24} color={focused ? colors.accent : colors.textDim} />
             ),
@@ -77,7 +77,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="settings"
           options={{
-            title: 'Configurações',
+            title: 'Ajustes',
             tabBarIcon: ({ focused }) => (
               <Ionicons name={focused ? TAB_ICONS.settings : `${TAB_ICONS.settings}-outline`} size={24} color={focused ? colors.accent : colors.textDim} />
             ),
