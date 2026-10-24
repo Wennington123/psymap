@@ -315,7 +315,7 @@ export default function SettingsScreen() {
         </TouchableOpacity>
 
         <View style={[styles.card, card(colors), styles.donationCard]}>
-          <Text style={[styles.label, { color: colors.text, marginBottom: 12 }]}>Fazer doação (PIX)</Text>
+          <Text style={[styles.label, { color: colors.text, marginBottom: 12, fontFamily: displayFont(colors, 'semibold') }]}>Fazer doação (PIX)</Text>
           <Image
             source={require('../../assets/qrcode-pix.png')}
             style={styles.qrImage}
@@ -323,7 +323,7 @@ export default function SettingsScreen() {
           />
           <Text style={[styles.pixKey, { color: colors.textSecondary }]}>Chave: {PIX_KEY}</Text>
           <TouchableOpacity
-            style={[styles.copyButton, { backgroundColor: colors.accent }]}
+            style={[styles.copyButton, { backgroundColor: colors.accent, borderRadius: colors.style === 'pixel' ? 6 : radii.btn }]}
             activeOpacity={0.7}
             onPress={handleCopyPix}
           >

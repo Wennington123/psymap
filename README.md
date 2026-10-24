@@ -1,29 +1,33 @@
 # PsyMap 🧠
 
-Mapeamento emocional direto do seu bolso. Registre como você se sente, acompanhe padrões ao longo do tempo e entenda melhor suas emoções — tudo 100% offline e privado.
+Mapeamento emocional direto do seu bolso. Registre como você se sente, acompanhe padrões ao longo do tempo e entenda melhor suas emoções — com os dados no seu aparelho.
 
 ---
 
 ## ✨ Funcionalidades
 
-- **Roda de emoções** — selecione entre emoções base ou crie as suas próprias
-- **Intensidade** — registre a força de cada sentimento (1 a 5)
-- **Notas** — adicione uma anotação opcional a cada registro
-- **Histórico** — visualize, filtre e exclua entradas passadas
-- **Estatísticas** — gráficos de frequência, distribuição, tendência de intensidade, dias da semana e horários
-- **Exportar PDF** — gere relatórios com seus dados para compartilhar com seu terapeuta
-- **4 temas** — Dracula, Escuro, Claro e Gatinhos
+- **Roda de emoções** — registre entre as 8 emoções base (roda de Plutchik)
+- **Intensidade** — a força de cada sentimento (1 a 5)
+- **Descrição** — escreva o que aconteceu e o que você percebeu no corpo e nos pensamentos
+- **Histórico** — visualize, filtre e exclua registros
+- **Estatísticas** — frequência, distribuição, tendência de intensidade, dia da semana e horário, com exportação em PDF
+- **Gamificação** — XP, níveis, sequência de dias e conquistas
+- **Ranking** — compare XP semanal/geral com outras pessoas (login opcional com Google)
+- **Temas** — Claro, Escuro, Dracula, Nord, Gruvbox, Catppuccin e Pixel
 - **Doação via PIX** — contribua com o projeto se quiser
 
 ---
 
 ## 🔒 Privacidade
 
-**O PsyMap não coleta, armazena ou transmite nenhum dado pessoal.**
+**Seus registros de humor ficam apenas no seu dispositivo** (`AsyncStorage`). Emoções, intensidades e descrições nunca saem do aparelho.
 
-Todos os seus registros ficam exclusivamente no seu dispositivo, usando `AsyncStorage`. Não existe login, não existe nuvem, não existe telemetria. O app não tem acesso à internet para nada além do que você explicitamente solicitar (abrir seu app de e-mail para feedback, por exemplo).
+O único dado que pode sair é o que o ranking precisa, e **somente se você entrar com Google** (opcional):
 
-Ninguém — nem os desenvolvedores — tem acesso aos seus dados. Se você desinstalar o app, tudo some junto.
+- nome de exibição e foto do perfil
+- XP total e semanal, nível e sequência de dias
+
+Esses campos vão para o Firestore do projeto e ficam visíveis para quem está no ranking. Sem login, o app funciona 100% local. Não há telemetria nem rastreamento.
 
 ---
 
@@ -41,8 +45,9 @@ Ao usar o PsyMap, você concorda que:
 ## 🚀 Instalação
 
 ### Pré-requisitos
-- Node.js 18+
-- Expo CLI (`npx expo`)
+- Node.js 22+
+- JDK 17 (para builds Android)
+- Android SDK com platform 36
 
 ### Rodando localmente
 
@@ -53,25 +58,36 @@ npm install
 npx expo start
 ```
 
-Escaneie o QR code com o **Expo Go** (Android/iOS) ou pressione `a` para emulador Android.
-
-### Build APK
+Para testar em um device Android com hot reload:
 
 ```bash
-npx eas-cli build -p android --profile preview
+npx expo prebuild --platform android
+npx expo run:android
 ```
 
-> **Nota:** O `eas-cli` deve ser usado via `npx` ou instalado globalmente (`npm i -g eas-cli`), não como dependência do projeto. O arquivo `.easignore` já exclui `releases/`, `.git/` e `node_modules/` do pacote enviado ao servidor de build.
+> O login Google e o ranking exigem `google-services.json` na raiz. Veja [FIREBASE_SETUP.md](./FIREBASE_SETUP.md).
+
+### Build
+
+```bash
+npx expo prebuild --platform android --clean
+cd android && ./gradlew assembleDebug       # APK de dev
+./gradlew assembleRelease bundleRelease     # APK + AAB assinados
+```
+
+O repositório também tem um workflow de CI no GitHub Actions que gera **APK debug, APK release e AAB** a cada push no `main`, com artifacts para download.
 
 ---
 
 ## 🛠 Tecnologias
 
-- [Expo](https://expo.dev) + [Expo Router](https://docs.expo.dev/router/introduction/) (navegação por arquivos)
-- [React Native](https://reactnative.dev) 0.81
-- [AsyncStorage](https://react-native-async-storage.github.io/async-storage/) (persistência local)
-- [react-native-gifted-charts](https://gifted-charts.web.app) (gráficos)
-- [Ionicons](https://ionic.io/ionicons) (ícones da tab bar)
+- [Expo](https://expo.dev) 54 + [Expo Router](https://docs.expo.dev/router/introduction/)
+- [React Native](https://reactnative.dev) 0.81 (New Architecture)
+- [AsyncStorage](https://react-native-async-storage.github.io/async-storage/)
+- [React Native Firebase](https://rnfirebase.io) + [Google Sign-In](https://github.com/react-native-google-signin/google-signin)
+- [react-native-gifted-charts](https://gifted-charts.web.app)
+- [Lucide](https://lucide.dev) (ícones) e [Nunito](https://fonts.google.com/specimen/Nunito) / [Pixelify Sans](https://fonts.google.com/specimen/Pixelify+Sans) (tipografia)
+- [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) (emojis 3D e flat)
 
 ---
 
@@ -79,7 +95,17 @@ npx eas-cli build -p android --profile preview
 
 Pull requests são bem-vindos! Para mudanças grandes, abra uma issue primeiro para discutir o que você gostaria de alterar.
 
-Gostou do app? Considere apoiar o projeto com uma doação via PIX — a chave e o QR code estão na aba **Configurações** do app. Toda contribuição ajuda a manter o PsyMap gratuito e independente.
+**Reportar bugs e sugestões:** use a aba **Ajustes → Enviar feedback** (abre um e-mail) ou abra uma issue no repositório.
+
+**Apoiar o projeto:** a chave PIX e o QR code estão em **Ajustes → Contribua**. Toda contribuição ajuda a manter o PsyMap gratuito e independente.
+
+### Próximas atualizações
+
+- Emoção × intensidade nas estatísticas
+- Vibração e microanimações
+- Ranking entre amigos
+- Exportar e importar histórico
+- Lembretes com horários personalizáveis
 
 ---
 
@@ -91,4 +117,5 @@ GNU GPLv3 © Wennington Dias
 
 ## 🙏 Atribuições
 
-- Emojis dos temas **Floresta**, **Sunset** e **Ocean** projetados por [OpenMoji](https://openmoji.org) – the open-source emoji and icon project. Licença: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+- Emojis por [Microsoft Fluent Emoji](https://github.com/microsoft/fluentui-emoji) — licença MIT.
+- Temas inspirados nas paletas FOSS [Dracula](https://draculatheme.com), [Nord](https://www.nordtheme.com), [Gruvbox](https://github.com/morhetz/gruvbox) e [Catppuccin](https://catppuccin.com).
