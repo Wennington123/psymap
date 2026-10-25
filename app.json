@@ -23,7 +23,7 @@
         "backgroundColor": "#1a1a2e"
       },
       "package": "com.app.psymap",
-      "versionCode": 2,
+      "versionCode": 10,
       "googleServicesFile": "./google-services.json"
     },
     "plugins": [
