@@ -21,3 +21,5 @@ expo-env.d.ts
 NEXT_STEPS.md
 
 /android/
+
+play-service-account.json
