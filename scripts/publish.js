@@ -116,8 +116,8 @@ async function main() {
     console.log(`▶ Atualizando track "${track}" (status: ${status})...`);
     await api(token, 'PUT', `${base}/edits/${editId}/tracks/${track}`, { track, releases: [release] });
 
-    console.log('▶ Commitando edição...');
-    await api(token, 'POST', `${base}/edits/${editId}:commit`, {});
+    console.log('▶ Commitando edição (changesNotSentForReview)...');
+    await api(token, 'POST', `${base}/edits/${editId}:commit?changesNotSentForReview=true`, {});
     console.log(`✔ Publicado na track ${track} (versionCode ${versionCode}, status ${status}).`);
   } catch (err) {
     await api(token, 'DELETE', `${base}/edits/${editId}`).catch(() => {});
