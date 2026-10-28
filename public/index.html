@@ -5,16 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PsyMap — Mapeamento emocional no seu bolso</title>
   <meta name="description" content="Registre emoções, acompanhe padrões e entenda melhor como você se sente. Dados no seu aparelho, privacidade por padrão." />
+  <link rel="icon" href="logo.png" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="theme.js" defer></script>
 </head>
 <body>
   <header class="site">
     <div class="wrap">
-      <div class="brand"><span class="dot"></span> PsyMap</div>
-      <nav class="links">
-        <a href="#recursos">Recursos</a>
+      <a class="brand" href="index.html"><img src="logo.png" alt="PsyMap" class="brand-logo" /> <span>PsyMap</span></a>
+      <nav class="nav">
         <a href="privacy.html">Privacidade</a>
         <a href="terms.html">Termos</a>
+        <div class="theme-toggle" role="group" aria-label="Tema">
+          <button data-theme-btn="light" aria-label="Claro" aria-pressed="false" title="Claro">☀️</button>
+          <button data-theme-btn="dark" aria-label="Escuro" aria-pressed="false" title="Escuro">🌙</button>
+          <button data-theme-btn="system" aria-label="Sistema" aria-pressed="false" title="Sistema">🖥️</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -22,6 +28,7 @@
   <main>
     <section class="hero">
       <div class="wrap">
+        <img src="logo.png" alt="PsyMap" class="hero-logo" />
         <div class="eyebrow">Diário emocional · Android</div>
         <h1>Entenda o que você sente,<br /><span class="accent">um registro de cada vez.</span></h1>
         <p class="lede">
@@ -30,6 +37,7 @@
         </p>
         <div class="actions">
           <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.app.psymap">Baixar na Play Store</a>
+          <a class="btn kofi" href="https://ko-fi.com/wenningtondaquino" target="_blank" rel="noopener">☕ Apoie no Ko-fi</a>
           <a class="btn ghost" href="privacy.html">Política de privacidade</a>
         </div>
       </div>
@@ -73,6 +81,14 @@
         <p class="note" style="margin-top: 22px;">
           O PsyMap é uma ferramenta de autoconhecimento. Ele não substitui acompanhamento psicológico ou médico.
         </p>
+
+        <div class="support">
+          <div>
+            <h3>Gostou do PsyMap?</h3>
+            <p>Se o app te ajuda, apoie o projeto com um café no Ko-fi. Toda contribuição mantém o PsyMap gratuito e independente.</p>
+          </div>
+          <a class="btn kofi" href="https://ko-fi.com/wenningtondaquino" target="_blank" rel="noopener">☕ Apoie no Ko-fi</a>
+        </div>
       </div>
     </section>
   </main>
@@ -80,10 +96,11 @@
   <footer class="site">
     <div class="wrap">
       <span>© 2026 PsyMap · GPLv3</span>
-      <span>
-        <a href="privacy.html">Privacidade</a> ·
-        <a href="terms.html">Termos</a> ·
+      <span class="links">
+        <a href="privacy.html">Privacidade</a>
+        <a href="terms.html">Termos</a>
         <a href="mailto:wenningtondiasx25@gmail.com">Contato</a>
+        <a href="https://ko-fi.com/wenningtondaquino" target="_blank" rel="noopener">Ko-fi</a>
       </span>
     </div>
   </footer>

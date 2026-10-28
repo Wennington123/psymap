@@ -29,6 +29,8 @@ O único dado que pode sair é o que o ranking precisa, e **somente se você ent
 
 Esses campos vão para o Firestore do projeto e ficam visíveis para quem está no ranking. Sem login, o app funciona 100% local. Não há telemetria nem rastreamento.
 
+A Política de Privacidade completa e os Termos de Uso estão publicados em [psymap.net.br](https://psymap.net.br) (GitHub Pages, com tema claro/escuro).
+
 ---
 
 ## 📜 Termos de Serviço
@@ -52,7 +54,7 @@ Ao usar o PsyMap, você concorda que:
 ### Rodando localmente
 
 ```bash
-git clone https://gitlab.com/wenningtondiasx25/psymap.git
+git clone https://github.com/Wennington123/psymap.git
 cd psymap
 npm install
 npx expo start
@@ -75,7 +77,28 @@ cd android && ./gradlew assembleDebug       # APK de dev
 ./gradlew assembleRelease bundleRelease     # APK + AAB assinados
 ```
 
-O repositório também tem um workflow de CI no GitHub Actions que gera **APK debug, APK release e AAB** a cada push no `main`, com artifacts para download.
+O repositório tem dois workflows no GitHub Actions:
+
+- **`android.yml`** — gera **APK debug, APK release e AAB** assinados a cada push no `main`, com artifacts para download.
+- **`pages.yml`** — publica a pasta `public/` (Política de Privacidade e Termos) no GitHub Pages, em `https://psymap.net.br`.
+
+> ⚠️ **Segredos não ficam mais no repositório.** A keystore de assinatura (`android-keystore.jks`),
+> `keystore-upload.properties` e `google-services.json` foram removidos do histórico e do tracking.
+> Eles são injetados em tempo de build via **GitHub Actions Secrets** (`ANDROID_KEYSTORE_BASE64`,
+> `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`, `GOOGLE_SERVICES_JSON`). Para buildar localmente,
+> mantenha esses arquivos na raiz (gitignored) e não os committe.
+
+### Publicação na Play Store
+
+1. O AAB é gerado pelo workflow `android.yml` (artifact `psymap-release-aab`).
+2. Envie para a Play com a Play Developer API (service account em `play-service-account.json`, gitignored):
+   ```bash
+   node scripts/publish.js --bundle app-release.aab --track production --status completed
+   ```
+   A Play exige revisão manual pelo Console (`changesNotSentForReview`), então após o commit da
+   edição vá em **Play Console → Production → Enviar para análise**.
+3. A Política de Privacidade deve estar cadastrada na Play apontando para
+   `https://psymap.net.br/privacy.html` (URL válida e em HTTPS).
 
 ---
 
