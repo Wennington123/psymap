@@ -16,6 +16,7 @@ import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { IS_FOSS } from '../../lib/config';
 import { BADGES } from '../../lib/gamification';
 import { Themes, ThemeName } from '../../constants/colors';
 import { clearAllData, getEntries } from '../../storage/moodStorage';
@@ -160,7 +161,10 @@ export default function SettingsScreen() {
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
+      {!IS_FOSS && (
       <Text style={[styles.sectionTitle, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Conta</Text>
+      )}
+      {!IS_FOSS && (
       <View style={styles.section}>
         {loading ? (
           <View style={[styles.accountCard, card(colors)]}>
@@ -204,6 +208,7 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         )}
       </View>
+      )}
 
       <Text style={[styles.sectionTitle, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Tema</Text>
       <View style={styles.section}>

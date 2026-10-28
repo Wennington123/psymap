@@ -1,15 +1,17 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { House, Clock, ChartColumn, Trophy, Settings } from 'lucide-react-native';
+import { House, Clock, ChartColumn, Trophy, Target, Settings } from 'lucide-react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { displayFont, shadow } from '../../constants/ui';
+import { IS_FOSS } from '../../lib/config';
 
 const TAB_ICONS = {
   index: House,
   history: Clock,
   statistics: ChartColumn,
   ranking: Trophy,
+  metas: Target,
   settings: Settings,
 } as const;
 
@@ -68,10 +70,10 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="ranking"
+          name={IS_FOSS ? 'metas' : 'ranking'}
           options={{
-            title: 'Ranking',
-            tabBarIcon: ({ focused, color }) => <TabIcon tab="ranking" focused={focused} color={color} />,
+            title: IS_FOSS ? 'Metas' : 'Ranking',
+            tabBarIcon: ({ focused, color }) => <TabIcon tab={IS_FOSS ? 'metas' : 'ranking'} focused={focused} color={color} />,
           }}
         />
         <Tabs.Screen

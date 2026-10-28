@@ -1,14 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithCredential,
-  signOut as fbSignOut,
-  GoogleAuthProvider,
-  type User,
-} from '@react-native-firebase/auth';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import Constants from 'expo-constants';
+import type { User } from '@react-native-firebase/auth';
+import { IS_FOSS } from '../lib/config';
 
 interface AuthContextValue {
   user: User | null;
@@ -16,12 +8,6 @@ interface AuthContextValue {
   signInWithGoogle: () => Promise<User | null>;
   signOut: () => Promise<void>;
 }
-
-GoogleSignin.configure({
-  webClientId: (Constants.expoConfig?.extra?.googleWebClientId as string) || '',
-});
-
-const authInstance = getAuth();
 
 const AuthContext = createContext<AuthContextValue>({
   user: null,
@@ -31,39 +17,45 @@ const AuthContext = createContext<AuthContextValue>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  // No flavor `foss` (F-Droid) não há conta: pronto imediatamente, user = null.
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!IS_FOSS);
 
   useEffect(() => {
-    return onAuthStateChanged(authInstance, (u) => {
-      setUser(u);
+    if (IS_FOSS) {
       setLoading(false);
-    });
+      return;
+    }
+    let unsub: (() => void) | undefined;
+    let active = true;
+    (async () => {
+      const { initAuth } = await import('../lib/firebase/auth');
+      if (!active) return;
+      unsub = initAuth(
+        (u) => {
+          if (active) setUser(u);
+        },
+        () => {
+          if (active) setLoading(false);
+        },
+      );
+    })();
+    return () => {
+      active = false;
+      unsub?.();
+    };
   }, []);
 
   const signInWithGoogle = useCallback(async (): Promise<User | null> => {
-    try {
-      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-      const result = await GoogleSignin.signIn();
-      if (result.type !== 'success') return null;
-      const idToken = result.data?.idToken;
-      if (!idToken) return null;
-      const credential = GoogleAuthProvider.credential(idToken);
-      const { user: fbUser } = await signInWithCredential(authInstance, credential);
-      return fbUser;
-    } catch (e) {
-      console.warn('Google sign-in failed', e);
-      return null;
-    }
+    if (IS_FOSS) return null;
+    const { signInWithGoogle: signIn } = await import('../lib/firebase/auth');
+    return signIn();
   }, []);
 
   const signOut = useCallback(async () => {
-    try {
-      await GoogleSignin.signOut();
-    } catch {
-      // ignore
-    }
-    await fbSignOut(authInstance);
+    if (IS_FOSS) return;
+    const { signOut: so } = await import('../lib/firebase/auth');
+    await so();
   }, []);
 
   return (

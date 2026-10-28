@@ -151,6 +151,7 @@ export const Themes: Record<string, ThemeDefinition> = {
     chartPalette: ChartPalette.nord,
     statusBar: 'light-content',
     emojiPack: EmojiPacks.default,
+    requiredBadge: 'streak-7',
   },
   gruvbox: {
     name: 'gruvbox',
@@ -171,6 +172,7 @@ export const Themes: Record<string, ThemeDefinition> = {
     chartPalette: ChartPalette.gruvbox,
     statusBar: 'light-content',
     emojiPack: EmojiPacks.default,
+    requiredBadge: 'entries-50',
   },
   catppuccin: {
     name: 'catppuccin',
@@ -191,6 +193,7 @@ export const Themes: Record<string, ThemeDefinition> = {
     chartPalette: ChartPalette.catppuccin,
     statusBar: 'light-content',
     emojiPack: EmojiPacks.default,
+    requiredBadge: 'level-5',
   },
   pixel: {
     name: 'pixel',
@@ -213,6 +216,7 @@ export const Themes: Record<string, ThemeDefinition> = {
     emojiPack: EmojiPacks.flat,
     style: 'pixel',
     radius: 6,
+    requiredBadge: 'streak-30',
   },
 };
 
