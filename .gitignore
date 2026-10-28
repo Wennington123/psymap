@@ -7,7 +7,6 @@ dist/
 *.mobileprovision
 credentials.json
 *.jks
-!android-keystore.jks
 *.orig.*
 web-build/
 .env
@@ -23,3 +22,5 @@ NEXT_STEPS.md
 /android/
 
 play-service-account.json
+keystore-upload.properties
+google-services.json
