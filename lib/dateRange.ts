@@ -1,13 +1,7 @@
 import { MoodEntry } from '../types';
+import i18n from './i18n';
 
 export type DateRangePreset = 'all' | '7d' | '30d' | '90d';
-
-export const RANGE_LABELS: Record<DateRangePreset, string> = {
-  all: 'Tudo',
-  '7d': '7 dias',
-  '30d': '30 dias',
-  '90d': '90 dias',
-};
 
 export function getRangeStart(preset: DateRangePreset): Date | null {
   if (preset === 'all') return null;
@@ -25,5 +19,5 @@ export function filterByRange(entries: MoodEntry[], preset: DateRangePreset): Mo
 }
 
 export function getRangeLabel(preset: DateRangePreset): string {
-  return RANGE_LABELS[preset];
+  return i18n.t('range.' + preset);
 }

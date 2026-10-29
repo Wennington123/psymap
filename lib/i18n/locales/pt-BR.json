@@ -1,0 +1,73 @@
+{
+  "app": { "name": "PsyMap" },
+  "common": { "cancel": "Cancelar", "ok": "OK", "delete": "Apagar", "back": "Voltar", "continue": "Continuar", "register": "Registrar", "anonimo": "Anônimo" },
+  "tabs": { "inicio": "Início", "historico": "Histórico", "graficos": "Gráficos", "ranking": "Ranking", "metas": "Metas", "ajustes": "Ajustes" },
+  "settings": {
+    "conta": "Conta", "tema": "Tema", "notificacoes": "Notificações", "dados": "Dados", "contribua": "Contribua", "idioma": "Idioma",
+    "entrarGoogle": "Entrar com Google", "paraCompetir": "Para competir no ranking semanal e geral",
+    "sair": "Sair", "sairConta": "Sair da conta", "sairContaMsg": "Sair da sua conta Google? Seus dados locais são mantidos.",
+    "lembretesDiarios": "Lembretes diários", "lembretesOn": "3 lembretes por dia (9h, 14h e 20h)", "lembretesOff": "Receba lembretes gentis para registrar seu humor",
+    "permissaoNegada": "Permissão negada", "permissaoNegadaMsg": "Para receber lembretes, ative as notificações para o PsyMap nas configurações do seu dispositivo.",
+    "notificacoesAtivadas": "Notificações ativadas", "notificacoesAtivadasMsg": "Você receberá 3 lembretes gentis por dia (9h, 14h e 20h) para registrar seu humor.",
+    "excluirDados": "Excluir todos os dados", "excluirConfirm": "Isso apagará todo o seu histórico, sua gamificação e redefinirá o tema. Esta ação não pode ser desfeita.", "excluirSucesso": "Todos os dados foram excluídos.",
+    "enviarFeedback": "Enviar feedback", "compartilharApp": "Compartilhar app", "fazerDoacao": "Fazer doação (PIX)", "copiarPix": "Copiar chave PIX", "copiado": "Copiado!",
+    "temasDesbloqueia": "Desbloqueia com: {{emoji}} {{title}}"
+  },
+  "temas": { "light": "Claro", "dark": "Escuro", "dracula": "Dracula", "nord": "Nord", "gruvbox": "Gruvbox", "catppuccin": "Catppuccin", "pixel": "Pixel" },
+  "home": {
+    "ola": "Olá", "comoSeSente": "Como você está se sentindo?",
+    "sequencia": "Sequência", "dia": "dia", "dias": "dias", "nivel": "Nível", "xpParaNivel": "XP para o nível {{n}}",
+    "registrado": "Registrado!", "novaConquista": "Nova conquista desbloqueada!"
+  },
+  "emotions": { "joy": "Alegria", "trust": "Confiança", "fear": "Medo", "surprise": "Surpresa", "sadness": "Tristeza", "disgust": "Nojo", "anger": "Raiva", "anticipation": "Expectativa" },
+  "badges": {
+    "first-entry": { "title": "Primeiro passo", "description": "Registre sua primeira emoção" },
+    "entries-10": { "title": "Aquecendo", "description": "10 registros" },
+    "entries-50": { "title": "Costume", "description": "50 registros" },
+    "entries-100": { "title": "Diarista", "description": "100 registros" },
+    "entries-365": { "title": "Ano inteiro", "description": "365 registros" },
+    "streak-3": { "title": "Faísca", "description": "Streak de 3 dias" },
+    "streak-7": { "title": "Uma semana", "description": "Streak de 7 dias" },
+    "streak-14": { "title": "Duas semanas", "description": "Streak de 14 dias" },
+    "streak-30": { "title": "Um mês", "description": "Streak de 30 dias" },
+    "level-2": { "title": "Nível 2", "description": "Alcance o nível 2" },
+    "level-5": { "title": "Nível 5", "description": "Alcance o nível 5" },
+    "level-10": { "title": "Nível 10", "description": "Alcance o nível 10" }
+  },
+  "notifications": {
+    "channel": "Lembretes PsyMap",
+    "title1": "Como você está?", "body1": "Registre seu humor de hoje no PsyMap 🧠",
+    "title2": "Pausa para o humor", "body2": "Reserve 1 minuto para registrar como se sente.",
+    "title3": "Reflexão do dia", "body3": "Seu diário emocional agradece uma anotação."
+  },
+  "ranking": {
+    "entreParaCompetir": "Entre para competir", "vejaRanking": "Acompanhe seu XP e veja como você está se saindo no ranking semanal e geral de registradores de humor.",
+    "entrarGoogle": "Entrar com Google", "privado": "Suas emoções continuam 100% privadas no seu aparelho — só contamos XP.",
+    "conquistas": "Conquistas", "semanal": "Semanal", "geral": "Geral", "ninguemAqui": "Ninguém por aqui ainda neste modo.",
+    "erroCarregar": "Não foi possível carregar o ranking. Tente novamente.", "tentarDeNovo": "Tentar de novo", "carregando": "Carregando..."
+  },
+  "metas": {
+    "intro": "Conquiste metas registrando seu humor. Cada meta desbloqueia um tema exclusivo — 100% offline, sem conta.",
+    "insignias": "Insígnias", "temaDesbloqueado": "Tema {{theme}} desbloqueado", "recompensa": "Recompensa: tema {{theme}}"
+  },
+  "historico": { "titulo": "Histórico", "vazio": "Nenhum registro ainda", "vazioDica": "Volte à tela inicial e registre sua primeira emoção", "remover": "Remover registro", "registros": "registros", "apagarConfirm": "Apagar \"{{label}}\"?" },
+  "estatisticas": {
+    "titulo": "Gráficos", "exportarPdf": "Exportar PDF", "pdfGerado": "PDF gerado!", "pdfSalvo": "Salvo em:\n{{uri}}", "erroPdf": "Erro", "erroPdfMsg": "Não foi possível gerar o PDF.",
+    "frequencia": "Frequência de Emoções", "distribuicao": "Distribuição de Humor", "intensidadeTempo": "Intensidade ao Longo do Tempo", "diaSemana": "Humor por Dia da Semana", "horaDia": "Humor por Hora do Dia"
+  },
+  "intensidade": { "titulo": "Qual a intensidade?", "muitoFraco": "Muito fraco", "fraco": "Fraco", "moderado": "Moderado", "forte": "Forte", "muitoIntenso": "Muito intenso" },
+  "nota": { "placeholder": "Descrição (opcional)" },
+  "emotionWheel": { "selecione": "Selecione uma emoção" },
+  "namePrompt": { "titulo": "Identificação para o PDF", "placeholder": "Seu nome ou apelido" },
+  "pdf": {
+    "titulo": "Relatório de Humor", "resumo": "Resumo", "frequencia": "Frequência de Emoções", "distribuicao": "Distribuição de Humor",
+    "intensidadeTempo": "Intensidade ao Longo do Tempo", "diaSemana": "Humor por Dia da Semana", "horaDia": "Humor por Hora do Dia",
+    "nenhumRegistro": "Nenhum registro no período.", "periodo": "Período", "exportadoEm": "Exportado em",
+    "maisFrequente": "Mais frequente", "diasAtivos": "Dias ativos", "sequencia": "Sequência (dias)",
+    "emocao": "Emoção", "porcento": "%", "intensMedia": "Intens. média", "data": "Data", "emocaoDominante": "Emoção dom.", "hora": "Hora",
+    "registros": "Registros", "paciente": "Paciente"
+  },
+  "stats": { "sequenciaDias": "Sequência de dias", "frequencia": "Frequência", "intensidadeMedia": "Intensidade média", "total": "Total", "intensidadeMediaSemana": "Intensidade média por dia da semana", "intensidadeMediaHora": "Intensidade média por hora do dia" },
+  "range": { "all": "Tudo", "7d": "7 dias", "30d": "30 dias", "90d": "90 dias" },
+  "diasSemana": ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
+}

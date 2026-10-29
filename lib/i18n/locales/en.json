@@ -1,0 +1,73 @@
+{
+  "app": { "name": "PsyMap" },
+  "common": { "cancel": "Cancel", "ok": "OK", "delete": "Delete", "back": "Back", "continue": "Continue", "register": "Register", "anonimo": "Anonymous" },
+  "tabs": { "inicio": "Home", "historico": "History", "graficos": "Charts", "ranking": "Ranking", "metas": "Goals", "ajustes": "Settings" },
+  "settings": {
+    "conta": "Account", "tema": "Theme", "notificacoes": "Notifications", "dados": "Data", "contribua": "Contribute", "idioma": "Language",
+    "entrarGoogle": "Sign in with Google", "paraCompetir": "To compete in the weekly and all-time ranking",
+    "sair": "Sign out", "sairConta": "Sign out of account", "sairContaMsg": "Sign out of your Google account? Your local data is kept.",
+    "lembretesDiarios": "Daily reminders", "lembretesOn": "3 reminders a day (9am, 2pm and 8pm)", "lembretesOff": "Get gentle reminders to log your mood",
+    "permissaoNegada": "Permission denied", "permissaoNegadaMsg": "To receive reminders, enable notifications for PsyMap in your device settings.",
+    "notificacoesAtivadas": "Notifications enabled", "notificacoesAtivadasMsg": "You'll get 3 gentle reminders a day (9am, 2pm and 8pm) to log your mood.",
+    "excluirDados": "Delete all data", "excluirConfirm": "This will erase all your history, your gamification and reset the theme. This action cannot be undone.", "excluirSucesso": "All data has been deleted.",
+    "enviarFeedback": "Send feedback", "compartilharApp": "Share app", "fazerDoacao": "Donate (PIX)", "copiarPix": "Copy PIX key", "copiado": "Copied!",
+    "temasDesbloqueia": "Unlocks with: {{emoji}} {{title}}"
+  },
+  "temas": { "light": "Light", "dark": "Dark", "dracula": "Dracula", "nord": "Nord", "gruvbox": "Gruvbox", "catppuccin": "Catppuccin", "pixel": "Pixel" },
+  "home": {
+    "ola": "Hi", "comoSeSente": "How are you feeling?",
+    "sequencia": "Streak", "dia": "day", "dias": "days", "nivel": "Level", "xpParaNivel": "XP to level {{n}}",
+    "registrado": "Logged!", "novaConquista": "New achievement unlocked!"
+  },
+  "emotions": { "joy": "Joy", "trust": "Trust", "fear": "Fear", "surprise": "Surprise", "sadness": "Sadness", "disgust": "Disgust", "anger": "Anger", "anticipation": "Anticipation" },
+  "badges": {
+    "first-entry": { "title": "First step", "description": "Log your first emotion" },
+    "entries-10": { "title": "Warming up", "description": "10 entries" },
+    "entries-50": { "title": "Habit", "description": "50 entries" },
+    "entries-100": { "title": "Diarist", "description": "100 entries" },
+    "entries-365": { "title": "Whole year", "description": "365 entries" },
+    "streak-3": { "title": "Spark", "description": "3-day streak" },
+    "streak-7": { "title": "One week", "description": "7-day streak" },
+    "streak-14": { "title": "Two weeks", "description": "14-day streak" },
+    "streak-30": { "title": "One month", "description": "30-day streak" },
+    "level-2": { "title": "Level 2", "description": "Reach level 2" },
+    "level-5": { "title": "Level 5", "description": "Reach level 5" },
+    "level-10": { "title": "Level 10", "description": "Reach level 10" }
+  },
+  "notifications": {
+    "channel": "PsyMap Reminders",
+    "title1": "How are you?", "body1": "Log today's mood in PsyMap 🧠",
+    "title2": "Mood break", "body2": "Take 1 minute to log how you feel.",
+    "title3": "Daily reflection", "body3": "Your emotional journal appreciates a note."
+  },
+  "ranking": {
+    "entreParaCompetir": "Join to compete", "vejaRanking": "Track your XP and see how you rank in the weekly and all-time mood loggers leaderboard.",
+    "entrarGoogle": "Sign in with Google", "privado": "Your emotions stay 100% private on your device — we only count XP.",
+    "conquistas": "Achievements", "semanal": "Weekly", "geral": "All-time", "ninguemAqui": "No one here in this mode yet.",
+    "erroCarregar": "Could not load the ranking. Try again.", "tentarDeNovo": "Try again", "carregando": "Loading..."
+  },
+  "metas": {
+    "intro": "Earn goals by logging your mood. Each goal unlocks an exclusive theme — 100% offline, no account.",
+    "insignias": "Badges", "temaDesbloqueado": "Theme {{theme}} unlocked", "recompensa": "Reward: {{theme}} theme"
+  },
+  "historico": { "titulo": "History", "vazio": "No entries yet", "vazioDica": "Go to the home screen and log your first emotion", "remover": "Remove entry", "registros": "entries", "apagarConfirm": "Delete \"{{label}}\"?" },
+  "estatisticas": {
+    "titulo": "Charts", "exportarPdf": "Export PDF", "pdfGerado": "PDF generated!", "pdfSalvo": "Saved to:\n{{uri}}", "erroPdf": "Error", "erroPdfMsg": "Could not generate the PDF.",
+    "frequencia": "Emotion Frequency", "distribuicao": "Mood Distribution", "intensidadeTempo": "Intensity Over Time", "diaSemana": "Mood by Day of Week", "horaDia": "Mood by Hour of Day"
+  },
+  "intensidade": { "titulo": "What's the intensity?", "muitoFraco": "Very weak", "fraco": "Weak", "moderado": "Moderate", "forte": "Strong", "muitoIntenso": "Very intense" },
+  "nota": { "placeholder": "Description (optional)" },
+  "emotionWheel": { "selecione": "Select an emotion" },
+  "namePrompt": { "titulo": "Name for the PDF", "placeholder": "Your name or nickname" },
+  "pdf": {
+    "titulo": "Mood Report", "resumo": "Summary", "frequencia": "Emotion Frequency", "distribuicao": "Mood Distribution",
+    "intensidadeTempo": "Intensity Over Time", "diaSemana": "Mood by Day of Week", "horaDia": "Mood by Hour of Day",
+    "nenhumRegistro": "No entries in this period.", "periodo": "Period", "exportadoEm": "Exported on",
+    "maisFrequente": "Most frequent", "diasAtivos": "Active days", "sequencia": "Day streak",
+    "emocao": "Emotion", "porcento": "%", "intensMedia": "Avg intensity", "data": "Date", "emocaoDominante": "Top emotion", "hora": "Hour",
+    "registros": "Entries", "paciente": "Patient"
+  },
+  "stats": { "sequenciaDias": "Day streak", "frequencia": "Frequency", "intensidadeMedia": "Average intensity", "total": "Total", "intensidadeMediaSemana": "Average intensity by day of week", "intensidadeMediaHora": "Average intensity by hour of day" },
+  "range": { "all": "All", "7d": "7 days", "30d": "30 days", "90d": "90 days" },
+  "diasSemana": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+}

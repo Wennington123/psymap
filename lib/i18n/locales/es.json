@@ -1,0 +1,73 @@
+{
+  "app": { "name": "PsyMap" },
+  "common": { "cancel": "Cancelar", "ok": "OK", "delete": "Borrar", "back": "Atrás", "continue": "Continuar", "register": "Registrar", "anonimo": "Anónimo" },
+  "tabs": { "inicio": "Inicio", "historico": "Historial", "graficos": "Gráficos", "ranking": "Clasificación", "metas": "Metas", "ajustes": "Ajustes" },
+  "settings": {
+    "conta": "Cuenta", "tema": "Tema", "notificacoes": "Notificaciones", "dados": "Datos", "contribua": "Contribuir", "idioma": "Idioma",
+    "entrarGoogle": "Iniciar con Google", "paraCompetir": "Para competir en la clasificación semanal y general",
+    "sair": "Cerrar sesión", "sairConta": "Cerrar sesión de la cuenta", "sairContaMsg": "¿Cerrar tu cuenta de Google? Tus datos locales se conservan.",
+    "lembretesDiarios": "Recordatorios diarios", "lembretesOn": "3 recordatorios al día (9h, 14h y 20h)", "lembretesOff": "Recibe recordatorios amables para registrar tu estado de ánimo",
+    "permissaoNegada": "Permiso denegado", "permissaoNegadaMsg": "Para recibir recordatorios, activa las notificaciones de PsyMap en los ajustes de tu dispositivo.",
+    "notificacoesAtivadas": "Notificaciones activadas", "notificacoesAtivadasMsg": "Recibirás 3 recordatorios amables al día (9h, 14h y 20h) para registrar tu estado de ánimo.",
+    "excluirDados": "Borrar todos los datos", "excluirConfirm": "Esto borrará todo tu historial, tu gamificación y restablecerá el tema. Esta acción no se puede deshacer.", "excluirSucesso": "Todos los datos han sido borrados.",
+    "enviarFeedback": "Enviar comentarios", "compartilharApp": "Compartir app", "fazerDoacao": "Donar (PIX)", "copiarPix": "Copiar clave PIX", "copiado": "¡Copiado!",
+    "temasDesbloqueia": "Desbloquea con: {{emoji}} {{title}}"
+  },
+  "temas": { "light": "Claro", "dark": "Oscuro", "dracula": "Dracula", "nord": "Nord", "gruvbox": "Gruvbox", "catppuccin": "Catppuccin", "pixel": "Pixel" },
+  "home": {
+    "ola": "Hola", "comoSeSente": "¿Cómo te sientes?",
+    "sequencia": "Racha", "dia": "día", "dias": "días", "nivel": "Nivel", "xpParaNivel": "XP para el nivel {{n}}",
+    "registrado": "¡Registrado!", "novaConquista": "¡Nuevo logro desbloqueado!"
+  },
+  "emotions": { "joy": "Alegría", "trust": "Confianza", "fear": "Miedo", "surprise": "Sorpresa", "sadness": "Tristeza", "disgust": "Asco", "anger": "Enojo", "anticipation": "Anticipación" },
+  "badges": {
+    "first-entry": { "title": "Primer paso", "description": "Registra tu primera emoción" },
+    "entries-10": { "title": "Calentando", "description": "10 registros" },
+    "entries-50": { "title": "Costumbre", "description": "50 registros" },
+    "entries-100": { "title": "Diarista", "description": "100 registros" },
+    "entries-365": { "title": "Todo un año", "description": "365 registros" },
+    "streak-3": { "title": "Chispa", "description": "Racha de 3 días" },
+    "streak-7": { "title": "Una semana", "description": "Racha de 7 días" },
+    "streak-14": { "title": "Dos semanas", "description": "Racha de 14 días" },
+    "streak-30": { "title": "Un mes", "description": "Racha de 30 días" },
+    "level-2": { "title": "Nivel 2", "description": "Alcanza el nivel 2" },
+    "level-5": { "title": "Nivel 5", "description": "Alcanza el nivel 5" },
+    "level-10": { "title": "Nivel 10", "description": "Alcanza el nivel 10" }
+  },
+  "notifications": {
+    "channel": "Recordatorios PsyMap",
+    "title1": "¿Cómo estás?", "body1": "Registra tu estado de ánimo de hoy en PsyMap 🧠",
+    "title2": "Pausa para el ánimo", "body2": "Tómate 1 minuto para registrar cómo te sientes.",
+    "title3": "Reflexión del día", "body3": "Tu diario emocional agradece una nota."
+  },
+  "ranking": {
+    "entreParaCompetir": "Únete para competir", "vejaRanking": "Sigue tu XP y mira tu posición en la clasificación semanal y general de registradores de ánimo.",
+    "entrarGoogle": "Iniciar con Google", "privado": "Tus emociones siguen 100% privadas en tu dispositivo — solo contamos XP.",
+    "conquistas": "Logros", "semanal": "Semanal", "geral": "General", "ninguemAqui": "Nadie por aquí todavía en este modo.",
+    "erroCarregar": "No se pudo cargar la clasificación. Inténtalo de nuevo.", "tentarDeNovo": "Intentar de nuevo", "carregando": "Cargando..."
+  },
+  "metas": {
+    "intro": "Consigue metas registrando tu estado de ánimo. Cada meta desbloquea un tema exclusivo — 100% sin conexión, sin cuenta.",
+    "insignias": "Insignias", "temaDesbloqueado": "Tema {{theme}} desbloqueado", "recompensa": "Recompensa: tema {{theme}}"
+  },
+  "historico": { "titulo": "Historial", "vazio": "Aún no hay registros", "vazioDica": "Vuelve a la pantalla de inicio y registra tu primera emoción", "remover": "Eliminar registro", "registros": "registros", "apagarConfirm": "¿Borrar \"{{label}}\"?" },
+  "estatisticas": {
+    "titulo": "Gráficos", "exportarPdf": "Exportar PDF", "pdfGerado": "¡PDF generado!", "pdfSalvo": "Guardado en:\n{{uri}}", "erroPdf": "Error", "erroPdfMsg": "No se pudo generar el PDF.",
+    "frequencia": "Frecuencia de Emociones", "distribuicao": "Distribución del Estado de Ánimo", "intensidadeTempo": "Intensidad a lo largo del tiempo", "diaSemana": "Estado de ánimo por día de la semana", "horaDia": "Estado de ánimo por hora del día"
+  },
+  "intensidade": { "titulo": "¿Qué tan intensa?", "muitoFraco": "Muy débil", "fraco": "Débil", "moderado": "Moderado", "forte": "Fuerte", "muitoIntenso": "Muy intensa" },
+  "nota": { "placeholder": "Descripción (opcional)" },
+  "emotionWheel": { "selecione": "Selecciona una emoción" },
+  "namePrompt": { "titulo": "Identificación para el PDF", "placeholder": "Tu nombre o apodo" },
+  "pdf": {
+    "titulo": "Informe de Estado de Ánimo", "resumo": "Resumen", "frequencia": "Frecuencia de Emociones", "distribuicao": "Distribución del Estado de Ánimo",
+    "intensidadeTempo": "Intensidad a lo largo del tiempo", "diaSemana": "Estado de ánimo por día de la semana", "horaDia": "Estado de ánimo por hora del día",
+    "nenhumRegistro": "Ningún registro en este período.", "periodo": "Período", "exportadoEm": "Exportado el",
+    "maisFrequente": "Más frecuente", "diasAtivos": "Días activos", "sequencia": "Racha (días)",
+    "emocao": "Emoción", "porcento": "%", "intensMedia": "Intens. media", "data": "Fecha", "emocaoDominante": "Emoción dom.", "hora": "Hora",
+    "registros": "Registros", "paciente": "Paciente"
+  },
+  "stats": { "sequenciaDias": "Racha de días", "frequencia": "Frecuencia", "intensidadeMedia": "Intensidad media", "total": "Total", "intensidadeMediaSemana": "Intensidad media por día de la semana", "intensidadeMediaHora": "Intensidad media por hora del día" },
+  "range": { "all": "Todo", "7d": "7 días", "30d": "30 días", "90d": "90 días" },
+  "diasSemana": ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"]
+}

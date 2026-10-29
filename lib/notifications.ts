@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from './i18n';
 
 const NOTIF_PREF_KEY = '@psymap:notificationsEnabled';
 
@@ -18,38 +19,20 @@ interface DailyReminder {
   id: string;
   hour: number;
   minute: number;
-  title: string;
-  body: string;
+  titleKey: string;
+  bodyKey: string;
 }
 
 const DAILY_REMINDERS: DailyReminder[] = [
-  {
-    id: 'psymap-morning',
-    hour: 9,
-    minute: 0,
-    title: 'Bom dia!',
-    body: 'Como você está se sentindo agora? Registre seu humor no PsyMap.',
-  },
-  {
-    id: 'psymap-afternoon',
-    hour: 14,
-    minute: 0,
-    title: 'Oi!',
-    body: 'Que tal uma pausa para registrar como você está?',
-  },
-  {
-    id: 'psymap-evening',
-    hour: 20,
-    minute: 0,
-    title: 'Hora do check-in',
-    body: 'Como foi seu dia? Registre suas emoções antes de descansar.',
-  },
+  { id: 'psymap-morning', hour: 9, minute: 0, titleKey: 'notifications.title1', bodyKey: 'notifications.body1' },
+  { id: 'psymap-afternoon', hour: 14, minute: 0, titleKey: 'notifications.title2', bodyKey: 'notifications.body2' },
+  { id: 'psymap-evening', hour: 20, minute: 0, titleKey: 'notifications.title3', bodyKey: 'notifications.body3' },
 ];
 
 export async function requestPermission(): Promise<boolean> {
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
-      name: 'Lembretes PsyMap',
+      name: i18n.t('notifications.channel'),
       importance: Notifications.AndroidImportance.DEFAULT,
     });
   }
@@ -67,8 +50,8 @@ export async function scheduleDailyReminders(): Promise<void> {
   for (const reminder of DAILY_REMINDERS) {
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: reminder.title,
-        body: reminder.body,
+        title: i18n.t(reminder.titleKey),
+        body: i18n.t(reminder.bodyKey),
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.DAILY,

@@ -15,6 +15,7 @@ import {
 } from '@expo-google-fonts/pixelify-sans';
 import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
 import { AuthProvider } from '../contexts/AuthContext';
+import { LocaleProvider } from '../contexts/LocaleContext';
 import { initNotifications } from '../lib/notifications';
 
 function AppContent() {
@@ -47,9 +48,11 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <SafeAreaProvider>
-          <AppContent />
-        </SafeAreaProvider>
+        <LocaleProvider>
+          <SafeAreaProvider>
+            <AppContent />
+          </SafeAreaProvider>
+        </LocaleProvider>
       </AuthProvider>
     </ThemeProvider>
   );

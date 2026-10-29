@@ -147,7 +147,7 @@ export function computeIntensityTrend(entries: MoodEntry[]): TimeSeriesPoint[] {
 }
 
 export function computeDayOfWeek(entries: MoodEntry[]): DayOfWeekStat[] {
-  const DAYS_PT = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  const DAYS = i18n.t('diasSemana') as string[];
   const buckets: { totalIntensity: number; count: number }[] = Array.from({ length: 7 }, () => ({
     totalIntensity: 0,
     count: 0,

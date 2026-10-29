@@ -16,8 +16,10 @@ import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLocale } from '../../contexts/LocaleContext';
 import { IS_FOSS } from '../../lib/config';
 import { BADGES } from '../../lib/gamification';
+import { i18n, LOCALES } from '../../lib/i18n';
 import { Themes, ThemeName } from '../../constants/colors';
 import { clearAllData, getEntries } from '../../storage/moodStorage';
 import { clearGamificationData, getEarnedBadges, getXpTotal } from '../../storage/gamification';
@@ -34,15 +36,6 @@ import { card, radii, shadow, displayFont } from '../../constants/ui';
 import { useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
 
-const THEME_LABELS: Record<ThemeName, string> = {
-  light: 'Claro',
-  dark: 'Escuro',
-  dracula: 'Dracula',
-  nord: 'Nord',
-  gruvbox: 'Gruvbox',
-  catppuccin: 'Catppuccin',
-  pixel: 'Pixel',
-};
 const THEME_LIST: ThemeName[] = ['light', 'dark', 'dracula', 'nord', 'gruvbox', 'catppuccin', 'pixel'];
 
 const PIX_KEY = '74988217793';
@@ -50,6 +43,7 @@ const PIX_KEY = '74988217793';
 export default function SettingsScreen() {
   const { colors, themeName, setTheme } = useTheme();
   const { user, loading, signInWithGoogle, signOut } = useAuth();
+  const { locale, setAppLocale } = useLocale();
   const version = Constants.expoConfig?.version ?? '1.0.0';
   const [notifEnabled, setNotifEnabled] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
@@ -151,8 +145,8 @@ export default function SettingsScreen() {
       return;
     }
     Alert.alert(
-      THEME_LABELS[name],
-      `Desbloqueie com a conquista ${requirement.emoji} ${requirement.title}: ${requirement.description.toLowerCase()}.`,
+      i18n.t('temas.' + name),
+      i18n.t('settings.temasDesbloqueia', { emoji: requirement.emoji, title: requirement.title }),
     );
   };
 
@@ -249,14 +243,40 @@ export default function SettingsScreen() {
                 ))}
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={[styles.label, { color: colors.text, fontFamily: displayFont(colors, 'semibold') }]}>{THEME_LABELS[key]}</Text>
+                <Text style={[styles.label, { color: colors.text, fontFamily: displayFont(colors, 'semibold') }]}>{i18n.t('temas.' + key)}</Text>
                 {requirement && !unlocked ? (
                   <Text style={[styles.description, { color: colors.textSecondary, fontFamily: displayFont(colors, 'regular') }]}>
-                    🔒 Desbloqueia com: {requirement.emoji} {requirement.title}
+                    {i18n.t('settings.temasDesbloqueia', { emoji: requirement.emoji, title: requirement.title })}
                   </Text>
                 ) : null}
               </View>
               {isSelected && unlocked && (
+                <View style={[styles.check, { backgroundColor: colors.accent }]}>
+                  <Text style={{ color: colors.textOnAccent, fontSize: 13, fontWeight: '700' }}>✓</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+
+      <Text style={[styles.sectionTitle, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Idioma</Text>
+      <View style={styles.section}>
+        {LOCALES.map((loc) => {
+          const isSelected = locale === loc.id;
+          return (
+            <TouchableOpacity
+              key={loc.id}
+              style={[
+                styles.card,
+                card(colors),
+                isSelected && { borderWidth: 2, borderColor: colors.accent },
+              ]}
+              activeOpacity={0.7}
+              onPress={() => setAppLocale(loc.id)}
+            >
+              <Text style={[styles.label, { color: colors.text, fontFamily: displayFont(colors, 'semibold') }]}>{loc.label}</Text>
+              {isSelected && (
                 <View style={[styles.check, { backgroundColor: colors.accent }]}>
                   <Text style={{ color: colors.textOnAccent, fontSize: 13, fontWeight: '700' }}>✓</Text>
                 </View>

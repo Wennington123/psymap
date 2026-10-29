@@ -1,5 +1,6 @@
 import { SummaryStats, EmotionStat, TimeSeriesPoint, DayOfWeekStat, HourOfDayStat } from './stats';
 import { ThemeColors } from '../constants/colors';
+import i18n from './i18n';
 
 const ESC = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -26,16 +27,17 @@ export function generateReportHtml({
   logoSrc,
   colors,
 }: ReportParams): string {
-  const exportedAt = new Date().toLocaleString('pt-BR');
-  const displayName = userName.trim() || 'Anônimo';
+  const exportedAt = new Date().toLocaleString(i18n.locale);
+  const displayName = userName.trim() || i18n.t('common.anonimo');
   const p = colors.chartPalette;
+  const t = (k: string) => i18n.t(k);
 
   return `<!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="${i18n.locale}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Relatório PsyMap — ${ESC(displayName)}</title>
+<title>${ESC(t('pdf.titulo'))} — ${ESC(displayName)}</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -101,9 +103,9 @@ export function generateReportHtml({
 <body>
 
 ${logoSrc ? `<div style="text-align:center;margin-bottom:12px;"><img src="${ESC(logoSrc)}" width="64" height="64" alt="PsyMap" /></div>` : ''}
-<h1>PsyMap — Relatório de Humor</h1>
-<div class="sub">Paciente: <strong>${ESC(displayName)}</strong></div>
-<div class="meta">Exportado em ${ESC(exportedAt)} · Período: ${ESC(rangeLabel)}</div>
+<h1>PsyMap — ${ESC(t('pdf.titulo'))}</h1>
+<div class="sub">${ESC(t('pdf.paciente'))}: <strong>${ESC(displayName)}</strong></div>
+<div class="meta">${ESC(t('pdf.exportadoEm'))} ${ESC(exportedAt)} · ${ESC(t('pdf.periodo'))}: ${ESC(rangeLabel)}</div>
 
 ${summaryHtml(summary)}
 ${frequencyHtml(frequency, p)}
@@ -113,8 +115,8 @@ ${dayOfWeekHtml(dayOfWeek, p)}
 ${hourOfDayHtml(hourOfDay)}
 
 <div class="footer">
-  Gerado por PsyMap — app gratuito e open-source (GPL-3.0)<br>
-  https://gitlab.com/wenningtondiasx25/psymap
+  ${ESC(t('pdf.titulo'))} · app gratuito e open-source (GPL-3.0)<br>
+  https://github.com/Wennington123/psymap
 </div>
 
 </body>
@@ -122,21 +124,21 @@ ${hourOfDayHtml(hourOfDay)}
 }
 
 function summaryHtml(s: SummaryStats): string {
-  if (s.totalEntries === 0) return '<p style="color:#888;text-align:center;padding:24px;">Nenhum registro no período.</p>';
-  return `<h2>Resumo</h2>
+  if (s.totalEntries === 0) return `<p style="color:#888;text-align:center;padding:24px;">${ESC(i18n.t('pdf.nenhumRegistro'))}</p>`;
+  return `<h2>${ESC(i18n.t('pdf.resumo'))}</h2>
 <div class="cards">
-  <div class="card"><div class="num">${s.totalEntries}</div><div class="lbl">Registros</div></div>
-  <div class="card"><div class="num">${s.avgIntensity}</div><div class="lbl">Média intensidade</div></div>
-  ${s.mostFrequent ? `<div class="card"><div class="emoji">${ESC(s.mostFrequent.emoji)}</div><div class="lbl">Mais frequente</div><div class="sub-text">${ESC(s.mostFrequent.label)}</div></div>` : ''}
-  <div class="card"><div class="num">${s.daysWithEntries}</div><div class="lbl">Dias ativos</div></div>
-  <div class="card"><div class="num">${s.currentStreak}</div><div class="lbl">Sequência (dias)</div></div>
+  <div class="card"><div class="num">${s.totalEntries}</div><div class="lbl">${ESC(i18n.t('stats.total'))}</div></div>
+  <div class="card"><div class="num">${s.avgIntensity}</div><div class="lbl">${ESC(i18n.t('stats.intensidadeMedia'))}</div></div>
+  ${s.mostFrequent ? `<div class="card"><div class="emoji">${ESC(s.mostFrequent.emoji)}</div><div class="lbl">${ESC(i18n.t('pdf.maisFrequente'))}</div><div class="sub-text">${ESC(s.mostFrequent.label)}</div></div>` : ''}
+  <div class="card"><div class="num">${s.daysWithEntries}</div><div class="lbl">${ESC(i18n.t('pdf.diasAtivos'))}</div></div>
+  <div class="card"><div class="num">${s.currentStreak}</div><div class="lbl">${ESC(i18n.t('pdf.sequencia'))}</div></div>
 </div>`;
 }
 
 function frequencyHtml(stats: EmotionStat[], p: readonly string[]): string {
   if (stats.length === 0) return '';
   const max = stats[0].count;
-  return `<h2>Frequência de Emoções</h2>
+  return `<h2>${ESC(i18n.t('pdf.frequencia'))}</h2>
 ${stats.map((s, i) => {
   const pct = Math.round((s.count / max) * 100);
   return `<div class="bar-row">
@@ -144,15 +146,15 @@ ${stats.map((s, i) => {
   <span class="label-span">${ESC(s.label)}</span>
   <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${p[i % p.length]}">${s.percentage > 5 ? s.percentage + '%' : ''}</div></div>
   <span class="count">${s.count}</span>
-</div>`;
+  </div>`;
 }).join('')}`;
 }
 
 function distributionTable(stats: EmotionStat[]): string {
   if (stats.length === 0) return '';
-  return `<h2>Distribuição de Humor</h2>
+  return `<h2>${ESC(i18n.t('pdf.distribuicao'))}</h2>
 <table>
-<tr><th>Emoção</th><th class="td-num">Registros</th><th class="td-num">%</th><th class="td-num">Intens. média</th></tr>
+<tr><th>${ESC(i18n.t('pdf.emocao'))}</th><th class="td-num">${ESC(i18n.t('pdf.registros'))}</th><th class="td-num">${ESC(i18n.t('pdf.porcento'))}</th><th class="td-num">${ESC(i18n.t('pdf.intensMedia'))}</th></tr>
 ${stats.map((s) => `<tr>
   <td class="td-emoji">${s.emoji}</td><td>${ESC(s.label)}</td>
   <td class="td-num">${s.count}</td>
@@ -164,9 +166,9 @@ ${stats.map((s) => `<tr>
 
 function intensityTable(points: TimeSeriesPoint[]): string {
   if (points.length < 2) return '';
-  return `<h2>Intensidade ao Longo do Tempo</h2>
+  return `<h2>${ESC(i18n.t('pdf.intensidadeTempo'))}</h2>
 <table>
-<tr><th>Data</th><th class="td-num">Intens. média</th><th class="td-num">Registros</th><th>Emoção dom.</th></tr>
+<tr><th>${ESC(i18n.t('pdf.data'))}</th><th class="td-num">${ESC(i18n.t('pdf.intensMedia'))}</th><th class="td-num">${ESC(i18n.t('pdf.registros'))}</th><th>${ESC(i18n.t('pdf.emocaoDominante'))}</th></tr>
 ${points.map((p) => {
   const [y, m, d] = p.date.split('-');
   return `<tr>
@@ -182,7 +184,7 @@ ${points.map((p) => {
 function dayOfWeekHtml(stats: DayOfWeekStat[], p: readonly string[]): string {
   if (stats.length === 0) return '';
   const max = Math.max(...stats.map((s) => s.avgIntensity), 1);
-  return `<h2>Humor por Dia da Semana</h2>
+  return `<h2>${ESC(i18n.t('pdf.diaSemana'))}</h2>
 <div class="dow-bars">
 ${stats.map((s, i) => {
   const h = Math.max((s.avgIntensity / max) * 80, 4);
@@ -190,7 +192,7 @@ ${stats.map((s, i) => {
   return `<div class="dow-col">
     <div class="dow-val">${hasData ? s.avgIntensity : ''}</div>
     <div class="dow-fill" style="height:${h}px;background:${hasData ? p[i % p.length] : '#ccc'}"></div>
-    <div class="dow-label">${s.dayLabel}</div>
+    <div class="dow-label">${ESC(s.dayLabel)}</div>
   </div>`;
 }).join('')}
 </div>`;
@@ -199,9 +201,9 @@ ${stats.map((s, i) => {
 function hourOfDayHtml(stats: HourOfDayStat[]): string {
   const active = stats.filter((s) => s.count > 0);
   if (active.length === 0) return '';
-  return `<h2>Humor por Hora do Dia</h2>
+  return `<h2>${ESC(i18n.t('pdf.horaDia'))}</h2>
 <table>
-<tr><th>Hora</th><th class="td-num">Intens. média</th><th class="td-num">Registros</th></tr>
+<tr><th>${ESC(i18n.t('pdf.hora'))}</th><th class="td-num">${ESC(i18n.t('pdf.intensMedia'))}</th><th class="td-num">${ESC(i18n.t('pdf.registros'))}</th></tr>
 ${active.map((s) => `<tr>
   <td>${s.hour.toString().padStart(2, '0')}h</td>
   <td class="td-num">${s.avgIntensity}</td>
