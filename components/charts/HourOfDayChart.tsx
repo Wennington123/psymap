@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { HourOfDayStat } from '../../lib/stats';
 import { useTheme } from '../../contexts/ThemeContext';
+import i18n from '../../lib/i18n';
 
 interface Props {
   data: HourOfDayStat[];
@@ -50,7 +51,7 @@ export default function HourOfDayChart({ data }: Props) {
         referenceLine1Position={0}
         referenceLine1Config={{ color: colors.chartAxis, thickness: 1 }}
       />
-      <Text style={[styles.hint, { color: colors.textDim }]}>Intensidade média por hora do dia</Text>
+      <Text style={[styles.hint, { color: colors.textDim }]}>{i18n.t('stats.intensidadeMediaHora')}</Text>
     </View>
   );
 }

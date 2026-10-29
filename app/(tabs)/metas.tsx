@@ -13,6 +13,7 @@ import { getEarnedBadges, getXpTotal } from '../../storage/gamification';
 import { getEntries } from '../../storage/moodStorage';
 import { Themes, ThemeName } from '../../constants/colors';
 import { card, displayFont } from '../../constants/ui';
+import i18n from '../../lib/i18n';
 
 export default function MetasScreen() {
   const { colors } = useTheme();
@@ -39,7 +40,7 @@ export default function MetasScreen() {
       contentContainerStyle={styles.content}
     >
       <Text style={[styles.intro, { color: colors.textSecondary, fontFamily: displayFont(colors, 'regular') }]}>
-        Conquiste metas registrando seu humor. Cada meta desbloqueia um tema exclusivo — 100% offline, sem conta.
+        {i18n.t('metas.intro')}
       </Text>
 
       {METAS.map((meta) => {
@@ -70,8 +71,8 @@ export default function MetasScreen() {
                 ]}
               >
                 {done
-                  ? `✅ Tema ${themeLabel(meta.rewardTheme)} desbloqueado`
-                  : `🎨 Recompensa: tema ${themeLabel(meta.rewardTheme)}`}
+                  ? i18n.t('metas.temaDesbloqueado', { theme: themeLabel(meta.rewardTheme) })
+                  : i18n.t('metas.recompensa', { theme: themeLabel(meta.rewardTheme) })}
               </Text>
             </View>
           </View>
@@ -79,7 +80,7 @@ export default function MetasScreen() {
       })}
 
       <Text style={[styles.sectionTitle, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>
-        Insígnias
+        {i18n.t('metas.insignias')}
       </Text>
       <View style={[styles.badgeGrid, card(colors)]}>
         {BADGES.map((b) => {
@@ -91,7 +92,7 @@ export default function MetasScreen() {
                 style={[styles.badgeName, { color: has ? colors.text : colors.textDim }]}
                 numberOfLines={1}
               >
-                {b.title}
+                {i18n.t('badges.' + b.id + '.title')}
               </Text>
             </View>
           );

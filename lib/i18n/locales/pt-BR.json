@@ -52,7 +52,7 @@
   },
   "historico": { "titulo": "Histórico", "vazio": "Nenhum registro ainda", "vazioDica": "Volte à tela inicial e registre sua primeira emoção", "remover": "Remover registro", "registros": "registros", "apagarConfirm": "Apagar \"{{label}}\"?" },
   "estatisticas": {
-    "titulo": "Gráficos", "exportarPdf": "Exportar PDF", "pdfGerado": "PDF gerado!", "pdfSalvo": "Salvo em:\n{{uri}}", "erroPdf": "Erro", "erroPdfMsg": "Não foi possível gerar o PDF.",
+    "titulo": "Gráficos", "exportarPdf": "Exportar PDF", "pdfGerado": "PDF gerado!", "pdfSalvo": "Salvo em:\n{{uri}}", "erroPdf": "Erro", "erroPdfMsg": "Não foi possível gerar o PDF.", "vazioDica": "Registre suas emoções para ver as estatísticas",
     "frequencia": "Frequência de Emoções", "distribuicao": "Distribuição de Humor", "intensidadeTempo": "Intensidade ao Longo do Tempo", "diaSemana": "Humor por Dia da Semana", "horaDia": "Humor por Hora do Dia"
   },
   "intensidade": { "titulo": "Qual a intensidade?", "muitoFraco": "Muito fraco", "fraco": "Fraco", "moderado": "Moderado", "forte": "Forte", "muitoIntenso": "Muito intenso" },

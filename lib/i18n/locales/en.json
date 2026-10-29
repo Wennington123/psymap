@@ -52,7 +52,7 @@
   },
   "historico": { "titulo": "History", "vazio": "No entries yet", "vazioDica": "Go to the home screen and log your first emotion", "remover": "Remove entry", "registros": "entries", "apagarConfirm": "Delete \"{{label}}\"?" },
   "estatisticas": {
-    "titulo": "Charts", "exportarPdf": "Export PDF", "pdfGerado": "PDF generated!", "pdfSalvo": "Saved to:\n{{uri}}", "erroPdf": "Error", "erroPdfMsg": "Could not generate the PDF.",
+    "titulo": "Charts", "exportarPdf": "Export PDF", "pdfGerado": "PDF generated!", "pdfSalvo": "Saved to:\n{{uri}}", "erroPdf": "Error", "erroPdfMsg": "Could not generate the PDF.", "vazioDica": "Log your emotions to see statistics",
     "frequencia": "Emotion Frequency", "distribuicao": "Mood Distribution", "intensidadeTempo": "Intensity Over Time", "diaSemana": "Mood by Day of Week", "horaDia": "Mood by Hour of Day"
   },
   "intensidade": { "titulo": "What's the intensity?", "muitoFraco": "Very weak", "fraco": "Weak", "moderado": "Moderate", "forte": "Strong", "muitoIntenso": "Very intense" },

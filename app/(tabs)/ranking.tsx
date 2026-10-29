@@ -21,6 +21,7 @@ import {
 } from '../../lib/firebaseRanking';
 import { getEarnedBadges, getXpTotal } from '../../storage/gamification';
 import { computeStreak } from '../../lib/gamification';
+import i18n from '../../lib/i18n';
 import { getEntries } from '../../storage/moodStorage';
 import { ensureRankDoc } from '../../lib/firebaseRanking';
 import { card, radii, shadow } from '../../constants/ui';
@@ -47,7 +48,7 @@ export default function RankingScreen() {
       const data = mode === 'weekly' ? await fetchWeeklyRanking() : await fetchAllTimeRanking();
       setRows(data);
     } catch (e) {
-      setError('Não foi possível carregar o ranking. Tente novamente.');
+      setError(i18n.t('ranking.erroCarregar'));
     } finally {
       setLoading(false);
     }
@@ -86,9 +87,9 @@ export default function RankingScreen() {
       >
         <View style={[styles.ctaCard, card(colors)]}>
           <Text style={styles.ctaEmoji}>🏆</Text>
-          <Text style={[styles.ctaTitle, { color: colors.text }]}>Entre para competir</Text>
+          <Text style={[styles.ctaTitle, { color: colors.text }]}>{i18n.t('ranking.entreParaCompetir')}</Text>
           <Text style={[styles.ctaBody, { color: colors.textSecondary }]}>
-            Acompanhe seu XP e veja como você está se saindo no ranking semanal e geral de registradores de humor.
+            {i18n.t('ranking.vejaRanking')}
           </Text>
           <TouchableOpacity style={[styles.ctaButton, { backgroundColor: colors.accent }]} onPress={handleSignIn} activeOpacity={0.7}>
             {signingIn ? (
@@ -96,12 +97,12 @@ export default function RankingScreen() {
             ) : (
               <View style={styles.ctaButtonInner}>
                 <Text style={styles.ctaGoogle}>G</Text>
-                <Text style={[styles.ctaButtonText, { color: colors.textOnAccent }]}>Entrar com Google</Text>
+                <Text style={[styles.ctaButtonText, { color: colors.textOnAccent }]}>{i18n.t('ranking.entrarGoogle')}</Text>
               </View>
             )}
           </TouchableOpacity>
           <Text style={[styles.ctaNote, { color: colors.textDim }]}>
-            Suas emoções continuam 100% privadas no seu aparelho — só contamos XP.
+            {i18n.t('ranking.privado')}
           </Text>
         </View>
 
@@ -130,7 +131,7 @@ export default function RankingScreen() {
             activeOpacity={0.7}
           >
             <Text style={[styles.modeText, { color: mode === m ? colors.textOnAccent : colors.textSecondary }]}>
-              {m === 'weekly' ? 'Semanal' : 'Geral'}
+              {m === 'weekly' ? i18n.t('ranking.semanal') : i18n.t('ranking.geral')}
             </Text>
           </TouchableOpacity>
         ))}
@@ -140,13 +141,13 @@ export default function RankingScreen() {
         <View style={styles.feedback}>
           <Text style={[styles.errorText, { color: colors.textSecondary }]}>{error}</Text>
           <TouchableOpacity onPress={load} style={styles.retryBtn}>
-            <Text style={[styles.retryText, { color: colors.accent }]}>Tentar de novo</Text>
+              <Text style={[styles.retryText, { color: colors.accent }]}>{i18n.t('ranking.tentarDeNovo')}</Text>
           </TouchableOpacity>
         </View>
       ) : rows.length === 0 && !loading ? (
         <View style={styles.feedback}>
           <Text style={[styles.errorText, { color: colors.textDim }]}>
-            Ninguém por aqui ainda neste modo.
+            {i18n.t('ranking.ninguemAqui')}
           </Text>
         </View>
       ) : (
@@ -248,7 +249,7 @@ function BadgeGrid({
 }) {
   return (
     <View style={styles.badgeSection}>
-      <Text style={[styles.badgeTitle, { color: colors.textDim }]}>Conquistas</Text>
+      <Text style={[styles.badgeTitle, { color: colors.textDim }]}>{i18n.t('ranking.conquistas')}</Text>
       <View style={[styles.badgeGrid, card(colors)]}>
         {BADGES.map((badge) => {
           const earned = myBadges.includes(badge.id);
@@ -261,7 +262,7 @@ function BadgeGrid({
                 style={[styles.badgeName, { color: earned ? colors.text : colors.textDim }]}
                 numberOfLines={1}
               >
-                {badge.title}
+                {i18n.t('badges.' + badge.id + '.title')}
               </Text>
             </View>
           );

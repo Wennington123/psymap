@@ -6,8 +6,9 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Emotion } from '../types';
-import { BASE_EMOTIONS } from '../constants/emotions';
+import { BASE_EMOTIONS, emotionLabel } from '../constants/emotions';
 import { useTheme } from '../contexts/ThemeContext';
+import i18n from '../lib/i18n';
 import { EmojiSource } from '../constants/colors';
 import { spacing, shadow, fonts, displayFont } from '../constants/ui';
 import EmojiRenderer from './EmojiRenderer';
@@ -29,7 +30,7 @@ export default function EmotionWheel({ onSelect }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Selecione uma emoção</Text>
+      <Text style={[styles.title, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>{i18n.t('emotionWheel.selecione')}</Text>
       <View style={styles.grid}>
         {BASE_EMOTIONS.map((emotion) => {
           const emojiSource: EmojiSource = emojiPack[emotion.id as keyof typeof emojiPack] ?? emotion.emoji;
@@ -47,7 +48,7 @@ export default function EmotionWheel({ onSelect }: Props) {
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {emotion.label}
+                {emotionLabel(emotion)}
               </Text>
             </TouchableOpacity>
           );

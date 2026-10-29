@@ -1,4 +1,5 @@
 import { MoodEntry } from '../types';
+import { emotionLabel } from '../constants/emotions';
 
 export interface EmotionStat {
   emotionId: string;
@@ -80,7 +81,7 @@ export function computeEmotionFrequency(entries: MoodEntry[]): EmotionStat[] {
       existing.totalIntensity += e.intensity;
     } else {
       map.set(e.emotion.id, {
-        label: e.emotion.label,
+        label: emotionLabel(e.emotion),
         emoji: e.emotion.emoji,
         count: 1,
         totalIntensity: e.intensity,

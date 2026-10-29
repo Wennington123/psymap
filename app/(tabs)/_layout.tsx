@@ -5,6 +5,7 @@ import { House, Clock, ChartColumn, Trophy, Target, Settings } from 'lucide-reac
 import { useTheme } from '../../contexts/ThemeContext';
 import { displayFont, shadow } from '../../constants/ui';
 import { IS_FOSS } from '../../lib/config';
+import i18n from '../../lib/i18n';
 
 const TAB_ICONS = {
   index: House,
@@ -51,35 +52,35 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: 'Início',
+            title: i18n.t('tabs.inicio'),
             tabBarIcon: ({ focused, color }) => <TabIcon tab="index" focused={focused} color={color} />,
           }}
         />
         <Tabs.Screen
           name="history"
           options={{
-            title: 'Histórico',
+            title: i18n.t('tabs.historico'),
             tabBarIcon: ({ focused, color }) => <TabIcon tab="history" focused={focused} color={color} />,
           }}
         />
         <Tabs.Screen
           name="statistics"
           options={{
-            title: 'Gráficos',
+            title: i18n.t('tabs.graficos'),
             tabBarIcon: ({ focused, color }) => <TabIcon tab="statistics" focused={focused} color={color} />,
           }}
         />
         <Tabs.Screen
           name={IS_FOSS ? 'metas' : 'ranking'}
           options={{
-            title: IS_FOSS ? 'Metas' : 'Ranking',
+            title: IS_FOSS ? i18n.t('tabs.metas') : i18n.t('tabs.ranking'),
             tabBarIcon: ({ focused, color }) => <TabIcon tab={IS_FOSS ? 'metas' : 'ranking'} focused={focused} color={color} />,
           }}
         />
         <Tabs.Screen
           name="settings"
           options={{
-            title: 'Ajustes',
+            title: i18n.t('tabs.ajustes'),
             tabBarIcon: ({ focused, color }) => <TabIcon tab="settings" focused={focused} color={color} />,
           }}
         />

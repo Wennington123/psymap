@@ -4,6 +4,8 @@ import { MoodEntry } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
 import { EmojiSource } from '../constants/colors';
 import { shadow, radii } from '../constants/ui';
+import { emotionLabel } from '../constants/emotions';
+import i18n from '../lib/i18n';
 import EmojiRenderer from './EmojiRenderer';
 
 interface Props {
@@ -26,7 +28,7 @@ export default function MoodLogItem({ entry }: Props) {
         <EmojiRenderer source={emojiSource} size={30} />
       </View>
       <View style={styles.center}>
-        <Text style={[styles.emotionName, { color: colors.text }]}>{entry.emotion.label}</Text>
+        <Text style={[styles.emotionName, { color: colors.text }]}>{emotionLabel(entry.emotion)}</Text>
         {entry.note ? <Text style={[styles.note, { color: colors.textSecondary }]}>{entry.note}</Text> : null}
       </View>
       <View style={styles.right}>

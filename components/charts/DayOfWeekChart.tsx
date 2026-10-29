@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
 import { DayOfWeekStat } from '../../lib/stats';
 import { useTheme } from '../../contexts/ThemeContext';
+import i18n from '../../lib/i18n';
 
 interface Props {
   data: DayOfWeekStat[];
@@ -41,7 +42,7 @@ export default function DayOfWeekChart({ data }: Props) {
         referenceLine1Position={0}
         referenceLine1Config={{ color: colors.chartAxis, thickness: 1 }}
       />
-      <Text style={[styles.hint, { color: colors.textDim }]}>Intensidade média por dia da semana</Text>
+      <Text style={[styles.hint, { color: colors.textDim }]}>{i18n.t('stats.intensidadeMediaSemana')}</Text>
     </View>
   );
 }

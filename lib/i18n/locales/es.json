@@ -52,7 +52,7 @@
   },
   "historico": { "titulo": "Historial", "vazio": "Aún no hay registros", "vazioDica": "Vuelve a la pantalla de inicio y registra tu primera emoción", "remover": "Eliminar registro", "registros": "registros", "apagarConfirm": "¿Borrar \"{{label}}\"?" },
   "estatisticas": {
-    "titulo": "Gráficos", "exportarPdf": "Exportar PDF", "pdfGerado": "¡PDF generado!", "pdfSalvo": "Guardado en:\n{{uri}}", "erroPdf": "Error", "erroPdfMsg": "No se pudo generar el PDF.",
+    "titulo": "Gráficos", "exportarPdf": "Exportar PDF", "pdfGerado": "¡PDF generado!", "pdfSalvo": "Guardado en:\n{{uri}}", "erroPdf": "Error", "erroPdfMsg": "No se pudo generar el PDF.", "vazioDica": "Registra tus emociones para ver las estadísticas",
     "frequencia": "Frecuencia de Emociones", "distribuicao": "Distribución del Estado de Ánimo", "intensidadeTempo": "Intensidad a lo largo del tiempo", "diaSemana": "Estado de ánimo por día de la semana", "horaDia": "Estado de ánimo por hora del día"
   },
   "intensidade": { "titulo": "¿Qué tan intensa?", "muitoFraco": "Muy débil", "fraco": "Débil", "moderado": "Moderado", "forte": "Fuerte", "muitoIntenso": "Muy intensa" },

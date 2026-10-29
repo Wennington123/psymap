@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
 import { card, radii } from '../constants/ui';
+import i18n from '../lib/i18n';
 
 interface Props {
   visible: boolean;
@@ -36,7 +37,7 @@ export default function NamePromptModal({ visible, onConfirm, onCancel }: Props)
     <Modal visible={visible} transparent animationType="fade" onRequestClose={handleClose}>
       <KeyboardAvoidingView style={[styles.overlay, { backgroundColor: colors.overlay }]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={[styles.card, { backgroundColor: colors.background }, card(colors)]}>
-          <Text style={[styles.title, { color: colors.text }]}>Identificação para o PDF</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{i18n.t('namePrompt.titulo')}</Text>
           <Text style={[styles.body, { color: colors.textSecondary }]}>
             Seu nome será usado apenas para identificar o relatório. Não será armazenado ou compartilhado.
           </Text>

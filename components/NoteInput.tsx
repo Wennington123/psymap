@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
 import { radii } from '../constants/ui';
+import i18n from '../lib/i18n';
 
 interface Props {
   value: string;
@@ -16,7 +17,7 @@ export default function NoteInput({ value, onChange, visible }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: colors.textSecondary }]}>Descrição (opcional)</Text>
+      <Text style={[styles.title, { color: colors.textSecondary }]}>{i18n.t('nota.placeholder')}</Text>
       <TextInput
         style={[styles.input, { backgroundColor: colors.surface, color: colors.text, borderRadius: radii.input }]}
         placeholder="O que aconteceu? O que você percebeu no corpo e nos pensamentos?"

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { SummaryStats } from '../../lib/stats';
 import { useTheme } from '../../contexts/ThemeContext';
 import { radii, shadow } from '../../constants/ui';
+import i18n from '../../lib/i18n';
 
 interface Props {
   data: SummaryStats;
@@ -15,8 +16,8 @@ export default function StatsSummaryCards({ data }: Props) {
     return (
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyEmoji}>📊</Text>
-        <Text style={[styles.emptyText, { color: colors.textSecondary }]}>Nenhum registro ainda</Text>
-        <Text style={[styles.emptyHint, { color: colors.textDim }]}>Registre suas emoções para ver as estatísticas</Text>
+        <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{i18n.t('historico.vazio')}</Text>
+        <Text style={[styles.emptyHint, { color: colors.textDim }]}>{i18n.t('estatisticas.vazioDica')}</Text>
       </View>
     );
   }
@@ -25,17 +26,17 @@ export default function StatsSummaryCards({ data }: Props) {
     <View style={styles.grid}>
       <View style={[styles.card, { backgroundColor: colors.surface }, shadow()]}>
         <Text style={[styles.cardNumber, { color: colors.accent }]}>{data.totalEntries}</Text>
-        <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>Registros</Text>
+        <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>{i18n.t('stats.total')}</Text>
       </View>
       <View style={[styles.card, { backgroundColor: colors.surface }, shadow()]}>
         <Text style={[styles.cardNumber, { color: colors.accent }]}>{data.avgIntensity}</Text>
-        <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>Média intensidade</Text>
+        <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>{i18n.t('stats.intensidadeMedia')}</Text>
       </View>
       <View style={[styles.card, { backgroundColor: colors.surface }, shadow()]}>
         {data.mostFrequent ? (
           <>
             <Text style={styles.cardEmoji}>{data.mostFrequent.emoji}</Text>
-            <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>Mais frequente</Text>
+            <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>{i18n.t('pdf.maisFrequente')}</Text>
             <Text style={[styles.cardSub, { color: colors.text }]}>{data.mostFrequent.label}</Text>
           </>
         ) : (
@@ -44,11 +45,11 @@ export default function StatsSummaryCards({ data }: Props) {
       </View>
       <View style={[styles.card, { backgroundColor: colors.surface }, shadow()]}>
         <Text style={[styles.cardNumber, { color: colors.accent }]}>{data.daysWithEntries}</Text>
-        <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>Dias ativos</Text>
+        <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>{i18n.t('pdf.diasAtivos')}</Text>
       </View>
       <View style={[styles.card, styles.cardWide, { backgroundColor: colors.surface }, shadow()]}>
         <Text style={[styles.cardNumber, { color: colors.accent }]}>🔥 {data.currentStreak}</Text>
-        <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>Sequência de dias</Text>
+        <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>{i18n.t('stats.sequenciaDias')}</Text>
       </View>
     </View>
   );

@@ -20,6 +20,8 @@ import { computeStreak } from '../../lib/gamification';
 import { awardEntry } from '../../storage/gamification';
 import { syncXpDelta } from '../../lib/firebaseRanking';
 import { card, radii, spacing, shadow, fonts, displayFont } from '../../constants/ui';
+import { emotionLabel } from '../../constants/emotions';
+import i18n from '../../lib/i18n';
 
 /* Cantos: temas pixel usam raio pequeno; os modernos usam pill. */
 function displayRadius(colors: ReturnType<typeof useTheme>['colors']): number {
@@ -63,7 +65,7 @@ export default function HomeScreen() {
       gamiMessage = `\n+${award.delta} XP`;
     }
     if (award.newBadges.length > 0) {
-      gamiMessage += `\nNova conquista desbloqueada! 🎉`;
+      gamiMessage += `\n${i18n.t('home.novaConquista')}`;
     }
 
     if (user && award.delta > 0) {
@@ -76,7 +78,10 @@ export default function HomeScreen() {
     setStep('wheel');
     setSelectedEmotion(null);
     setNote('');
-    Alert.alert('Registrado!', `${selectedEmotion.emoji} ${selectedEmotion.label} — intensidade ${intensity}/5${gamiMessage}`);
+    Alert.alert(
+      i18n.t('home.registrado'),
+      `${selectedEmotion.emoji} ${emotionLabel(selectedEmotion)} — intensidade ${intensity}/5${gamiMessage}`,
+    );
   }
 
   return (
@@ -87,25 +92,36 @@ export default function HomeScreen() {
       {step === 'wheel' && (
         <>
           <View style={styles.greeting}>
-            <Text style={[styles.greetingTitle, { color: colors.text, fontFamily: displayFont(colors, 'extrabold') }]}>Olá 👋</Text>
+            <Text style={[styles.greetingTitle, { color: colors.text, fontFamily: displayFont(colors, 'extrabold') }]}>
+              {i18n.t('home.ola')} 👋
+            </Text>
             <Text style={[styles.greetingSubtitle, { color: colors.textDim, fontFamily: displayFont(colors, 'regular') }]}>
-              Como você está se sentindo?
+              {i18n.t('home.comoSeSente')}
             </Text>
           </View>
 
           <View style={[styles.gamiCard, card(colors)]}>
             <View style={styles.gamiRow}>
               <View>
-                <Text style={[styles.gamiLabel, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>Sequência</Text>
+                <Text style={[styles.gamiLabel, { color: colors.textDim, fontFamily: displayFont(colors, 'bold') }]}>
+                  {i18n.t('home.sequencia')}
+                </Text>
                 <Text style={[styles.gamiStreak, { color: colors.text, fontFamily: displayFont(colors, 'extrabold') }]}>
                   🔥 {gamification.streak}
                   <Text style={[styles.gamiStreakUnit, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>
-                    {gamification.streak === 1 ? ' dia' : ' dias'}
+                    {gamification.streak === 1 ? i18n.t('home.dia') : i18n.t('home.dias')}
                   </Text>
                 </Text>
               </View>
-              <View style={[styles.levelPill, { backgroundColor: colors.accent + '1f', borderColor: colors.accent + '60', borderRadius: displayRadius(colors) }]}>
-                <Text style={[styles.levelPillText, { color: colors.accent, fontFamily: displayFont(colors, 'bold') }]}>Nível {gamification.level}</Text>
+              <View
+                style={[
+                  styles.levelPill,
+                  { backgroundColor: colors.accent + '1f', borderColor: colors.accent + '60', borderRadius: displayRadius(colors) },
+                ]}
+              >
+                <Text style={[styles.levelPillText, { color: colors.accent, fontFamily: displayFont(colors, 'bold') }]}>
+                  {i18n.t('home.nivel')} {gamification.level}
+                </Text>
               </View>
             </View>
             <View style={[styles.gamiBarTrack, { backgroundColor: colors.background }]}>
@@ -118,7 +134,7 @@ export default function HomeScreen() {
             </View>
             <View style={styles.gamiFooter}>
               <Text style={[styles.gamiNext, { color: colors.textDim }]}>
-                {gamification.toNext} XP para o nível {gamification.level + 1}
+                {i18n.t('home.xpParaNivel', { n: gamification.level + 1 })}
               </Text>
               <Text style={[styles.gamiNext, { color: colors.textDim }]}>{gamification.xpTotal} XP</Text>
             </View>
@@ -134,22 +150,25 @@ export default function HomeScreen() {
             source={emojiPack[selectedEmotion.id as keyof typeof emojiPack] ?? selectedEmotion.emoji}
             size={64}
           />
-          <Text style={[styles.selectedLabel, { color: colors.text, fontFamily: displayFont(colors, 'bold') }]}>{selectedEmotion.label}</Text>
+          <Text style={[styles.selectedLabel, { color: colors.text, fontFamily: displayFont(colors, 'bold') }]}>
+            {emotionLabel(selectedEmotion)}
+          </Text>
 
           <IntensityPicker value={intensity} onChange={setIntensity} />
 
           <View style={styles.stepButtons}>
-            <TouchableOpacity
-              style={styles.backBtn}
-              onPress={() => setStep('wheel')}
-            >
-              <Text style={[styles.backBtnText, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>Voltar</Text>
+            <TouchableOpacity style={styles.backBtn} onPress={() => setStep('wheel')}>
+              <Text style={[styles.backBtnText, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>
+                {i18n.t('common.back')}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.nextBtn, { backgroundColor: colors.accent, borderRadius: radii.btn }]}
               onPress={() => setStep('note')}
             >
-              <Text style={[styles.primaryBtnText, { color: colors.textOnAccent, fontFamily: displayFont(colors, 'bold') }]}>Continuar</Text>
+              <Text style={[styles.primaryBtnText, { color: colors.textOnAccent, fontFamily: displayFont(colors, 'bold') }]}>
+                {i18n.t('common.continue')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -166,23 +185,24 @@ export default function HomeScreen() {
             size={64}
           />
           <Text style={[styles.selectedLabel, { color: colors.text, fontFamily: displayFont(colors, 'bold') }]}>
-            {selectedEmotion?.label} — {intensity}/5
+            {emotionLabel(selectedEmotion)} — {intensity}/5
           </Text>
 
           <NoteInput value={note} onChange={setNote} visible={true} />
 
           <View style={styles.stepButtons}>
-            <TouchableOpacity
-              style={styles.backBtn}
-              onPress={() => setStep('intensity')}
-            >
-              <Text style={[styles.backBtnText, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>Voltar</Text>
+            <TouchableOpacity style={styles.backBtn} onPress={() => setStep('intensity')}>
+              <Text style={[styles.backBtnText, { color: colors.textSecondary, fontFamily: displayFont(colors, 'semibold') }]}>
+                {i18n.t('common.back')}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.nextBtn, { backgroundColor: colors.accent, borderRadius: radii.btn }]}
               onPress={handleRegister}
             >
-              <Text style={[styles.primaryBtnText, { color: colors.textOnAccent, fontFamily: displayFont(colors, 'bold') }]}>Registrar</Text>
+              <Text style={[styles.primaryBtnText, { color: colors.textOnAccent, fontFamily: displayFont(colors, 'bold') }]}>
+                {i18n.t('common.register')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

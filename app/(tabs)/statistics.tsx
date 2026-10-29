@@ -26,6 +26,7 @@ import {
 import { generateReportHtml } from '../../lib/pdfReport';
 import { useTheme } from '../../contexts/ThemeContext';
 import { radii, shadow } from '../../constants/ui';
+import i18n from '../../lib/i18n';
 import RangeSelector from '../../components/charts/RangeSelector';
 import StatsSummaryCards from '../../components/charts/StatsSummaryCards';
 import StatsSection from '../../components/charts/StatsSection';
@@ -119,14 +120,14 @@ export default function StatisticsScreen() {
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(uri, {
           mimeType: 'application/pdf',
-          dialogTitle: 'Relatório PsyMap',
+          dialogTitle: i18n.t('estatisticas.titulo'),
           UTI: 'com.adobe.pdf',
         });
       } else {
-        Alert.alert('PDF gerado!', `Salvo em:\n${uri}`);
+        Alert.alert(i18n.t('estatisticas.pdfGerado'), i18n.t('estatisticas.pdfSalvo', { uri }));
       }
     } catch (err) {
-      Alert.alert('Erro', 'Não foi possível gerar o PDF.');
+      Alert.alert(i18n.t('estatisticas.erroPdf'), i18n.t('estatisticas.erroPdfMsg'));
     } finally {
       setExporting(false);
       dataRef.current = null;
@@ -149,7 +150,7 @@ export default function StatisticsScreen() {
         {exporting ? (
           <ActivityIndicator color={colors.textOnAccent} size="small" />
         ) : (
-          <Text style={[styles.exportBtnText, { color: colors.textOnAccent }]}>Exportar PDF</Text>
+          <Text style={[styles.exportBtnText, { color: colors.textOnAccent }]}>{i18n.t('estatisticas.exportarPdf')}</Text>
         )}
       </TouchableOpacity>
 
@@ -157,23 +158,23 @@ export default function StatisticsScreen() {
 
       {hasData && (
         <>
-          <StatsSection title="Frequência de Emoções">
+          <StatsSection title={i18n.t('estatisticas.frequencia')}>
             <EmotionFrequencyChart data={frequency} />
           </StatsSection>
 
-          <StatsSection title="Distribuição de Humor">
+          <StatsSection title={i18n.t('estatisticas.distribuicao')}>
             <MoodDistributionChart data={frequency} />
           </StatsSection>
 
-          <StatsSection title="Intensidade ao Longo do Tempo">
+          <StatsSection title={i18n.t('estatisticas.intensidadeTempo')}>
             <IntensityTrendChart data={trend} />
           </StatsSection>
 
-          <StatsSection title="Humor por Dia da Semana">
+          <StatsSection title={i18n.t('estatisticas.diaSemana')}>
             <DayOfWeekChart data={dayOfWeek} />
           </StatsSection>
 
-          <StatsSection title="Humor por Hora do Dia">
+          <StatsSection title={i18n.t('estatisticas.horaDia')}>
             <HourOfDayChart data={hourOfDay} />
           </StatsSection>
         </>

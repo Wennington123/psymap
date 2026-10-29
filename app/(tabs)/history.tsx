@@ -14,6 +14,7 @@ import { shadow } from '../../constants/ui';
 
 import MoodLogItem from '../../components/MoodLogItem';
 import { getEntries, deleteEntry } from '../../storage/moodStorage';
+import i18n from '../../lib/i18n';
 
 interface Section {
   title: string;
@@ -38,7 +39,7 @@ export default function HistoryScreen() {
     const grouped = new Map<string, MoodEntry[]>();
     entries.forEach((entry) => {
       const date = new Date(entry.timestamp);
-      const key = date.toLocaleDateString('pt-BR', {
+      const key = date.toLocaleDateString(i18n.locale, {
         weekday: 'long',
         day: '2-digit',
         month: 'long',
@@ -57,7 +58,7 @@ export default function HistoryScreen() {
   }
 
   function handleDelete(id: string, label: string) {
-    Alert.alert('Remover registro', `Apagar "${label}"?`, [
+    Alert.alert(i18n.t('historico.remover'), i18n.t('historico.apagarConfirm', { label }), [
       { text: 'Cancelar', style: 'cancel' },
       {
         text: 'Apagar',
@@ -75,8 +76,8 @@ export default function HistoryScreen() {
       {sections.length === 0 ? (
         <View style={styles.empty}>
           <Text style={styles.emptyEmoji}>📝</Text>
-          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>Nenhum registro ainda</Text>
-          <Text style={[styles.emptyHint, { color: colors.textDim }]}>Volte à tela inicial e registre sua primeira emoção</Text>
+          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{i18n.t('historico.vazio')}</Text>
+          <Text style={[styles.emptyHint, { color: colors.textDim }]}>{i18n.t('historico.vazioDica')}</Text>
         </View>
       ) : (
         <SectionList
@@ -100,7 +101,7 @@ export default function HistoryScreen() {
           ListHeaderComponent={
             <View style={styles.topBar}>
               <Text style={[styles.totalText, { color: colors.textDim }]}>
-                {sections.reduce((sum, s) => sum + s.data.length, 0)} registros
+                {`${sections.reduce((sum, s) => sum + s.data.length, 0)} ${i18n.t('historico.registros')}`}
               </Text>
               <TouchableOpacity
                 onPress={() => router.push('/statistics' as any)}
