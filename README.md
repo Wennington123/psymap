@@ -1,5 +1,9 @@
 # PsyMap 🧠
 
+<p align="center">
+  <img src="assets/logo.svg" width="128" alt="PsyMap">
+</p>
+
 Mapeamento emocional direto do seu bolso. Registre como você se sente, acompanhe padrões ao longo do tempo e entenda melhor suas emoções — com os dados no seu aparelho.
 
 ---
