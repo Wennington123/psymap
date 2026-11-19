@@ -20,7 +20,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/favicon.png",
-        "backgroundColor": "#1a1a2e"
+        "backgroundColor": "#F7F8FA"
       },
       "package": "com.app.psymap",
       "versionCode": 11,
@@ -33,7 +33,7 @@
         "expo-notifications",
         {
           "icon": "./assets/icon.png",
-          "color": "#1a1a2e"
+          "color": "#F7F8FA"
         }
       ],
       "@react-native-firebase/app",
