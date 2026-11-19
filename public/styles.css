@@ -255,6 +255,25 @@ h2 {
 .card p { margin: 0; font-size: 14px; color: var(--muted); }
 .card .emoji { font-size: 24px; display: block; margin-bottom: 10px; }
 
+.dl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+}
+.dl h3 { margin: 0 0 6px; font-size: 16px; }
+.dl p { margin: 0; font-size: 14px; color: var(--muted); max-width: 60ch; }
+.dl code { background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; font-size: 13px; }
+
+.steps { margin: 18px 0 0; padding-left: 22px; color: var(--muted); font-size: 15px; }
+.steps li { margin: 6px 0; }
+.steps a { color: var(--text); }
+
 .note {
   border-left: 3px solid var(--accent);
   background: var(--surface);

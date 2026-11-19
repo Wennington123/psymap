@@ -46,7 +46,15 @@ Ao usar o PsyMap, você concorda que:
 
 ## 🚀 Instalação
 
-### Pré-requisitos
+### No Android (usuários)
+
+1. Baixe a APK assinada direto da
+   [última release](../../releases/latest/download/PsyMap.apk) — sem loja, sem conta.
+2. Autorize "instalar apps de fontes desconhecidas" quando o Android pedir.
+3. Abra a APK baixada e instale. Versões anteriores ficam em
+   [Releases](../../releases).
+
+### Pré-requisitos (build local)
 - Node.js 22+
 - JDK 17 (para builds Android)
 - Android SDK com platform 36
@@ -74,31 +82,21 @@ npx expo run:android
 ```bash
 npx expo prebuild --platform android --clean
 cd android && ./gradlew assembleDebug       # APK de dev
-./gradlew assembleRelease bundleRelease     # APK + AAB assinados
+./gradlew assembleRelease                   # APK assinado
 ```
 
 O repositório tem dois workflows no GitHub Actions:
 
-- **`android.yml`** — gera **APK debug, APK release e AAB** assinados a cada push no `main`, com artifacts para download.
-- **`pages.yml`** — publica a pasta `public/` (Política de Privacidade e Termos) no GitHub Pages, em `https://psymap.net.br`.
+- **`android.yml`** — a cada push no `main`, gera a **APK release assinada** e a publica na
+  release [`latest`](../../releases/tag/latest) (`PsyMap.apk`); a APK de debug fica nos artifacts.
+- **`pages.yml`** — publica a pasta `public/` (site, Política de Privacidade e Termos) no
+  GitHub Pages, em `https://psymap.net.br`.
 
 > ⚠️ **Segredos não ficam mais no repositório.** A keystore de assinatura (`android-keystore.jks`),
 > `keystore-upload.properties` e `google-services.json` foram removidos do histórico e do tracking.
 > Eles são injetados em tempo de build via **GitHub Actions Secrets** (`ANDROID_KEYSTORE_BASE64`,
 > `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`, `GOOGLE_SERVICES_JSON`). Para buildar localmente,
 > mantenha esses arquivos na raiz (gitignored) e não os committe.
-
-### Publicação na Play Store
-
-1. O AAB é gerado pelo workflow `android.yml` (artifact `psymap-release-aab`).
-2. Envie para a Play com a Play Developer API (service account em `play-service-account.json`, gitignored):
-   ```bash
-   node scripts/publish.js --bundle app-release.aab --track production --status completed
-   ```
-   A Play exige revisão manual pelo Console (`changesNotSentForReview`), então após o commit da
-   edição vá em **Play Console → Production → Enviar para análise**.
-3. A Política de Privacidade deve estar cadastrada na Play apontando para
-   `https://psymap.net.br/privacy.html` (URL válida e em HTTPS).
 
 ---
 

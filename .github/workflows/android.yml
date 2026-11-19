@@ -110,20 +110,25 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Build release APK and AAB
+      - name: Build release APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease bundleRelease -PreactNativeArchitectures=$REACT_NATIVE_ARCHS --stacktrace
+          ./gradlew assembleRelease -PreactNativeArchitectures=$REACT_NATIVE_ARCHS --stacktrace
 
-      - name: Upload release APK
+      - name: Upload release APK (artifact)
         uses: actions/upload-artifact@v4
         with:
           name: psymap-release-apk
           path: android/app/build/outputs/apk/release/app-release.apk
 
-      - name: Upload release AAB
-        uses: actions/upload-artifact@v4
-        with:
-          name: psymap-release-aab
-          path: android/app/build/outputs/bundle/release/app-release.aab
+      - name: Publish to GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(node -p "require('./app.json').expo.version")
+          cp android/app/build/outputs/apk/release/app-release.apk PsyMap.apk
+          gh release delete latest --cleanup-tag --yes 2>/dev/null || true
+          gh release create latest PsyMap.apk \
+            --title "PsyMap $VERSION" \
+            --notes "APK release assinada, gerada automaticamente do \`main\` (${GITHUB_SHA::7}). Instale autorizando \"apps de fontes desconhecidas\"."
